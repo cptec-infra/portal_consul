@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+{% block title %}Serviços - Portal Consul{% endblock %}
+
+{% block content %}
+<h1 class="text-2xl font-bold mb-4">Serviços Registrados</h1>
+
+<div class="bg-white rounded shadow p-6 mb-6 border border-gray-200">
+  <h2 class="text-lg font-semibold text-indigo-700 mb-2">{{ service.name }}</h2>
+  <p><strong>ID:</strong> {{ service.id }}</p>
+  <p><strong>Node:</strong> {{ service.node }} ({{ service.node_address }})</p>
+  <p><strong>Tags:</strong> {{ service.tags|join:", " }}</p>
+  <p><strong>Endereço:</strong> {{ service.address }}:{{ service.port }}</p>
+  <p><strong>Datacenter:</strong> {{ service.datacenter }}</p>
+
+  <div class="mt-4">
+    <p class="font-semibold">Verificações:</p>
+    {% for check in service.checks %}
+      <div class="ml-4 mb-2 p-2 border rounded bg-gray-50">
+        <p><strong>{{ check.name }}</strong>:</p>
+        <p>
+          Status:
+          {% if check.status == 'passing' %}
+            <span class="text-green-600 font-semibold">✔ Ok</span>
+          {% elif check.status == 'warning' %}
+            <span class="text-yellow-600 font-semibold">⚠ Warning</span>
+          {% elif check.status == 'critical' %}
+            <span class="text-red-600 font-semibold">✖ Critical</span>
+          {% else %}
+            <span class="text-gray-600">Unknow</span>
+          {% endif %}
+        </p>
+        <p class="text-sm text-gray-600">Saída: <code>{{ check.output }}</code></p>
+      </div>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}
