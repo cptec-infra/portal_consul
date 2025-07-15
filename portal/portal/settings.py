@@ -24,6 +24,11 @@ load_dotenv(dotenv_path=BASE_DIR / '.env')
 CONSUL_HOST = os.getenv('CONSUL_HOST')
 CONSUL_PORT = int(os.getenv('CONSUL_PORT'))
 
+# MONGODB config
+MONGO_USER = os.getenv('MONGO_INITDB_ROOT_USERNAME')
+MONGO_PASSWORD = os.getenv('MONGO_INITDB_ROOT_PASSWORD')
+MONGO_BD = os.getenv('MONGO_INITDB_DATABASE')
+
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 

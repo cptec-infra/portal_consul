@@ -3,3 +3,4 @@ gunicorn
 python-consul
 python-dotenv
 django-tailwind
+pymongo
