@@ -1,18 +1,17 @@
-<aside class="w-full md:w-64 bg-white shadow-md p-4 flex-shrink-0 h-screen overflow-auto">
-  <ul class="space-y-2 text-sm font-medium text-gray-700">
-    <li>
-      <a href="{% url 'home' %}"
-         class="flex items-center px-4 py-2 rounded-lg hover:bg-blue-600
-                {% if request.path == '/' %} bg-blue-700 text-white {% else %} text-gray-700 {% endif %}">
-        Estrutura de Grupos
-      </a>
-    </li>
-    <li>
-      <a href="{% url 'servicos' %}"
-         class="flex items-center px-4 py-2 rounded-lg hover:bg-blue-600
-                {% if request.path == '/servicos/' %} bg-blue-700 text-white {% else %} text-gray-700 {% endif %}">
-        Serviços
-      </a>
-    </li>
-  </ul>
+<aside class="hidden sm:flex flex-col justify-between w-64 bg-white shadow-md p-4 fixed top-0 left-0 h-screen pt-16 z-40 overflow-y-auto">
+  <div class="flex flex-col justify-between flex-1">
+    {% include 'partials/sidebar_menu.html' %}
+    <div class="mt-4">
+      {% include 'partials/footer.html' %}
+    </div>
+  </div>
 </aside>
+
+<div id="mobile-menu" class="sm:hidden fixed top-16 left-0 w-64 bg-white shadow-md p-4 h-[calc(100vh-4rem)] flex flex-col justify-between z-50 hidden overflow-y-auto">
+  <div class="flex flex-col justify-between flex-1">
+    {% include 'partials/sidebar_menu.html' %}
+    <div class="mt-4">
+      {% include 'partials/footer.html' %}
+    </div>
+  </div>
+</div>

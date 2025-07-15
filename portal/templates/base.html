@@ -1,38 +1,48 @@
 {% load static %}
 <!DOCTYPE html>
-<html lang="pt-br">
-<head>
-  <meta charset="UTF-8" />
-  <title>{% block title %}Portal Consul{% endblock %}</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <link href="{% static 'css/styles.css' %}" rel="stylesheet">
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.css" rel="stylesheet">
-</head>
-<body class="bg-gray-100 text-gray-900 font-sans flex flex-col min-h-screen">
-
-  {% include 'partials/header.html' %}
-
-  <div class="flex flex-1 min-h-0">
-    {% include 'partials/sidebar.html' %}
-    <main class="flex-1 bg-gray-50 p-6 flex items-center justify-center min-h-0 overflow-auto">
-      <div class="bg-white rounded-lg shadow-md p-8 w-full max-w-4xl">
-        {% block content %}
-        <h1 class="text-2xl font-semibold mb-4">Bem-vindo!</h1>
-        <p class="text-gray-600">Use o menu lateral para navegar pelo portal.</p>
-        {% endblock %}
+<html lang="pt-br" class="h-full overflow-x-hidden">
+  <head>
+    <meta charset="UTF-8" />
+    <title>{% block title %}Portal Consul{% endblock %}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link href="{% static 'css/styles.css' %}" rel="stylesheet">
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.css"
+      rel="stylesheet">
+  </head>
+  
+  <body class="bg-gray-100 text-gray-900 font-sans flex flex-col h-full overflow-x-hidden">
+    <nav class="bg-white shadow-md px-6 py-3 w-full fixed top-0 left-0 z-50">
+      <div class="flex items-center justify-between">
+        <a href="/" class="text-xl font-bold text-indigo-600">
+          3S<span class="text-gray-800">PORTAL</span>
+        </a>
+        <div class="text-sm text-gray-600">
+          Bem vindo, <span class="font-semibold text-indigo-600">Renato</span>
+        </div>
       </div>
-    </main>
-  </div>
+    </nav>
 
-  {% include 'partials/footer.html' %}
+    <div class="flex flex-1 pt-16">
+      {% include 'partials/sidebar.html' %}
+      <main class="flex-1 overflow-y-auto p-6 sm:ml-64">
+        <div class="bg-white rounded-lg shadow-md p-6 w-full mx-auto">
+          {% block content %}
+          {% endblock %}
+        </div>
+      </main>
+    </div>
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.js"></script>
-  <script>
-    const btn = document.getElementById('menu-button');
-    const menu = document.getElementById('mobile-menu');
-    if (btn && menu) {
-      btn.addEventListener('click', () => menu.classList.toggle('hidden'));
-    }
-  </script>
-</body>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.js"></script>
+    <script>
+      const btn = document.getElementById('menu-button');
+      const menu = document.getElementById('mobile-menu');
+      if (btn && menu) {
+        btn.addEventListener('click', () => {
+          menu.classList.toggle('hidden');
+          document.body.classList.toggle('overflow-hidden', !menu.classList.contains('hidden'));
+        });
+      }
+    </script>
+  </body>
 </html>
