@@ -1,0 +1,18 @@
+<aside class="w-full md:w-64 bg-white shadow-md p-4 flex-shrink-0 h-screen overflow-auto">
+  <ul class="space-y-2 text-sm font-medium text-gray-700">
+    <li>
+      <a href="{% url 'home' %}"
+         class="flex items-center px-4 py-2 rounded-lg hover:bg-blue-600
+                {% if request.path == '/' %} bg-blue-700 text-white {% else %} text-gray-700 {% endif %}">
+        Estrutura de Grupos
+      </a>
+    </li>
+    <li>
+      <a href="{% url 'servicos' %}"
+         class="flex items-center px-4 py-2 rounded-lg hover:bg-blue-600
+                {% if request.path == '/servicos/' %} bg-blue-700 text-white {% else %} text-gray-700 {% endif %}">
+        Serviços
+      </a>
+    </li>
+  </ul>
+</aside>

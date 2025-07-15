@@ -6,8 +6,6 @@ services:
       context: .
       dockerfile: Docker/Dockerfile.web
     container_name: django_web
-    depends_on:
-      - tailwind
     volumes:
       - static_volume:/app/static
       - .:/app
@@ -19,20 +17,7 @@ services:
       - .env
     networks:
       - portal_net
-
-  tailwind:
-    build:
-      context: .
-      dockerfile: Docker/Dockerfile.tailwind
-    container_name: django_tailwind
-    working_dir: /app
-    volumes:
-      - ./portal/frontend:/app
-      - static_volume:/app/static
-    command: sh -c "npm install && npm run build"
-    networks:
-    - portal_net
-
+      
   nginx:
     image: nginx:alpine
     container_name: django_nginx
