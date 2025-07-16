@@ -1,3 +1,4 @@
+from collections import defaultdict
 import os
 import requests
 
@@ -74,16 +75,23 @@ def get_services():
 
 def get_detailed_services():
     catalog_url = f"{BASE_URL}/v1/catalog/services"
-    catalog_response = requests.get(catalog_url)
-    catalog_response.raise_for_status()
-    services = catalog_response.json()
+    try:
+        catalog_response = requests.get(catalog_url, timeout=5)
+        catalog_response.raise_for_status()
+    except requests.RequestException as e:
+        print(f"Erro ao consultar catálogo: {e}")
+        return []
 
+    services = catalog_response.json()
     detailed = []
 
     for service_name in services.keys():
-        health_url = f"{BASE_URL}/v1/health/service/{service_name}?passing=false"
-        health_response = requests.get(health_url)
-        if health_response.status_code != 200:
+        health_url = f"{BASE_URL}/v1/health/service/{service_name}"
+        try:
+            health_response = requests.get(health_url, timeout=5)
+            health_response.raise_for_status()
+        except requests.RequestException as e:
+            print(f"Erro ao consultar {service_name}: {e}")
             continue
 
         for entry in health_response.json():
@@ -91,23 +99,50 @@ def get_detailed_services():
             service = entry["Service"]
             checks = entry["Checks"]
 
+            statuses = [check["Status"].lower() for check in checks]
+
+            if any(status == "critical" for status in statuses):
+                overall_status = "critical"
+            elif any(status == "warning" for status in statuses):
+                overall_status = "warning"
+            elif all(status == "passing" for status in statuses):
+                overall_status = "passing"
+            else:
+                overall_status = "unknown"
+
             detailed.append({
                 "name": service["Service"],
                 "id": service["ID"],
                 "address": service["Address"],
                 "port": service["Port"],
                 "tags": service.get("Tags", []),
-                "datacenter": node.get("Datacenter", "desconhecido"),
+                "meta": service.get("Meta", {}),
+                "kind": service.get("Kind", "standard"),
+                "weights": service.get("Weights", {}),
+                "enable_tag_override": service.get("EnableTagOverride", False),
                 "node": node["Node"],
                 "node_address": node["Address"],
+                "datacenter": node.get("Datacenter", "desconhecido"),
+                "create_index": service.get("CreateIndex"),
+                "modify_index": service.get("ModifyIndex"),
+                "status": overall_status,  
                 "checks": [
                     {
                         "name": check["Name"],
-                        "status": check["Status"],
-                        "output": check["Output"],
-                        "type": check["CheckType"] if "CheckType" in check else "N/A"
+                        "status": check["Status"], 
+                        "output": check.get("Output", ""),
+                        "type": check.get("CheckType", "N/A")
                     } for check in checks
                 ]
             })
 
     return detailed
+
+def group_by_node(servicos):
+    group = defaultdict(list)
+
+    for svc in servicos:
+        key = (svc["node"], svc["node_address"], svc["datacenter"])
+        group[key].append(svc)
+
+    return group
