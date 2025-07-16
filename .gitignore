@@ -1,5 +1,6 @@
 .env
 db.sqlite3
+*.pyc
 node_modules/
 __pycache__/
 data/
