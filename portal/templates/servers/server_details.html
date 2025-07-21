@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="p-6">
+  <h1 class="text-2xl font-bold mb-4">Servidor: {{ servidor.nome }}</h1>
+
+  <div class="bg-white rounded-lg shadow-md p-6 space-y-4">
+    <div>
+      <span class="font-semibold text-gray-700">IP:</span> {{ servidor.ip }}
+    </div>
+    <div>
+      <span class="font-semibold text-gray-700">Sistema Operacional:</span> {{ servidor.sistema_operacional }}
+    </div>
+    <div>
+      <span class="font-semibold text-gray-700">Status:</span>
+      {% if servidor.status == 'ativo' %}
+        <span class="text-green-600 font-semibold">Ativo</span>
+      {% else %}
+        <span class="text-red-600 font-semibold">Inativo</span>
+      {% endif %}
+    </div>
+    <div>
+      <span class="font-semibold text-gray-700">Descrição:</span> {{ servidor.descricao }}
+    </div>
+    <div>
+      <a href="{% url 'servidores:lista' %}" class="text-blue-600 hover:underline">← Voltar para a lista</a>
+    </div>
+  </div>
+</div>
+{% endblock %}

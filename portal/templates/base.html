@@ -3,7 +3,7 @@
 <html lang="pt-br" class="h-full overflow-x-hidden">
   <head>
     <meta charset="UTF-8" />
-    <title>{% block title %}Portal Consul{% endblock %}</title>
+    <title>{% block title %}{% endblock %}</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link href="{% static 'css/styles.css' %}" rel="stylesheet">
     <link
@@ -43,10 +43,6 @@
           document.body.classList.toggle('overflow-hidden', !menu.classList.contains('hidden'));
         });
       }
-
-      setInterval(function() {
-        location.reload();
-      }, 5000);
     </script>
   </body>
 </html>
