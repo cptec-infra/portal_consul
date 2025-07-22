@@ -2,6 +2,5 @@
 db.sqlite3
 *.pyc
 node_modules/
-__pycache__/
-__pycache__/*
-data/
+*/__pycache__/*
+portal_backend/data/
