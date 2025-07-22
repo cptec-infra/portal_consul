@@ -1,28 +1,24 @@
 version: "3.8"
 
 services:
-  web:
+  django:
     build:
       context: .
       dockerfile: Docker/Dockerfile.web
-    container_name: portal_web
+    container_name: portal_django
     volumes:
       - static_volume:/app/static
       - .:/app
-    environment:
-      - DJANGO_SETTINGS_MODULE=${DJANGO_SETTINGS_MODULE}
-      - CONSUL_HOST=${CONSUL_HOST}
-      - CONSUL_PORT=${CONSUL_PORT}
     env_file:
       - .env
     networks:
       - portal_net
-      
+
   nginx:
     image: nginx:alpine
     container_name: portal_nginx
     depends_on:
-      - web
+      - django
     ports:
       - "80:80"
     volumes:
@@ -32,24 +28,62 @@ services:
       - portal_net
 
   mongodb:
-    image: mongo:latest
+    image: mongo:5.0
     container_name: portal_mongodb
+    restart: always
     ports:
       - "27017:27017"
     volumes:
       - ./data/mongodb:/data/db
       - ./init-mongo.js:/docker-entrypoint-initdb.d/init-mongo.js:ro
     env_file:
-      - .env    
-    environment:
-      - MONGO_INITDB_ROOT_USERNAME=${MONGO_INITDB_ROOT_USERNAME}
-      - MONGO_INITDB_ROOT_PASSWORD=${MONGO_INITDB_ROOT_PASSWORD}
-      - MONGO_INITDB_DATABASE=${MONGO_INITDB_DATABASE}
+      - .env
     networks:
       - portal_net
-      
+
+  portal_kafka:
+    image: confluentinc/cp-kafka:7.5.0
+    container_name: portal_kafka
+    ports:
+      - "9092:9092"
+    env_file:
+      - .env
+    environment:
+      KAFKA_PROCESS_ROLES: broker
+      KAFKA_NODE_ID: 1
+      KAFKA_LISTENERS: PLAINTEXT://portal_kafka:9092,CONTROLLER://portal_kafka:9093
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://portal_kafka:9092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,CONTROLLER:PLAINTEXT
+      KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_CONTROLLER_QUORUM_VOTERS: 1@portal_kafka:9093
+      KAFKA_LOG_DIRS: /tmp/kraft-combined-logs
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"
+      KAFKA_CLUSTER_ID: ${KAFKA_CLUSTER_ID}
+    volumes:
+      - ./portal/kafka/entrypoint.sh:/entrypoint.sh      
+      - ./data/kafka:/var/lib/kafka/data
+      - ./portal/kafka/kafka.properties:/etc/kafka/kafka.properties 
+    command: ["/bin/bash", "/entrypoint.sh"]
+    networks:
+      - portal_net
+
+  kafka_consumer:
+    build:
+      context: .
+      dockerfile: Docker/Dockerfile.kafka_consumer
+    container_name: portal_kafka_consumer
+    depends_on:
+      - portal_kafka
+      - mongodb
+    env_file:
+      - .env
+    restart: unless-stopped
+    networks:
+      - portal_net
 volumes:
   static_volume:
 
 networks:
   portal_net:
+    driver: bridge

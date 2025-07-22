@@ -1,0 +1,26 @@
+FROM python:3.11-slim
+
+WORKDIR /app
+
+# Instalar dependências do sistema
+RUN apt-get update && apt-get install -y \
+    gcc \
+    && rm -rf /var/lib/apt/lists/*
+
+# Copiar requirements
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Copiar código do projeto
+COPY . .
+
+# Criar um script de entrada que aguarda os serviços
+RUN echo '#!/bin/bash\n\
+echo "Aguardando Kafka e MongoDB estarem disponíveis..."\n\
+sleep 30\n\
+echo "Iniciando consumer do Kafka..."\n\
+python portal/kafka/consumer_kafka.py' > /entrypoint.sh
+
+RUN chmod +x /entrypoint.sh
+
+CMD ["/entrypoint.sh"]

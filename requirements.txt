@@ -4,3 +4,4 @@ python-consul
 python-dotenv
 django-tailwind
 pymongo
+kafka-python

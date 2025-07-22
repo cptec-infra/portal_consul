@@ -1,6 +1,8 @@
 from django.shortcuts import render
-from .consul_client import get_nodes, get_detailed_services, get_services, group_by_node
-from portal.mongo_client import history_collection
+
+from portal.producer_kafka import publish_event
+from .consul_client import get_nodes, get_detailed_services, group_by_node
+from portal.utils.history import history_event
 import datetime
 
 def home(request):
@@ -15,10 +17,3 @@ def servicos(request):
     return render(request, "consulviewer/servicos.html", {"servicos_agrupados": servicos_agrupados
     })
 
-def history_event(event, level="INFO"):
-    history = {
-        "event": event,
-        "level": level,
-        "timestamp": datetime.datetime.utcnow()
-    }
-    history_collection.insert_one(history)
