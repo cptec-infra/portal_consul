@@ -27,9 +27,8 @@ def home(request):
 # API: Lista de serviços agrupados por nó
 def servicos(request):
     services = get_detailed_services()
-    servicos_agrupados = dict(group_by_node(services))
-    return JsonResponse(servicos_agrupados)
-
+    # servicos_agrupados = dict(group_by_node(services))
+    return JsonResponse(services, safe=False)
 
 # API: Lista de servidores com filtros opcionais
 def servers_list(request):

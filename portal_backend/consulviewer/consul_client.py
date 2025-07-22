@@ -2,8 +2,8 @@ from collections import defaultdict
 import os
 import requests
 
-CONSUL_HOST = os.getenv("CONSUL_HOST", "localhost")
-CONSUL_PORT = os.getenv("CONSUL_PORT", "8500")
+CONSUL_HOST = os.getenv("CONSUL_HOST")
+CONSUL_PORT = os.getenv("CONSUL_PORT")
 BASE_URL = f"http://{CONSUL_HOST}:{CONSUL_PORT}"
 
 def get_nodes():

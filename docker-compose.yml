@@ -1,18 +1,14 @@
 version: "3.8"
 
 services:
-  web:
+  django:
     build:
       context: .
-      dockerfile: Docker/Dockerfile.web
-    container_name: portal_web
+      dockerfile: portal_backend/Docker/Dockerfile
+    container_name: portal_django
     volumes:
       - static_volume:/app/static
       - .:/app
-    environment:
-      - DJANGO_SETTINGS_MODULE=${DJANGO_SETTINGS_MODULE}
-      - CONSUL_HOST=${CONSUL_HOST}
-      - CONSUL_PORT=${CONSUL_PORT}
     env_file:
       - .env
     networks:
@@ -22,7 +18,7 @@ services:
     image: nginx:alpine
     container_name: portal_nginx
     depends_on:
-      - web
+      - django
     ports:
       - "80:80"
     volumes:
@@ -32,13 +28,13 @@ services:
       - portal_net
 
   mongodb:
-    image: mongo:latest
+    image: mongo:7.0
     container_name: portal_mongodb
     ports:
       - "27017:27017"
     volumes:
-      - ./data/mongodb:/data/db
-      - ./init-mongo.js:/docker-entrypoint-initdb.d/init-mongo.js:ro
+      - ./portal_backend/data/mongodb:/data/db
+      - ./portal_backend/init-mongo.js:/docker-entrypoint-initdb.d/init-mongo.js:ro
     env_file:
       - .env    
     environment:
