@@ -2,7 +2,8 @@ Django>=5.2
 gunicorn
 python-consul
 python-dotenv
-django-tailwind
 pymongo
 openpyxl
 reportlab
+django-cors-headers
+djangorestframework
