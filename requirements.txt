@@ -4,3 +4,5 @@ python-consul
 python-dotenv
 django-tailwind
 pymongo
+openpyxl
+reportlab

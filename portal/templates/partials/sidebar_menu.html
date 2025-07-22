@@ -20,13 +20,13 @@
     </a>
   </li>
   <li>
-    <a href="{% url 'servers' %}"
+    <a href="{% url 'servers_list' %}"
        class="flex items-center px-4 py-2 rounded-lg hover:bg-blue-600
-              {% if request.path == '/servers/' %} bg-blue-700 text-white {% else %} text-gray-700 {% endif %}">
+              {% if request.path == '/servers_list/' %} bg-blue-700 text-white {% else %} text-gray-700 {% endif %}">
       <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
         <path d="M13 7a3 3 0 1 0-6 0 3 3 0 0 0 6 0Zm-3 5a5 5 0 0 0-5 5v1h10v-1a5 5 0 0 0-5-5Z"/>
       </svg>
-      Serviços
+      Servidores
     </a>
   </li>
 </ul>
