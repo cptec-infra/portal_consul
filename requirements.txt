@@ -7,3 +7,7 @@ openpyxl
 reportlab
 django-cors-headers
 djangorestframework
+celery
+redis
+django-celery-beat
+django-celery-results

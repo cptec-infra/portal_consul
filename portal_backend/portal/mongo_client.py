@@ -2,7 +2,7 @@ from pymongo import MongoClient
 from django.conf import settings
 
 mongo_client = MongoClient(
-    f"mongodb://{settings.MONGO_USER}:{settings.MONGO_PASSWORD}@portal_mongodb:27017/"
+    f"mongodb://{settings.MONGO_USER}:{settings.MONGO_PASSWORD}@{settings.MONGO_HOST}:27017/"
 )
 
 history_db = mongo_client[settings.MONGO_BD]

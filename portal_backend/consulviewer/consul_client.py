@@ -1,6 +1,11 @@
 from collections import defaultdict
+from datetime import datetime
+from pymongo import DESCENDING
+from portal.mongo_client import history_collection
 import os
 import requests
+import hashlib
+import json
 
 CONSUL_HOST = os.getenv("CONSUL_HOST")
 CONSUL_PORT = os.getenv("CONSUL_PORT")
@@ -146,3 +151,36 @@ def group_by_node(servicos):
         group[key].append(svc)
 
     return group
+
+
+def generation_hash(servicos):
+    """Gera um hash SHA256 do estado atual dos serviços"""
+    json_str = json.dumps(servicos, sort_keys=True)
+    return hashlib.sha256(json_str.encode('utf-8')).hexdigest()
+
+def save_history():
+    dados = get_detailed_services()
+    agrupado = group_by_node(dados)
+
+
+    for (node, node_address, datacenter), servicos in agrupado.items():
+        hash_atual = generation_hash(servicos)
+
+        ultimo = history_collection.find_one(
+            {"node": node, "node_address": node_address, "datacenter": datacenter},
+            sort=[("timestamp", DESCENDING)]
+        )
+
+        if not ultimo or ultimo.get("hash") != hash_atual:
+            doc = {
+                "timestamp": datetime.utcnow(),
+                "node": node,
+                "node_address": node_address,
+                "datacenter": datacenter,
+                "services": servicos,
+                "hash": hash_atual,
+            }
+            history_collection.insert_one(doc)
+            print(f"[Mongo] Novo estado salvo para: {node}")
+        else:
+            print(f"[Mongo] Estado inalterado para: {node}")

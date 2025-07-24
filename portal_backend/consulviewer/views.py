@@ -1,13 +1,12 @@
 from django.http import JsonResponse, HttpResponse
 from django.views.decorators.csrf import csrf_exempt
-from .consul_client import get_nodes, get_detailed_services, group_by_node
+from .consul_client import get_nodes, get_detailed_services, group_by_node, save_history
 from portal.mongo_client import history_collection
 import openpyxl
 from io import BytesIO
 from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import letter
 import datetime
-import json
 
 # Dados simulados
 SERVIDORES_DATA = [
@@ -147,3 +146,7 @@ def history_event(event, level="INFO"):
         "timestamp": datetime.datetime.utcnow()
     }
     history_collection.insert_one(history)
+
+def registry_history(request):
+    save_history()
+    return JsonResponse({"message": "Estado registrado (se diferente)."})

@@ -28,6 +28,17 @@ CONSUL_PORT = int(os.getenv('CONSUL_PORT'))
 MONGO_USER = os.getenv('MONGO_INITDB_ROOT_USERNAME')
 MONGO_PASSWORD = os.getenv('MONGO_INITDB_ROOT_PASSWORD')
 MONGO_BD = os.getenv('MONGO_INITDB_DATABASE')
+MONGO_HOST = os.getenv('MONGO_HOST')
+
+CELERY_BROKER_URL = 'redis://portal_redis:6379/0'  
+CELERY_RESULT_BACKEND = 'redis://portal_redis:6379/0'
+CELERY_ACCEPT_CONTENT = ['json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_BEAT_SCHEDULER = 'django_celery_beat.schedulers:DatabaseScheduler'
+CELERY_ENABLE_UTC = True
+CELERY_TIMEZONE = "UTC"
+USE_TZ = False
+
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
@@ -50,6 +61,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django_celery_beat',
+    'django_celery_results',
     'consulviewer',
 ]
 
@@ -71,7 +84,6 @@ ROOT_URLCONF = 'portal.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        # 'DIRS': [BASE_DIR / "templates"],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [

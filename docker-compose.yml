@@ -4,8 +4,10 @@ services:
   django:
     build:
       context: .
-      dockerfile: portal_backend/Docker/Dockerfile
+      dockerfile: portal_backend/Docker/Dockerfile_django
     container_name: portal_django
+    ports:
+      - "80:8000"
     volumes:
       - static_volume:/app/static
       - .:/app
@@ -13,19 +15,23 @@ services:
       - .env
     networks:
       - portal_net
-      
-  nginx:
-    image: nginx:alpine
-    container_name: portal_nginx
+
+  celery:
+    build:
+      context: .
+      dockerfile: portal_backend/Docker/Dockerfile_celery
+    container_name: portal_celery
+    command: /app/start.sh
+    volumes:
+      - ./portal_backend/Docker/celery_start.sh:/app/start.sh
+      - ./portal_backend:/portal_backend
+    env_file:
+      - .env
     depends_on:
       - django
-    ports:
-      - "80:80"
-    volumes:
-      - static_volume:/app/static
-      - ./Docker/nginx/default.conf:/etc/nginx/conf.d/default.conf
+      - redis
     networks:
-      - portal_net
+      - portal_net      
 
   mongodb:
     image: mongo:7.0
@@ -34,16 +40,25 @@ services:
       - "27017:27017"
     volumes:
       - ./portal_backend/data/mongodb:/data/db
-      - ./portal_backend/init-mongo.js:/docker-entrypoint-initdb.d/init-mongo.js:ro
+      - ./portal_backend/entrypoint-mongo.sh:/entrypoint.sh:ro
     env_file:
       - .env    
     environment:
       - MONGO_INITDB_ROOT_USERNAME=${MONGO_INITDB_ROOT_USERNAME}
       - MONGO_INITDB_ROOT_PASSWORD=${MONGO_INITDB_ROOT_PASSWORD}
       - MONGO_INITDB_DATABASE=${MONGO_INITDB_DATABASE}
+    entrypoint: ["/entrypoint.sh"]
     networks:
       - portal_net
       
+  redis:
+    image: redis:7-alpine
+    container_name: portal_redis
+    ports:
+      - "6379:6379"
+    networks:
+      - portal_net
+
 volumes:
   static_volume:
 
