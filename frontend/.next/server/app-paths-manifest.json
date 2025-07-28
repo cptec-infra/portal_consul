@@ -1,6 +1,0 @@
-{
-  "/favicon.ico/route": "app/favicon.ico/route.js",
-  "/page": "app/page.js",
-  "/utilities/shadow/page": "app/utilities/shadow/page.js",
-  "/utilities/typography/page": "app/utilities/typography/page.js"
-}
