@@ -16,6 +16,23 @@ services:
     networks:
       - portal_net
 
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: portal_frontend
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./frontend:/app
+    command: npm run dev
+    env_file:
+      - .env
+    networks:
+      - portal_net
+    depends_on:
+      - django
+
   celery:
     build:
       context: .
@@ -62,5 +79,5 @@ services:
 volumes:
   static_volume:
 
-networks:
+networks: 
   portal_net:
