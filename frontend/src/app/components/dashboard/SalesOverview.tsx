@@ -1,5 +1,5 @@
 import React from 'react';
-import { Select, MenuItem } from '@mui/material';
+import { Select, MenuItem, Button } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import DashboardCard from '@/app/components/shared/DashboardCard';
 import dynamic from "next/dynamic";
@@ -102,7 +102,6 @@ const SalesOverview = () => {
                 <MenuItem value={1}>March 2025</MenuItem>
                 <MenuItem value={2}>April 2025</MenuItem>
                 <MenuItem value={3}>May 2025</MenuItem>
-                <MenuItem value={3}>April 2025</MenuItem>
             </Select>
         }>
             <Chart
@@ -111,6 +110,15 @@ const SalesOverview = () => {
                 type="bar"
                 height={370} width={"100%"}
             />
+            <Button
+                variant="outlined"
+                size="small"
+                fullWidth
+                color="primary"
+                startIcon={<i className="fas fa-download" />}
+                endIcon={<i className="fas fa-file-download" />}
+                sx={{ mt: 2, color: 'text.secondary', borderColor: 'divider' }}
+                onClick={() => alert('Download clicked!')} />
         </DashboardCard>
     );
 };

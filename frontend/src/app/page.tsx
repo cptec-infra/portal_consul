@@ -28,6 +28,9 @@ const Dashboard = () => {
               {/* </Grid> */}
             {/* </Grid> */}
           {/* </Grid> */}
+          <Grid size={{ xs: 12, lg: 8 }}>
+            <SalesOverview />
+          </Grid>
 
           <Grid size={{ xs: 12, lg: 4 }}>
             {/* <Alerts /> */}
