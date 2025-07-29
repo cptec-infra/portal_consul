@@ -29,7 +29,7 @@ const Menuitems = [
     id: uniqueId(),
     title: "Maquinas",
     icon: IconTypography,
-    href: "/utilities/typography",
+    href: "/utilities/machines",
   },
   {
     id: uniqueId(),

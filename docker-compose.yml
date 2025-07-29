@@ -7,7 +7,7 @@ services:
       dockerfile: portal_backend/Docker/Dockerfile_django
     container_name: portal_django
     ports:
-      - "80:8000"
+      - "8000:8000"
     volumes:
       - static_volume:/app/static
       - .:/app
