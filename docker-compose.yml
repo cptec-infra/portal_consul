@@ -22,9 +22,10 @@ services:
       dockerfile: Dockerfile
     container_name: portal_frontend
     ports:
-      - "3000:3000"
+      - "3001:3000"
     volumes:
       - ./frontend:/app
+      - /app/node_modules
     command: npm run dev
     env_file:
       - .env
