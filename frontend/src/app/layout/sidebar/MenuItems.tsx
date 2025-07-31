@@ -27,7 +27,7 @@ const Menuitems = [
   },
   {
     id: uniqueId(),
-    title: "Maquinas",
+    title: "Servidores",
     icon: IconTypography,
     href: "/utilities/machines",
   },

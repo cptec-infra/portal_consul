@@ -24,6 +24,7 @@ const Shadow = () => {
         const response = await api.get('/servicos/');
         setServicos(response.data);
       } catch (err: any) {
+        console.log('Erro ao buscar serviços:', err);
         setError('Erro ao carregar os serviços');
       } finally {
         setLoading(false);
