@@ -9,11 +9,13 @@ import json
 
 CONSUL_HOST = os.getenv("CONSUL_HOST")
 CONSUL_PORT = os.getenv("CONSUL_PORT")
+CONSUL_TOKEN = os.getenv("CONSUL_TOKEN")
 BASE_URL = f"http://{CONSUL_HOST}:{CONSUL_PORT}"
+HEADERS = {"X-Consul-Token": CONSUL_TOKEN} if CONSUL_TOKEN else {}
 
 def get_nodes():
     try:
-        response = requests.get(f"{BASE_URL}/v1/catalog/nodes")
+        response = requests.get(f"{BASE_URL}/v1/catalog/nodes", headers=HEADERS)
         response.raise_for_status()
         nodes_data = response.json()
 
@@ -81,7 +83,7 @@ def get_services():
 def get_detailed_services():
     catalog_url = f"{BASE_URL}/v1/catalog/services"
     try:
-        catalog_response = requests.get(catalog_url, timeout=5)
+        catalog_response = requests.get(catalog_url, headers=HEADERS, timeout=5)
         catalog_response.raise_for_status()
     except requests.RequestException as e:
         print(f"Erro ao consultar catálogo: {e}")
@@ -93,7 +95,7 @@ def get_detailed_services():
     for service_name in services.keys():
         health_url = f"{BASE_URL}/v1/health/service/{service_name}"
         try:
-            health_response = requests.get(health_url, timeout=5)
+            health_response = requests.get(health_url, headers=HEADERS, timeout=5)
             health_response.raise_for_status()
         except requests.RequestException as e:
             print(f"Erro ao consultar {service_name}: {e}")
