@@ -14,7 +14,7 @@ const MSidebar = ({
 }: ItemType) => {
   const lgUp = useMediaQuery((theme: any) => theme.breakpoints.up("lg"));
 
-  const sidebarWidth = "270px";
+  const sidebarWidth = "230px";
   const scrollbarStyles = {
     '&::-webkit-scrollbar': {
       width: '7px',
@@ -41,7 +41,7 @@ const MSidebar = ({
         flexDirection: "column",
       }}
     >
-      <Toolbar /> {/* espaço para o AppBar */}
+      <Toolbar />
       <Box sx={{ flexGrow: 1, overflowY: "auto", p: 2 }}>
         <SidebarItems />
       </Box>

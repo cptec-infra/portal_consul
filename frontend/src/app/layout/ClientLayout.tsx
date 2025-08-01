@@ -14,9 +14,9 @@ const MainWrapper = styled("div")(() => ({
 const PageWrapper = styled("div")(() => ({
   display: "flex",
   flexGrow: 1,
-  paddingBottom: "60px",
+  paddingBottom: "100px",
   flexDirection: "column",
-  zIndex: 1,
+  zIndex: 2,
   backgroundColor: "transparent",
 }));
 
@@ -37,8 +37,21 @@ export default function ClientLayout({
       />
       <PageWrapper className="page-wrapper">
         <Header toggleMobileSidebar={() => setMobileSidebarOpen(true)} />
-        <Container sx={{ paddingTop: "20px", maxWidth: "1200px" }}>
-          <Box sx={{ minHeight: "calc(100vh - 170px)" }}>{children}</Box>
+        <Container
+          sx={{ paddingTop: "2px",
+            height: "100%",
+            overflow: "hidden",
+          }}
+          maxWidth={false}
+        >
+          <Box
+            sx={{
+              height: "100%",
+              overflowY: "auto",
+            }}
+          >
+            {children}
+          </Box>
         </Container>
       </PageWrapper>
     </MainWrapper>

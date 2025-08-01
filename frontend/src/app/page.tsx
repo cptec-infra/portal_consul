@@ -1,49 +1,119 @@
-'use client'
-import { Grid, Box } from '@mui/material';
+'use client';
+import { Grid, Box, Typography, Paper, Divider } from '@mui/material';
+import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from 'recharts';
 import PageContainer from '@/app/components/container/PageContainer';
-// componentes existentes
-import SalesOverview from '@/app/components/dashboard/SalesOverview';
-// futuros componentes sugeridos (você pode criar depois):
-// import MachineSummary from '@/app/components/dashboard/MachineSummary';
-// import Alerts from '@/app/components/dashboard/Alerts';
-// import ActivityUptime from '@/app/components/dashboard/ActivityUptime';
-// import SystemStatus from '@/app/components/dashboard/SystemStatus';
+import CpuUsageChart from './components/charts/CpuUsageChart';
+import RamUsageChart from './components/charts/RamUsageChart';
+import MachineTable from './components/charts/MachineTable';
+import AlertsTable from './components/charts/AlertsTable';
+import UserSessions from './components/charts/UserSessions';
 
-const Dashboard = () => {
+const machineStatusData = [
+  { name: 'Rodando', value: 80, color: '#4CAF50' },
+  { name: 'Parado', value: 32, color: '#FFC107' },
+  { name: 'Erro', value: 20, color: '#F44336' },
+];
+
+const stats = [
+  { label: 'Total de Máquinas', value: 114 },
+  { label: 'Total de Serviços', value: 343 },
+  { label: 'Fora do ar', value: 20, color: '#F44336' },
+];
+
+export default function Dashboard() {
   return (
     <PageContainer title="Dashboard" description="Painel geral de consumo e status das máquinas.">
       <Box>
         <Grid container spacing={3}>
-          <Grid size={{ xs: 12, lg: 12 }}>
-            <SalesOverview />
-          </Grid>
-
-          {/* <Grid size={{ xs: 12, lg: 4 }}> */}
-            {/* <Grid container spacing={3}> */}
-              {/* <Grid size={12}> */}
-                {/* <MachineSummary /> */}
-              {/* </Grid> */}
-              {/* <Grid size={12}> */}
-                {/* <ActivityUptime /> */}
-              {/* </Grid> */}
-            {/* </Grid> */}
-          {/* </Grid> */}
-          <Grid size={{ xs: 12, lg: 8 }}>
-            <SalesOverview />
-          </Grid>
-
-          <Grid size={{ xs: 12, lg: 4 }}>
-            {/* <Alerts /> */}
-          </Grid>
-
-          <Grid size={{ xs: 12, lg: 8 }}>
-            {/* <SystemStatus /> */}
-          </Grid>
+          {stats.map((stat, index) => (
+            <Grid sx={{ xs: 12, sm: 4 }} key={index}>
+              <Paper elevation={1} sx={{ padding: 4, textAlign: 'center' }}>
+                <Typography variant="h6">{stat.label}</Typography>
+                <Typography variant="h4" sx={{ color: stat.color || 'primary.main' }}>
+                  {stat.value}
+                </Typography>
+              </Paper>
+            </Grid>
+          ))}
         </Grid>
 
+        <Divider sx={{ my: 4 }} />
+
+        <Grid container spacing={4}>
+          <Grid sx={{ xs: 12, md: 6 }}>
+            <Paper
+              elevation={3}
+              sx={{
+                padding: 3,
+                minHeight: 200,
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "space-between"
+              }}
+            >
+              <Typography variant="h6" gutterBottom>
+                Status das Máquinas ativas
+              </Typography>
+              <ResponsiveContainer width="100%" height={300} >
+                <PieChart>
+                  <Pie
+                    data={machineStatusData}
+                    cx="50%"
+                    cy="50%"
+                    outerRadius={120}
+                    dataKey="value"
+                  >
+                    {machineStatusData.map((entry, index) => (
+                      <Cell key={index} fill={entry.color} />
+                    ))}
+                  </Pie>
+                  <Tooltip />
+                </PieChart>
+              </ResponsiveContainer>
+            </Paper>
+          </Grid>
+
+          <Grid sx={{ xs: 12, md: 6 }}>
+            <Paper elevation={3} sx={{ padding: 3, height: '100%' }}>
+              <Typography variant="h6" gutterBottom>
+                Informações adicionais
+              </Typography>
+              <Typography variant="body2">
+                Você pode adicionar uptime, alertas, logs, etc. aqui.
+              </Typography>
+            </Paper>
+          </Grid>
+          <Grid sx={{ xs: 12 }}>
+            <Paper elevation={3} sx={{ p: 2 }}>
+              <AlertsTable />
+            </Paper>
+          </Grid>
+
+          <Grid sx={{ xs: 12, md: 7 }}>
+            <Paper elevation={3} sx={{ p: 2 }}>
+              <MachineTable />
+            </Paper>
+          </Grid>
+
+          <Grid sx={{ xs: 12, md: 5 }}>
+            <Paper elevation={3} sx={{ p: 2 }}>
+              <UserSessions />
+            </Paper>
+          </Grid>
+          <Grid sx={{ xs: 12, md: 6 }}>
+            <Paper elevation={3} sx={{ p: 2 }}>
+              <CpuUsageChart />
+            </Paper>
+          </Grid>
+
+          <Grid sx={{ xs: 12, md: 6 }}>
+            <Paper elevation={3} sx={{ p: 2 }}>
+              <RamUsageChart />
+            </Paper>
+          </Grid>
+
+        </Grid>
       </Box>
     </PageContainer>
   );
-};
-
-export default Dashboard;
+}

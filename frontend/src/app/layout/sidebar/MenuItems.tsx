@@ -17,7 +17,7 @@ const Menuitems = [
   },
   {
     id: uniqueId(),
-    title: "Inicio",
+    title: "Dashboard",
     icon: IconLayoutDashboard,
     href: "/",
   },
