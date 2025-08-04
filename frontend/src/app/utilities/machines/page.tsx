@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { Box, Typography, Paper, CircularProgress } from '@mui/material';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import { Panel, PanelGroup, PanelResizeHandle } from 'react-resizable-panels';
-import api, { fetchMachines } from '@/app/api/api';
+import { fetchMachines } from '@/app/api/api';
 import MachineDetails from './MachineDetails';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import WarningIcon from '@mui/icons-material/Warning';
@@ -22,6 +22,7 @@ interface Machine {
   node_address: string;
   datacenter: string;
   checks: Check[];
+  id?: string;
 }
 
 export default function MachinesPage() {
@@ -33,7 +34,13 @@ export default function MachinesPage() {
     const getMachines = async () => {
       try {
         const data = await fetchMachines();
-        setMachines(data);
+
+        const machinesWithIds = data.map((machine, index) => ({
+          ...machine,
+          id: `${machine.node}-${machine.name}-${index}`,
+        }));
+
+        setMachines(machinesWithIds);
       } catch (error) {
         console.error('Erro ao buscar máquinas:', error);
       } finally {
@@ -46,7 +53,7 @@ export default function MachinesPage() {
 
   const columns: GridColDef[] = [
     { field: 'node', headerName: 'Node', flex: 1 },
-    { field: 'node_address', headerName: 'IP', flex: 1 },
+    { field: 'address', headerName: 'IP', flex: 1 },
     { field: 'datacenter', headerName: 'Datacenter', flex: 1 },
     {
       field: 'status',
@@ -87,7 +94,7 @@ export default function MachinesPage() {
               <DataGrid
                 rows={machines}
                 columns={columns}
-                getRowId={(row) => row.address}
+                getRowId={(row) => row.id!}
                 onRowClick={(params) => setSelectedMachine(params.row)}
                 hideFooter
                 sx={{
