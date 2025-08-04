@@ -1,6 +1,6 @@
 from django.http import JsonResponse, HttpResponse
 from django.views.decorators.csrf import csrf_exempt
-from .consul_client import get_nodes, get_detailed_services, group_by_node, save_history
+from .consul_client import get_nodes, get_detailed_services, get_services, group_by_node, save_history
 from portal.mongo_client import history_collection
 import openpyxl
 from io import BytesIO
@@ -25,7 +25,7 @@ def home(request):
 
 # API: Lista de serviços agrupados por nó
 def servicos(request):
-    services = get_detailed_services()
+    services = get_services()
     # servicos_agrupados = dict(group_by_node(services))
     return JsonResponse(services, safe=False)
 

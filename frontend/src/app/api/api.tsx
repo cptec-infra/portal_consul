@@ -1,4 +1,5 @@
 import axios, { AxiosInstance, AxiosResponse, InternalAxiosRequestConfig } from 'axios';
+import { Machine } from '../utilities/machines/types';
 
 const api: AxiosInstance = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:8000/api',
@@ -18,6 +19,12 @@ api.interceptors.request.use(
   },
   (error) => Promise.reject(error)
 );
+
+
+export const fetchMachines = async (): Promise<Machine[]> => {
+  const response = await api.get<Machine[]>('/servicos');
+  return response.data;
+};
 
 
 export default api;

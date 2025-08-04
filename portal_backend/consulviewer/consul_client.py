@@ -13,6 +13,7 @@ CONSUL_TOKEN = os.getenv("CONSUL_TOKEN")
 BASE_URL = f"http://{CONSUL_HOST}:{CONSUL_PORT}"
 HEADERS = {"X-Consul-Token": CONSUL_TOKEN} if CONSUL_TOKEN else {}
 
+
 def get_nodes():
     try:
         response = requests.get(f"{BASE_URL}/v1/catalog/nodes", headers=HEADERS)
@@ -20,6 +21,7 @@ def get_nodes():
         nodes_data = response.json()
 
         nodes = []
+
         for node in nodes_data:
             nodes.append({
                 "name": node.get("Node"),
@@ -28,10 +30,11 @@ def get_nodes():
                 "version": node.get("Meta", {}).get("consul-version", "N/A"),
             })
 
-        print(nodes)
+        print(mock_services)
         return nodes
 
     except requests.RequestException as e:
+        print(mock_services)
         print(f"Erro ao buscar nodes do Consul: {e}")
         return []
 
@@ -69,16 +72,20 @@ def get_services():
                     "node": entry["Node"]["Node"],          
                     "status": status,
                 })
+        print(mock_services)
 
         return detailed_services
 
     except requests.RequestException as e:
+        print(mock_services)
         print(f"Erro ao acessar o Consul: {e}")
         return []
 
     except requests.RequestException as e:
+        print(mock_services)
         print(f"Erro ao consultar Consul: {e}")
         return []
+    
 
 def get_detailed_services():
     catalog_url = f"{BASE_URL}/v1/catalog/services"
