@@ -34,13 +34,7 @@ export default function MachinesPage() {
     const getMachines = async () => {
       try {
         const data = await fetchMachines();
-
-        const machinesWithIds = data.map((machine, index) => ({
-          ...machine,
-          id: `${machine.address}-${machine.name}-${index}`,
-        }));
-
-        setMachines(machinesWithIds);
+        setMachines(data);
       } catch (error) {
         console.error('Erro ao buscar máquinas:', error);
       } finally {
