@@ -22,7 +22,7 @@ api.interceptors.request.use(
 
 
 export const fetchMachines = async (): Promise<Machine[]> => {
-  const response = await api.get<Machine[]>('/servicos');
+  const response = await api.get<Machine[]>('/nodes');
   return response.data;
 };
 
