@@ -6,8 +6,6 @@ import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import { Panel, PanelGroup, PanelResizeHandle } from 'react-resizable-panels';
 import { fetchMachines } from '@/app/api/api';
 import MachineDetails from './MachineDetails';
-import CheckCircleIcon from '@mui/icons-material/CheckCircle';
-import WarningIcon from '@mui/icons-material/Warning';
 
 
 interface Machine {
@@ -58,12 +56,6 @@ export default function MachinesPage() {
                 theme.palette.mode === 'dark' ? '#1e1e1e' : '#fafafa',
             }}
           >
-            {
-              console.log('Máquinas:', machines)
-            }
-            {
-              console.log('Colunas:', columns)
-            }
             {loading ? (
               <Box sx={{ display: 'flex', justifyContent: 'center', mt: 5 }}>
                 <CircularProgress />
