@@ -1,16 +1,28 @@
-import React from 'react';
-import {Box,AppBar,Toolbar,styled,Stack,IconButton,InputBase,Typography,Button} from '@mui/material';
+import React, { useState } from 'react';
+import {Box,AppBar,Toolbar,styled,Stack,IconButton,InputBase,Typography,Button, Menu, MenuItem} from '@mui/material';
 import PropTypes from 'prop-types';
 import Link from 'next/link';
 import { IconBellRinging, IconMenu2, IconGridDots, IconSearch } from '@tabler/icons-react';
 import Profile from './Profile';
 import AppsIcon from '@mui/icons-material/Apps';
+import Menuitems from "@/app/layout/sidebar/MenuItems"; 
 
 interface ItemType {
   toggleMobileSidebar: (event: React.MouseEvent<HTMLElement>) => void;
 }
 
 const Header = ({ toggleMobileSidebar }: ItemType) => {
+  const links = Menuitems.filter((item) => item.href);
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const open = Boolean(anchorEl);
+
+  const handleMenuClick = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
   
   const AppBarStyled = styled(AppBar)(({ theme }) => ({
     boxShadow: 'none',
@@ -40,12 +52,47 @@ const Header = ({ toggleMobileSidebar }: ItemType) => {
         {/* Lado esquerdo */}
         <Stack direction="row" alignItems="center" spacing={2}>
           <IconButton
-            onClick={toggleMobileSidebar}
+            onClick={handleMenuClick}
             sx={{ color: 'white' }}
             size="small"
           >
             <AppsIcon size="small" />
           </IconButton>
+
+          <Menu
+            anchorEl={anchorEl}
+            open={open}
+            onClose={handleClose}
+            PaperProps={{
+              sx: {
+                backgroundColor: '#232f3e',
+                color: 'white',
+                mt: 6,
+                minWidth: 180,
+                boxShadow: 3,
+              },
+            }}
+            anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
+            transformOrigin={{ vertical: 'top', horizontal: 'left' }}
+          >
+            {links.map((item, index) => (
+              <MenuItem
+                key={index}
+                onClick={handleClose}
+                component={Link}
+                href={item.href}
+                sx={{
+                  color: 'white',
+                  '&:hover': {
+                    backgroundColor: '#1a2533',
+                  },
+                }}
+              >
+                {item.title}
+              </MenuItem>
+            ))}
+          </Menu>
+
 
           <Typography variant="h6" sx={{ color: 'white', fontWeight: 600 }}>
             Portal
