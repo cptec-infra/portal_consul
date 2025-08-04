@@ -6,4 +6,5 @@ export interface Machine {
   zone: string;
   ipv4: string;
   dnsName: string;
+  id: string;
 }
