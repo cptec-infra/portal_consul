@@ -9,19 +9,11 @@ import MachineDetails from './MachineDetails';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import WarningIcon from '@mui/icons-material/Warning';
 
-interface Check {
-  name: string;
-  status: string;
-  output: string;
-}
 
 interface Machine {
-  address: string;
-  name: string;
-  node: string;
-  node_address: string;
-  datacenter: string;
-  checks: Check[];
+  name?: string;
+  address?: string;
+  datacenter?: string;
   id?: string;
 }
 
@@ -34,6 +26,7 @@ export default function MachinesPage() {
     const getMachines = async () => {
       try {
         const data = await fetchMachines();
+        console.log('Máquinas obtidas:', data);
         setMachines(data);
       } catch (error) {
         console.error('Erro ao buscar máquinas:', error);
@@ -65,7 +58,16 @@ export default function MachinesPage() {
                 theme.palette.mode === 'dark' ? '#1e1e1e' : '#fafafa',
             }}
           >
+<<<<<<< HEAD
 		{console.log('machines: ', machines)}
+=======
+            {
+              console.log('Máquinas:', machines)
+            }
+            {
+              console.log('Colunas:', columns)
+            }
+>>>>>>> c76a414b2b58108fb98e7314b872ca2662db7077
             {loading ? (
               <Box sx={{ display: 'flex', justifyContent: 'center', mt: 5 }}>
                 <CircularProgress />
