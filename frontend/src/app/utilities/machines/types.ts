@@ -1,5 +1,5 @@
 export interface Machine {
-  id: string;
+  address: string;
   name: string;
   status: string;
   type: string;
