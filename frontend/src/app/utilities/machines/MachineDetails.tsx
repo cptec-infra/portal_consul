@@ -95,7 +95,6 @@ export default function MachineDetails({ node }: Props) {
             gap: 3,
           }}
         >
-          <DetailItem label="ID da Instância" value={machine.id} />
           <DetailItem label="Nome" value={machine.name} />
           <DetailItem label="Datacenter" value={machine.datacenter} />
           <DetailItem label="Status" value={machine.status} />

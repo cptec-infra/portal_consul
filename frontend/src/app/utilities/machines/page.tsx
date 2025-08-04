@@ -105,7 +105,7 @@ export default function MachinesPage() {
               }}
             >
               <MachineDetails
-                machine={selectedMachine}
+                node={selectedMachine.name}
                 onClose={() => setSelectedMachine(null)}
               />
             </Paper>
