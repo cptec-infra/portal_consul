@@ -1,17 +1,46 @@
 'use client';
 
-import { Tabs, Tab, Box, Typography, Paper, Divider } from '@mui/material';
-import { useState } from 'react';
-import { Machine } from './types';
+import { fetchMachinesDetails } from '@/app/api/api';
+import { Tabs, Tab, Box, Typography, Paper, Divider, CircularProgress } from '@mui/material';
+import { useEffect, useState } from 'react';
 
-interface Props {
-  machine: Machine;
+
+interface Machine {
+  name: string;
+  id: string;
+  address: string;
+  port: number;
+  datacenter: string;
+  node: string;
+  status: string;
 }
 
-export default function MachineDetails({ machine }: Props) {
-  const [tab, setTab] = useState(0);
+interface Props {
+  node: string;
+}
 
-  const DetailItem = ({ label, value }: { label: string; value: string }) => (
+export default function MachineDetails({ node }: Props) {
+  const [tab, setTab] = useState(0);
+  const [machine, setMachine] = useState<Machine | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function loadDetails() {
+      try {
+        const allMachines = await fetchMachinesDetails();
+        const found = allMachines.find((m: Machine) => m.node === node);
+        setMachine(found || null);
+      } catch (error) {
+        console.error('Erro ao carregar dados da máquina:', error);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    loadDetails();
+  }, [node]);
+
+  const DetailItem = ({ label, value }: { label: string; value: string | number }) => (
     <Box>
       <Typography variant="caption" color="text.secondary">
         {label}
@@ -21,6 +50,25 @@ export default function MachineDetails({ machine }: Props) {
       </Typography>
     </Box>
   );
+
+  if (loading) {
+    return (
+      <Paper elevation={2} sx={{ mt: 4, p: 3, textAlign: 'center' }}>
+        <CircularProgress />
+        <Typography variant="body2" sx={{ mt: 2 }}>
+          Carregando detalhes...
+        </Typography>
+      </Paper>
+    );
+  }
+
+  if (!machine) {
+    return (
+      <Paper elevation={2} sx={{ mt: 4, p: 3 }}>
+        <Typography color="error">Máquina não encontrada.</Typography>
+      </Paper>
+    );
+  }
 
   return (
     <Paper elevation={2} sx={{ mt: 4, p: 3 }}>
@@ -49,7 +97,7 @@ export default function MachineDetails({ machine }: Props) {
         >
           <DetailItem label="ID da Instância" value={machine.id} />
           <DetailItem label="Nome" value={machine.name} />
-          <DetailItem label="Tipo" value={machine.type} />
+          <DetailItem label="Datacenter" value={machine.datacenter} />
           <DetailItem label="Status" value={machine.status} />
         </Box>
       )}
@@ -62,9 +110,9 @@ export default function MachineDetails({ machine }: Props) {
             gap: 3,
           }}
         >
-          <DetailItem label="Endereço IPv4" value={machine.ipv4} />
-          <DetailItem label="DNS Privado" value={machine.dnsName} />
-          <DetailItem label="Zona" value={machine.zone} />
+          <DetailItem label="Endereço IP" value={machine.address} />
+          <DetailItem label="Porta" value={machine.port} />
+          <DetailItem label="Node" value={machine.node} />
         </Box>
       )}
 
