@@ -1,4 +1,4 @@
-import { useMediaQuery, Box, Drawer, Toolbar } from "@mui/material";
+import { useMediaQuery, Box, Drawer } from "@mui/material";
 import SidebarItems from "./SidebarItems";
 
 interface ItemType {
@@ -31,6 +31,8 @@ const MSidebar = ({
     backgroundColor: "#f9f9f9",
     borderRight: "1px solid #e0e0e0",
     ...scrollbarStyles,
+    top: "70px", 
+    height: "calc(100% - 64px)",
   };
 
   const drawerContent = (
@@ -41,7 +43,6 @@ const MSidebar = ({
         flexDirection: "column",
       }}
     >
-      <Toolbar />
       <Box sx={{ flexGrow: 1, overflowY: "auto", p: 2 }}>
         <SidebarItems />
       </Box>

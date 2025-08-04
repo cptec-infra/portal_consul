@@ -13,11 +13,11 @@ const MainWrapper = styled("div")(() => ({
 
 const PageWrapper = styled("div")(() => ({
   display: "flex",
-  flexGrow: 1,
-  paddingBottom: "100px",
+  flexGrow: 1,  
   flexDirection: "column",
   zIndex: 2,
   backgroundColor: "transparent",
+  paddingTop: "70px",
 }));
 
 export default function ClientLayout({
@@ -38,7 +38,7 @@ export default function ClientLayout({
       <PageWrapper className="page-wrapper">
         <Header toggleMobileSidebar={() => setMobileSidebarOpen(true)} />
         <Container
-          sx={{ paddingTop: "2px",
+          sx={{ paddingTop: "1rem",
             height: "100%",
             overflow: "hidden",
           }}
