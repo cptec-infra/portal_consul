@@ -16,7 +16,7 @@ interface Check {
 }
 
 interface Machine {
-  id: string;
+  address: string;
   name: string;
   node: string;
   node_address: string;
@@ -86,7 +86,7 @@ export default function MachinesPage() {
               <DataGrid
                 rows={machines}
                 columns={columns}
-                getRowId={(row) => row.id}
+                getRowId={(row) => row.address}
                 onRowClick={(params) => setSelectedMachine(params.row)}
                 hideFooter
                 sx={{
