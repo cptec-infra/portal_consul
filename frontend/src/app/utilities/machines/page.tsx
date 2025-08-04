@@ -78,6 +78,7 @@ export default function MachinesPage() {
                 theme.palette.mode === 'dark' ? '#1e1e1e' : '#fafafa',
             }}
           >
+		{console.log('machines: ', machines)}
             {loading ? (
               <Box sx={{ display: 'flex', justifyContent: 'center', mt: 5 }}>
                 <CircularProgress />

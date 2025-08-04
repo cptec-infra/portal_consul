@@ -30,11 +30,9 @@ def get_nodes():
                 "version": node.get("Meta", {}).get("consul-version", "N/A"),
             })
 
-        print(mock_services)
         return nodes
 
     except requests.RequestException as e:
-        print(mock_services)
         print(f"Erro ao buscar nodes do Consul: {e}")
         return []
 
@@ -72,17 +70,14 @@ def get_services():
                     "node": entry["Node"]["Node"],          
                     "status": status,
                 })
-        print(mock_services)
 
         return detailed_services
 
     except requests.RequestException as e:
-        print(mock_services)
         print(f"Erro ao acessar o Consul: {e}")
         return []
 
     except requests.RequestException as e:
-        print(mock_services)
         print(f"Erro ao consultar Consul: {e}")
         return []
     
