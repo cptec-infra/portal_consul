@@ -24,8 +24,7 @@ export default function MachinesPage() {
     const getMachines = async () => {
       try {
         const data = await fetchMachines();
-        console.log('Máquinas obtidas:', data);
-        setMachines(data);
+        setMachines(data?.nodes);
       } catch (error) {
         console.error('Erro ao buscar máquinas:', error);
       } finally {
@@ -56,12 +55,6 @@ export default function MachinesPage() {
                 theme.palette.mode === 'dark' ? '#1e1e1e' : '#fafafa',
             }}
           >
-            {
-              console.log('Máquinas:', machines)
-            }
-            {
-              console.log('Colunas:', columns)
-            }
             {loading ? (
               <Box sx={{ display: 'flex', justifyContent: 'center', mt: 5 }}>
                 <CircularProgress />
@@ -70,7 +63,7 @@ export default function MachinesPage() {
               <DataGrid
                 rows={machines}
                 columns={columns}
-                getRowId={(row) => row.id!}
+                getRowId={(row) => row.name!}
                 onRowClick={(params) => setSelectedMachine(params.row)}
                 hideFooter
                 sx={{
