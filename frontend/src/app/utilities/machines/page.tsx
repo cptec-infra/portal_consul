@@ -37,7 +37,7 @@ export default function MachinesPage() {
 
         const machinesWithIds = data.map((machine, index) => ({
           ...machine,
-          id: `${machine.node}-${machine.name}-${index}`,
+          id: `${machine.address}-${machine.name}-${index}`,
         }));
 
         setMachines(machinesWithIds);
@@ -52,23 +52,9 @@ export default function MachinesPage() {
   }, []);
 
   const columns: GridColDef[] = [
-    { field: 'node', headerName: 'Node', flex: 1 },
+    { field: 'name', headerName: 'Servidores', flex: 1 },
     { field: 'address', headerName: 'IP', flex: 1 },
     { field: 'datacenter', headerName: 'Datacenter', flex: 1 },
-    {
-      field: 'status',
-      headerName: 'Status',
-      flex: 1,
-      renderCell: (params) => {
-        const allPassing = params.row.checks?.every((check: Check) => check.status === 'passing');
-
-        return allPassing ? (
-          <CheckCircleIcon sx={{ color: 'green' }} />
-        ) : (
-          <WarningIcon sx={{ color: 'orange' }} />
-        );
-      },
-    },
   ];
 
   return (
