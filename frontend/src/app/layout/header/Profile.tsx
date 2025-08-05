@@ -13,6 +13,14 @@ import {
 
 import { IconListCheck, IconMail, IconUser } from "@tabler/icons-react";
 
+const menuItemStyles = {
+  color: 'white',
+  backgroundColor: '#232f3e',
+  '&:hover': {
+    backgroundColor: '#1a2533',
+  },  
+};
+
 const Profile = () => {
   const [anchorEl2, setAnchorEl2] = useState(null);
   const handleClick2 = (event: any) => {
@@ -59,25 +67,27 @@ const Profile = () => {
         transformOrigin={{ horizontal: "right", vertical: "top" }}
         sx={{
           "& .MuiMenu-paper": {
+            backgroundColor: '#232f3e',
+            color: 'white',
             width: "200px",
           },
         }}
       >
-        <MenuItem>
+        <MenuItem sx={menuItemStyles}>
           <ListItemIcon>
-            <IconUser width={20} />
+            <IconUser color="#fff" width={20} />
           </ListItemIcon>
           <ListItemText>My Profile</ListItemText>
         </MenuItem>
-        <MenuItem>
+        <MenuItem sx={menuItemStyles}>
           <ListItemIcon>
-            <IconMail width={20} />
+            <IconMail color="#fff" width={20} />
           </ListItemIcon>
           <ListItemText>My Account</ListItemText>
         </MenuItem>
-        <MenuItem>
+        <MenuItem sx={menuItemStyles}>
           <ListItemIcon>
-            <IconListCheck width={20} />
+            <IconListCheck color="#fff" width={20} />
           </ListItemIcon>
           <ListItemText>My Tasks</ListItemText>
         </MenuItem>
@@ -88,6 +98,10 @@ const Profile = () => {
             color="primary"
             component={Link}
             fullWidth
+            sx={{
+              backgroundColor: '#232f3e',
+              color: 'white',
+            }}
           >
             Logout
           </Button>
