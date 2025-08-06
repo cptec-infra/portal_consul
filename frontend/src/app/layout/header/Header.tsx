@@ -12,7 +12,7 @@ interface ItemType {
 }
 
 const Header = ({ toggleMobileSidebar }: ItemType) => {
-  const links = Menuitems.filter((item) => item.href);
+  const links = Menuitems?.filter((item) => item?.href);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
 
@@ -56,7 +56,7 @@ const Header = ({ toggleMobileSidebar }: ItemType) => {
             sx={{ color: 'white' }}
             size="small"
           >
-            <AppsIcon size="small" />
+            <AppsIcon />
           </IconButton>
 
           <Menu
@@ -80,7 +80,7 @@ const Header = ({ toggleMobileSidebar }: ItemType) => {
                 key={index}
                 onClick={handleClose}
                 component={Link}
-                href={item.href}
+                href={item.href ?? '#'}
                 sx={{
                   color: 'white',
                   '&:hover': {

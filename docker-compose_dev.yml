@@ -13,36 +13,24 @@ services:
       - .env
     networks:
       - portal_net
-    deploy:
-      resources:
-        limits:
-          cpus: '0.50'
-          memory: 512M
-        reservations:
-          cpus: '0.25'
-          memory: 256M
 
   frontend:
     build:
       context: ./frontend
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile_dev
     container_name: portal_frontend
     ports:
       - "3001:3000"
-    command: npm start
-    environment:
-      - NODE_OPTIONS=--enable-source-maps
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    command: npm run dev
     env_file:
       - .env
     networks:
       - portal_net
     depends_on:
       - django
-    deploy:
-      resources:
-        limits:
-          cpus: '0.70'
-          memory: 512M
 
   celery:
     build:
@@ -59,12 +47,7 @@ services:
       - django
       - redis
     networks:
-      - portal_net
-    deploy:
-      resources:
-        limits:
-          cpus: '0.50'
-          memory: 768M
+      - portal_net      
 
   mongodb:
     image: mongo:7.0
@@ -83,12 +66,7 @@ services:
     entrypoint: ["/entrypoint.sh"]
     networks:
       - portal_net
-    deploy:
-      resources:
-        limits:
-          cpus: '0.70'
-          memory: 768M
-
+      
   redis:
     image: redis:7-alpine
     container_name: portal_redis
@@ -96,11 +74,6 @@ services:
       - "6379:6379"
     networks:
       - portal_net
-    deploy:
-      resources:
-        limits:
-          cpus: '0.30'
-          memory: 128M
 
 volumes:
   static_volume:

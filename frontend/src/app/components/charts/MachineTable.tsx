@@ -24,7 +24,8 @@ export default function MachineTable() {
         autoHeight
         rows={rows}
         columns={columns}
-        pageSize={5}
+        initialState={{ pagination: { paginationModel: { pageSize: 5, page: 0 } }}}
+        pageSizeOptions={[5, 10, 25]}
         disableRowSelectionOnClick
       />
     </>
