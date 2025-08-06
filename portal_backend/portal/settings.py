@@ -64,6 +64,7 @@ INSTALLED_APPS = [
     'django_celery_beat',
     'django_celery_results',
     'consulviewer',
+    'machines',
     'corsheaders',
 ]
 
@@ -97,6 +98,12 @@ TEMPLATES = [
         },
     },
 ]
+
+REST_FRAMEWORK = {
+    'DEFAULT_RENDERER_CLASSES': (
+        'rest_framework.renderers.JSONRenderer',
+    )
+}
 
 WSGI_APPLICATION = 'portal.wsgi.application'
 

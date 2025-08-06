@@ -8,7 +8,6 @@ from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import letter
 import datetime
 
-# Dados simulados
 SERVIDORES_DATA = [
     {"id": 1, "nome": "vm-database-01", "ip": "172.27.1.10", "sistema_operacional": "Ubuntu 22.04", "status": "ativo", "descricao": "Servidor de banco de dados PostgreSQL rodando em VM dedicada"},
     {"id": 2, "nome": "vm-api-01", "ip": "172.27.1.11", "sistema_operacional": "Debian 11", "status": "ativo", "descricao": "Servidor de API principal com Node.js e PM2"},
@@ -17,19 +16,15 @@ SERVIDORES_DATA = [
     {"id": 5, "nome": "vm-backup-01", "ip": "172.27.1.30", "sistema_operacional": "Rocky Linux 9", "status": "ativo", "descricao": "Servidor responsável por backup automático diário"},
 ]
 
-# API: Lista de nós do Consul
 def home(request):
     nodes = get_nodes()
     return JsonResponse({'nodes': nodes})
 
 
-# API: Lista de serviços agrupados por nó
 def servicos(request):
     services = get_services()
-    # servicos_agrupados = dict(group_by_node(services))
     return JsonResponse(services, safe=False)
 
-# API: Lista de servidores com filtros opcionais
 def servers_list(request):
     servidores = SERVIDORES_DATA
 
@@ -49,7 +44,6 @@ def servers_list(request):
     return JsonResponse(servidores, safe=False)
 
 
-# API: Detalhes de um servidor por ID
 def servers_details(request):
     servidor_id = request.GET.get("id")
     if not servidor_id:
@@ -66,11 +60,9 @@ def servers_details(request):
     return JsonResponse(servidor)
 
 
-# API: Exporta servidores em Excel (aceita filtros via GET)
 def export_excel(request):
     servidores = SERVIDORES_DATA
 
-    # Reutiliza filtros
     search = request.GET.get('search', '').lower()
     status_filter = request.GET.get('status', '')
     sistema_filter = request.GET.get('sistema', '')
@@ -97,11 +89,9 @@ def export_excel(request):
     return response
 
 
-# API: Exporta servidores em PDF (aceita filtros via GET)
 def export_pdf(request):
     servidores = SERVIDORES_DATA
 
-    # Reutiliza filtros
     search = request.GET.get('search', '').lower()
     status_filter = request.GET.get('status', '')
     sistema_filter = request.GET.get('sistema', '')
@@ -138,7 +128,6 @@ def export_pdf(request):
     return response
 
 
-# MongoDB histórico (pode ser usado em outros pontos depois)
 def history_event(event, level="INFO"):
     history = {
         "event": event,

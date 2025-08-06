@@ -1,6 +1,6 @@
 'use client';
 
-import { fetchMachinesDetails } from '@/app/api/api';
+import { fetchMachineHistory } from '@/app/api/api';
 import { Tabs, Tab, Box, Typography, Paper, Divider, CircularProgress } from '@mui/material';
 import { useEffect, useState } from 'react';
 
@@ -23,15 +23,18 @@ export default function MachineDetails({ node }: Props) {
   const [tab, setTab] = useState(0);
   const [machine, setMachine] = useState<Machine | null>(null);
   const [loading, setLoading] = useState(true);
+  const [history, setHistory] = useState<any[]>([]);
 
   useEffect(() => {
     async function loadDetails() {
       try {
-        const allMachines = await fetchMachinesDetails();
-        const found = allMachines.find((m: Machine) => m.node === node);
-        setMachine(found || null);
+        console.log('node: ', node)
+        console.log('1')
+        const historyData = await fetchMachineHistory(node);
+        console.log('2')
+        setHistory(historyData);
       } catch (error) {
-        console.error('Erro ao carregar dados da máquina:', error);
+        console.log('Erro ao carregar dados da máquina:', error);
       } finally {
         setLoading(false);
       }
@@ -83,6 +86,7 @@ export default function MachineDetails({ node }: Props) {
         <Tab label="Detalhes" />
         <Tab label="Rede" />
         <Tab label="Segurança" />
+        <Tab label="Histórico" />
       </Tabs>
 
       <Divider sx={{ mb: 2 }} />
@@ -122,6 +126,36 @@ export default function MachineDetails({ node }: Props) {
           </Typography>
         </Box>
       )}
+      {tab === 3 && (
+        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+          {history.length === 0 ? (
+            <Typography variant="body2" color="text.secondary">
+              Nenhum histórico disponível.
+            </Typography>
+          ) : (
+            history.map((entry, index) => (
+              <Paper key={index} elevation={1} sx={{ p: 2 }}>
+                <Typography variant="caption" color="text.secondary">
+                  {new Date(entry.timestamp).toLocaleString()}
+                </Typography>
+                <Typography variant="body2">
+                  <strong>Ação:</strong> {entry.action || 'Alteração'}
+                </Typography>
+                <Typography variant="body2">
+                  <strong>Campo alterado:</strong> {entry.field || '-'}
+                </Typography>
+                <Typography variant="body2">
+                  <strong>Valor anterior:</strong> {entry.old_value || '-'}
+                </Typography>
+                <Typography variant="body2">
+                  <strong>Novo valor:</strong> {entry.new_value || '-'}
+                </Typography>
+              </Paper>
+            ))
+          )}
+        </Box>
+      )}
+
     </Paper>
   );
 }
