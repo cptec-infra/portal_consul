@@ -51,7 +51,6 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
-
 # Application definition
 
 INSTALLED_APPS = [
@@ -161,10 +160,13 @@ STATIC_URL = '/app/static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
-CORS_ALLOWED_ORIGINS = [
-    "http://localhost:3000",
+CORS_ALLOWED_ORIGINS = [    
     "http://localhost:3001",
+    "http://localhost:80",
     "http://portal_frontend:3001",
+    "http://portal_frontend:80",
+    "http://150.163.190.23:3001",
+    "http://150.163.190.23:80",
     "http://150.163.212.76:3001",
-    "http://127.0.0.1:9000",
+    "http://150.163.212.76:80",
 ]

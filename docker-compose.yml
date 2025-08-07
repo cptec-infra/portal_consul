@@ -28,8 +28,7 @@ services:
       dockerfile: Dockerfile
     container_name: portal_frontend
     ports:
-      - "3001:3000"
-    command: npm start
+      - "3001:80"
     environment:
       - NODE_OPTIONS=--enable-source-maps
     env_file:

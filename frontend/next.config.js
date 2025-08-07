@@ -4,6 +4,8 @@ const nextConfig = {
   images: { unoptimized: true },
   eslint: { ignoreDuringBuilds: true },
   productionBrowserSourceMaps: true,
+  output: 'export',
+  trailingSlash: true,
 };
 
 module.exports = nextConfig;

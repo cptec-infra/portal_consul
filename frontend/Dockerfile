@@ -1,4 +1,5 @@
-FROM node:18-alpine AS builder
+# Etapa de build do Next.js
+FROM node:18-alpine as builder
 
 WORKDIR /app
 
@@ -8,19 +9,14 @@ RUN npm ci
 COPY . .
 RUN npm run build
 
-# ---- Production image ----
-FROM node:18-alpine
+# Etapa final: servir com NGINX
+FROM nginx:alpine
 
-WORKDIR /app
+# Remove config padrão
+RUN rm /etc/nginx/conf.d/default.conf
 
-COPY --from=builder /app/package.json ./package.json
-COPY --from=builder /app/.next ./.next
-COPY --from=builder /app/public ./public
-COPY --from=builder /app/next.config.js ./next.config.js
-COPY --from=builder /app/next-env.d.ts ./next-env.d.ts
-COPY --from=builder /app/tsconfig.json ./tsconfig.json
+# Copia os arquivos exportados
+COPY --from=builder /app/out /usr/share/nginx/html
 
-RUN npm install --omit=dev
-
-EXPOSE 3000
-CMD ["npm", "start"]
+# Copia nova configuração do nginx
+COPY nginx.conf /etc/nginx/conf.d/default.conf

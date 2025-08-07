@@ -2,7 +2,7 @@ import axios, { AxiosInstance, AxiosResponse, InternalAxiosRequestConfig } from 
 import { Machine } from '../utilities/machines/types';
 
 const api: AxiosInstance = axios.create({
-  baseURL: 'http://portal_backend:8000/api',
+  baseURL: process.env.NEXT_PUBLIC_API_BASE_URL,
   headers: {
     'Content-Type': 'application/json',
   },
@@ -21,26 +21,9 @@ api.interceptors.request.use(
 );
 
 
-// export const fetchMachines = async (): Promise<Machine[]> => {
-//   const response = await api.get<Machine[]>('/nodes');
-//   console.log('API /nodes response.data:', response.data);
-//   return response.data;
-// };
-
-
 export const fetchMachines = async (): Promise<Machine[]> => {
-  try {
-    const response = await api.get<Machine[]>('/nodes');
-    if (Array.isArray(response.data)) {
-      return response.data;
-    } else {
-      console.warn('API /nodes returned data that is not an array:', response.data);
-      return [];
-    }
-  } catch (error) {
-    console.error('Error fetching machines:', error);
-    return [];
-  }
+  const response = await api.get<{nodes: Machine[]}>('/nodes');
+  return response.data.nodes;
 };
 
 export const fetchMachinesDetails = async (): Promise<Machine[]> => {
