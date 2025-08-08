@@ -48,9 +48,7 @@ SECRET_KEY = 'django-insecure-+xf(pck(k#rml0v43t(-_$bwnd4s07h$iz2)3ig=8@^v5a_z#o
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
-
-ALLOWED_HOSTS = ['*']
-
+ALLOWED_HOSTS = os.getenv("DJANGO_ALLOWED_HOSTS", "localhost").split(",")
 # Application definition
 
 INSTALLED_APPS = [
@@ -143,6 +141,7 @@ USE_L10N = True
 
 USE_TZ = True
 
+DEBUG = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
@@ -160,13 +159,6 @@ STATIC_URL = '/app/static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
-CORS_ALLOWED_ORIGINS = [    
-    "http://localhost:3001",
-    "http://localhost:80",
-    "http://portal_frontend:3001",
-    "http://portal_frontend:80",
-    "http://150.163.190.23:3001",
-    "http://150.163.190.23:80",
-    "http://150.163.212.76:3001",
-    "http://150.163.212.76:80",
+CORS_ALLOWED_ORIGINS = [
+    origin.strip() for origin in os.getenv("CORS_ALLOWED_ORIGINS", "").split(",") if origin.strip()
 ]
