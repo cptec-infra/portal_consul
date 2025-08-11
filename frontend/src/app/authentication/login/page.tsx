@@ -3,7 +3,7 @@ import Link from "next/link";
 import { Grid, Box, Card, Stack, Typography } from "@mui/material";
 // components
 import PageContainer from "@/app/components/container/PageContainer";
-import Logo from "@/app/layout/shared/logo/Logo";
+// import Logo from "@/app/layout/shared/logo/Logo";
 import AuthLogin from "../auth/AuthLogin";
 
 const Login2 = () => {
@@ -44,9 +44,9 @@ const Login2 = () => {
               elevation={9}
               sx={{ p: 4, zIndex: 1, width: "100%", maxWidth: "500px" }}
             >
-              <Box display="flex" alignItems="center" justifyContent="center">
+              {/* <Box display="flex" alignItems="center" justifyContent="center">
                 <Logo />
-              </Box>
+              </Box> */}
               <AuthLogin
                 subtext={
                   <Typography

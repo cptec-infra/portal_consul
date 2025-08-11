@@ -7,4 +7,7 @@ export interface Machine {
   ipv4: string;
   dnsName: string;
   id: string;
+  node: string;
+  port: string;
+  datacenter: string;
 }

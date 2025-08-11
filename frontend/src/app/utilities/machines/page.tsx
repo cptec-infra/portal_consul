@@ -7,9 +7,8 @@ import { Panel, PanelGroup, PanelResizeHandle } from 'react-resizable-panels';
 import { fetchMachines } from '@/app/api/api';
 import MachineDetails from './MachineDetails';
 
-
 interface Machine {
-  name?: string;
+  name: string;
   address?: string;
   datacenter?: string;
   id?: string;
@@ -24,7 +23,7 @@ export default function MachinesPage() {
     const getMachines = async () => {
       try {
         const data = await fetchMachines();
-        setMachines(data?.nodes);
+        setMachines(data);
       } catch (error) {
         console.error('Erro ao buscar máquinas:', error);
       } finally {
@@ -105,7 +104,7 @@ export default function MachinesPage() {
               }}
             >
               <MachineDetails
-                node={selectedMachine.name}
+                node={selectedMachine.name || ''}
                 onClose={() => setSelectedMachine(null)}
               />
             </Paper>

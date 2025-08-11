@@ -4,19 +4,9 @@ import { fetchMachineHistory } from '@/app/api/api';
 import { Tabs, Tab, Box, Typography, Paper, Divider, CircularProgress } from '@mui/material';
 import { useEffect, useState } from 'react';
 
-
-interface Machine {
-  name: string;
-  id: string;
-  address: string;
-  port: number;
-  datacenter: string;
-  node: string;
-  status: string;
-}
-
 interface Props {
   node: string;
+  onClose: () => void;
 }
 
 export default function MachineDetails({ node }: Props) {
@@ -28,6 +18,9 @@ export default function MachineDetails({ node }: Props) {
   useEffect(() => {
     async function loadDetails() {
       try {
+        const allMachines = await fetchMachinesDetails();
+        const found = allMachines.find((m) => m.node === node);
+        setMachine(found || null);
         console.log('node: ', node)
         console.log('1')
         const historyData = await fetchMachineHistory(node);
@@ -42,14 +35,19 @@ export default function MachineDetails({ node }: Props) {
 
     loadDetails();
   }, [node]);
-
-  const DetailItem = ({ label, value }: { label: string; value: string | number }) => (
+  
+  interface DetailItemProps {
+    label: string;
+    value: string | number;
+  }
+  
+  const DetailItem = ({ label, value }: DetailItemProps) => (
     <Box>
       <Typography variant="caption" color="text.secondary">
         {label}
       </Typography>
       <Typography variant="body2" fontWeight="bold">
-        {value || '-'}
+        {value === 0 ? 0 : value || '-'}
       </Typography>
     </Box>
   );
