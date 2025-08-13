@@ -13,6 +13,14 @@ services:
       - .env
     networks:
       - portal_net
+    deploy:
+      resources:
+        limits:
+          cpus: '0.50'
+          memory: 512M
+        reservations:
+          cpus: '0.25'
+          memory: 256M
 
   frontend:
     build:
@@ -31,6 +39,11 @@ services:
       - portal_net
     depends_on:
       - django
+    deploy:
+      resources:
+        limits:
+          cpus: '0.70'
+          memory: 512M
 
   celery:
     build:
@@ -47,7 +60,12 @@ services:
       - django
       - redis
     networks:
-      - portal_net      
+      - portal_net  
+    deploy:
+      resources:
+        limits:
+          cpus: '0.50'
+          memory: 768M    
 
   mongodb:
     image: mongo:7.0
@@ -66,6 +84,11 @@ services:
     entrypoint: ["/entrypoint.sh"]
     networks:
       - portal_net
+    deploy:
+      resources:
+        limits:
+          cpus: '0.70'
+          memory: 768M
       
   redis:
     image: redis:7-alpine
@@ -74,6 +97,11 @@ services:
       - "6379:6379"
     networks:
       - portal_net
+    deploy:
+      resources:
+        limits:
+          cpus: '0.30'
+          memory: 128M
 
 volumes:
   static_volume:
