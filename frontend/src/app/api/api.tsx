@@ -27,7 +27,7 @@ export const fetchMachines = async (): Promise<Machine[]> => {
 };
 
 export const fetchMachinesDetails = async (): Promise<Machine[]> => {
-  const response = await api.get<Machine[]>('/servicos');
+  const response = await api.get<Machine[]>('/servicos/');
   return response.data;
 };
 
