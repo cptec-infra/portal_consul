@@ -24,17 +24,17 @@ services:
     ports:
       - "3001:3000"
     volumes:
-      - ./frontend:/app
+      - ./frontend:/app:cached 
       - node_modules_dev:/app/node_modules
-    command: npm run dev
+    # command: node --max-old-space-size=3072 node_modules/.bin/next dev
     env_file:
       - .env
     networks:
       - portal_net
     depends_on:
       - django
-    mem_limit: 2g
-    cpus: 2
+    # cpus: "2.00"
+    # mem_limit: 2g
 
   celery:
     build:
