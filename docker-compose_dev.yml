@@ -13,14 +13,8 @@ services:
       - .env
     networks:
       - portal_net
-    deploy:
-      resources:
-        limits:
-          cpus: '0.50'
-          memory: 512M
-        reservations:
-          cpus: '0.25'
-          memory: 256M
+    mem_limit: 512m
+    cpus: 0.5
 
   frontend:
     build:
@@ -30,20 +24,17 @@ services:
     ports:
       - "3001:3000"
     volumes:
-      - ./frontend:/app
+      - ./frontend:/app:cached 
       - node_modules_dev:/app/node_modules
-    command: npm run dev
+    # command: node --max-old-space-size=3072 node_modules/.bin/next dev
     env_file:
       - .env
     networks:
       - portal_net
     depends_on:
       - django
-    deploy:
-      resources:
-        limits:
-          cpus: '0.70'
-          memory: 512M
+    # cpus: "2.00"
+    # mem_limit: 2g
 
   celery:
     build:
@@ -60,12 +51,9 @@ services:
       - django
       - redis
     networks:
-      - portal_net  
-    deploy:
-      resources:
-        limits:
-          cpus: '0.50'
-          memory: 768M    
+      - portal_net
+    mem_limit: 768m
+    cpus: 0.5
 
   mongodb:
     image: mongo:7.0
@@ -84,12 +72,9 @@ services:
     entrypoint: ["/entrypoint.sh"]
     networks:
       - portal_net
-    deploy:
-      resources:
-        limits:
-          cpus: '0.70'
-          memory: 768M
-      
+    mem_limit: 768m
+    cpus: 0.7
+
   redis:
     image: redis:7-alpine
     container_name: portal_redis
@@ -97,11 +82,8 @@ services:
       - "6379:6379"
     networks:
       - portal_net
-    deploy:
-      resources:
-        limits:
-          cpus: '0.30'
-          memory: 128M
+    mem_limit: 128m
+    cpus: 0.3
 
 volumes:
   static_volume:

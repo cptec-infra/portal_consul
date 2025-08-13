@@ -1,11 +1,9 @@
 import {
-  IconAperture,
   IconCopy,
   IconLayoutDashboard,
-  IconLogin,
-  IconMoodHappy,
-  IconTypography,
-  IconUserPlus,
+  IconServer,
+  IconSettings,
+  IconActivity
 } from "@tabler/icons-react";
 
 import { uniqueId } from "lodash";
@@ -28,14 +26,14 @@ const Menuitems = [
   {
     id: uniqueId(),
     title: "Servidores",
-    icon: IconTypography,
+    icon: IconServer,
     href: "/utilities/machines",
   },
   {
     id: uniqueId(),
     title: "Serviços",
-    icon: IconCopy,
-    href: "/utilities/shadow",
+    icon: IconActivity,
+    href: "/utilities/services",
   },
 ];
 
