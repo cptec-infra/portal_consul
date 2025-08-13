@@ -1,12 +1,59 @@
 'use client';
 
 import { fetchMachineHistory } from '@/app/api/api';
-import { Tabs, Tab, Box, Typography, Paper, Divider, CircularProgress } from '@mui/material';
+import {
+  Tabs,
+  Tab,
+  Box,
+  Typography,
+  Paper,
+  Divider,
+  CircularProgress,
+  Accordion,
+  AccordionSummary,
+  AccordionDetails,
+  Chip,
+  Card,
+  CardContent,
+  IconButton,
+  Tooltip,
+  Grid,
+  Stack
+} from '@mui/material';
+import {
+  ExpandMore as ExpandMoreIcon,
+  Computer as ComputerIcon,
+  Storage as DatacenterIcon,
+  Apps as ServicesIcon,
+  NetworkCheck as NetworkIcon,
+  History as HistoryIcon,
+  Edit as EditIcon,
+  Info as InfoIcon,
+  Visibility as VisibilityIcon,
+  VisibilityOff as VisibilityOffIcon,
+  CheckCircle as CheckCircleIcon,
+  Security as SecurityIcon,
+  Speed as SpeedIcon,
+  Tag as TagIcon,
+  Timeline as TimelineIcon,
+  Memory as MemoryIcon,
+  Build as BuildIcon,
+  Fingerprint as FingerprintIcon
+} from '@mui/icons-material';
 import { useEffect, useState } from 'react';
 
 interface Props {
   node: string;
-  onClose: () => void;
+  onClose?: () => void;
+}
+
+interface Machine {
+  node: string;
+  node_address: string;
+  datacenter: string;
+  services: any[];
+  _id?: string;
+  hash?: string;
 }
 
 export default function MachineDetails({ node }: Props) {
@@ -14,20 +61,28 @@ export default function MachineDetails({ node }: Props) {
   const [machine, setMachine] = useState<Machine | null>(null);
   const [loading, setLoading] = useState(true);
   const [history, setHistory] = useState<any[]>([]);
+  const [showId, setShowId] = useState(false);
+  const [showIp, setShowIp] = useState(false);
 
   useEffect(() => {
     async function loadDetails() {
       try {
-        const allMachines = await fetchMachinesDetails();
-        const found = allMachines.find((m) => m.node === node);
-        setMachine(found || null);
-        console.log('node: ', node)
-        console.log('1')
         const historyData = await fetchMachineHistory(node);
-        console.log('2')
+        if (historyData.length > 0) {
+          const latest = historyData[0];
+          setMachine({
+            node: latest.node,
+            node_address: latest.node_address,
+            datacenter: latest.datacenter,
+            services: latest.services,
+            _id: latest._id,
+            hash: latest.hash
+          });
+        }
+
         setHistory(historyData);
       } catch (error) {
-        console.log('Erro ao carregar dados da máquina:', error);
+        console.error('Erro ao carregar dados da máquina:', error);
       } finally {
         setLoading(false);
       }
@@ -35,29 +90,205 @@ export default function MachineDetails({ node }: Props) {
 
     loadDetails();
   }, [node]);
-  
-  interface DetailItemProps {
+
+  const DetailItem = ({ label, value, icon, fullWidth = false, action }: {
     label: string;
-    value: string | number;
-  }
-  
-  const DetailItem = ({ label, value }: DetailItemProps) => (
-    <Box>
-      <Typography variant="caption" color="text.secondary">
-        {label}
+    value: string | number | React.ReactNode;
+    icon?: React.ReactNode;
+    fullWidth?: boolean;
+    action?: React.ReactNode;
+  }) => (
+    <Card sx={{
+      p: 2.5,
+      background: 'linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%)',
+      border: '1px solid #e2e8f0',
+      transition: 'all 0.3s ease-in-out',
+      height: '100%',
+      ...(fullWidth && { gridColumn: '1 / -1' }),
+      '&:hover': {
+        transform: 'translateY(-3px)',
+        boxShadow: '0 8px 25px rgba(0,0,0,0.12)',
+        background: 'linear-gradient(135deg, #ffffff 0%, #f8fafc 100%)',
+      }
+    }}>
+      <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 1.5 }}>
+        <Box sx={{
+          p: 1.2,
+          borderRadius: 2,
+          background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+          color: 'white',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center'
+        }}>
+          {icon}
+        </Box>
+        <Typography variant="body1" color="text.secondary" fontWeight="600" sx={{ flex: 1, fontSize: '0.9rem' }}>
+          {label}
+        </Typography>
+        {action}
+      </Box>
+      <Typography variant="h6" fontWeight="700" color="text.primary" sx={{
+        wordBreak: 'break-all',
+        lineHeight: 1.3,
+        fontSize: '1.1rem'
+      }}>
+        {value === 0 ? '0' : value || '-'}
       </Typography>
-      <Typography variant="body2" fontWeight="bold">
-        {value === 0 ? 0 : value || '-'}
-      </Typography>
-    </Box>
+    </Card>
   );
+
+  const ServiceCard = ({ service, index }: { service: any, index: number }) => {
+    const getStatusColor = (status: string) => {
+      switch (status) {
+        case 'passing': return 'success';
+        case 'warning': return 'warning';
+        case 'critical': return 'error';
+        default: return 'default';
+      }
+    };
+
+    return (
+      <Card sx={{
+        p: 2.5,
+        background: 'linear-gradient(135deg, #ffffff 0%, #f8fafc 100%)',
+        border: '1px solid #e2e8f0',
+        transition: 'all 0.3s ease-in-out',
+        '&:hover': {
+          transform: 'translateY(-2px)',
+          boxShadow: '0 8px 20px rgba(0,0,0,0.1)',
+          borderColor: '#667eea'
+        }
+      }}>
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
+          <Box sx={{
+            width: 42,
+            height: 42,
+            borderRadius: 2,
+            background: `linear-gradient(135deg, ${getStatusColor(service.status) === 'success' ? '#10b981, #059669' : '#f59e0b, #d97706'})`,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            color: 'white'
+          }}>
+            <ServicesIcon />
+          </Box>
+          <Box sx={{ flex: 1 }}>
+            <Typography variant="h6" fontWeight="700" color="text.primary" sx={{ fontSize: '1.1rem' }}>
+              {service.name}
+            </Typography>
+            <Chip
+              icon={<CheckCircleIcon />}
+              label={service.status}
+              color={getStatusColor(service.status) as any}
+              size="small"
+              variant="filled"
+            />
+          </Box>
+        </Box>
+
+        <Divider sx={{ my: 2 }} />
+
+        <Grid container spacing={2}>
+          <Grid sx={{ xs: 4 }}>
+            <Typography variant="caption" color="text.secondary" fontWeight="600" sx={{ fontSize: '0.75rem' }}>
+              PORTA
+            </Typography>
+            <Typography variant="body1" fontWeight="600" sx={{ fontSize: '0.95rem' }}>
+              :{service.port}
+            </Typography>
+            <Typography variant="caption" color="text.secondary" fontWeight="600" sx={{ fontSize: '0.75rem' }}>
+              KIND
+            </Typography>
+            <Typography variant="body1" fontWeight="600" sx={{ fontSize: '0.95rem' }}>
+              {service.kind}
+            </Typography>
+          </Grid>
+          <Grid sx={{ xs: 4 }}>
+            <Typography variant="caption" color="text.secondary" fontWeight="600" sx={{ fontSize: '0.75rem' }}>
+              TAGS
+            </Typography>
+            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.5, mt: 0.5 }}>
+              {service.tags && service.tags.length > 0 ? (
+                service.tags.map((tag: string, tagIndex: number) => (
+                  <Chip
+                    key={tagIndex}
+                    icon={<TagIcon />}
+                    label={tag}
+                    size="small"
+                    variant="outlined"
+                    color="primary"
+                    sx={{ alignSelf: 'flex-start' }}
+                  />
+                ))
+              ) : (
+                <Typography variant="body2" color="text.secondary" sx={{ fontSize: '0.85rem' }}>
+                  Nenhuma tag
+                </Typography>
+              )}
+            </Box>
+          </Grid>
+          <Grid sx={{ xs: 4 }}>
+            <Typography variant="caption" color="text.secondary" fontWeight="600" sx={{ fontSize: '0.75rem' }}>
+              HEALTH CHECK
+            </Typography>
+            {service.checks && service.checks.length > 0 ? (
+              <Stack spacing={1} sx={{ mt: 1 }}>
+                {service.checks.map((check: any, checkIndex: number) => (
+                  <Box key={checkIndex} sx={{
+                    p: 1.5,
+                    backgroundColor: check.status === 'passing' ? '#f0fdf4' : '#fef3c7',
+                    borderRadius: 1,
+                    border: `1px solid ${check.status === 'passing' ? '#bbf7d0' : '#fde68a'}`
+                  }}>
+                    <Typography variant="body2" fontWeight="600" sx={{ mb: 0.5, fontSize: '0.85rem' }}>
+                      {check.name}
+                    </Typography>
+                    <Chip
+                      label={check.status}
+                      size="small"
+                      color={getStatusColor(check.status) as any}
+                      variant="filled"
+                    />
+                  </Box>
+                ))}
+              </Stack>
+            ) : (
+              <Typography variant="body2" color="text.secondary" sx={{ fontSize: '0.85rem', mt: 0.5 }}>
+                Nenhum check
+              </Typography>
+            )}
+          </Grid>
+          <Grid sx={{ xs: 12 }}>
+
+          </Grid>
+        </Grid>
+      </Card>
+    );
+  };
+
+  const formatDate = (timestamp: string) => {
+    const date = new Date(timestamp);
+    return `${String(date.getDate()).padStart(2, '0')}/${String(
+      date.getMonth() + 1
+    ).padStart(2, '0')}/${date.getFullYear()} ${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}:${date.getSeconds().toString().padStart(2, '0')}`;
+  };
 
   if (loading) {
     return (
-      <Paper elevation={2} sx={{ mt: 4, p: 3, textAlign: 'center' }}>
-        <CircularProgress />
-        <Typography variant="body2" sx={{ mt: 2 }}>
-          Carregando detalhes...
+      <Paper sx={{
+        mt: 4,
+        p: 4,
+        textAlign: 'center',
+        background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+        color: 'white'
+      }}>
+        <CircularProgress sx={{ color: 'white', mb: 2 }} />
+        <Typography variant="h6" sx={{ mb: 1, fontSize: '1.1rem' }}>
+          Carregando detalhes da máquina
+        </Typography>
+        <Typography variant="body2" sx={{ opacity: 0.9, fontSize: '0.9rem' }}>
+          Aguarde enquanto buscamos as informações...
         </Typography>
       </Paper>
     );
@@ -65,95 +296,295 @@ export default function MachineDetails({ node }: Props) {
 
   if (!machine) {
     return (
-      <Paper elevation={2} sx={{ mt: 4, p: 3 }}>
-        <Typography color="error">Máquina não encontrada.</Typography>
+      <Paper sx={{
+        mt: 4,
+        p: 4,
+        textAlign: 'center',
+        background: 'linear-gradient(135deg, #ff6b6b 0%, #ee5a52 100%)',
+        color: 'white'
+      }}>
+        <InfoIcon sx={{ fontSize: 48, mb: 2, opacity: 0.9 }} />
+        <Typography variant="h6" sx={{ fontSize: '1.1rem' }}>Máquina não encontrada</Typography>
+        <Typography variant="body2" sx={{ mt: 1, opacity: 0.9, fontSize: '0.9rem' }}>
+          Não foi possível localizar as informações desta máquina.
+        </Typography>
       </Paper>
     );
   }
 
   return (
-    <Paper elevation={2} sx={{ mt: 4, p: 3 }}>
-      <Tabs
-        value={tab}
-        onChange={(_, val) => setTab(val)}
-        aria-label="Machine details tabs"
-        textColor="primary"
-        indicatorColor="primary"
-        sx={{ mb: 2 }}
-      >
-        <Tab label="Detalhes" />
-        <Tab label="Rede" />
-        <Tab label="Segurança" />
-        <Tab label="Histórico" />
-      </Tabs>
-
-      <Divider sx={{ mb: 2 }} />
-
-      {tab === 0 && (
-        <Box
-          sx={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
-            gap: 3,
-          }}
+    <Paper sx={{ mt: 4, p: 4 }}>
+      <Box>
+        <Tabs
+          value={tab}
+          onChange={(_, val) => setTab(val)}
+          aria-label="Machine details tabs"
+          textColor="primary"
+          indicatorColor="primary"
+          sx={{ mb: 3 }}
         >
-          <DetailItem label="Nome" value={machine.name} />
-          <DetailItem label="Datacenter" value={machine.datacenter} />
-          <DetailItem label="Status" value={machine.status} />
-        </Box>
-      )}
+          <Tab label="Detalhes da Máquina" />
+          <Tab label="Histórico de Alterações" />
+        </Tabs>
 
-      {tab === 1 && (
-        <Box
-          sx={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
-            gap: 3,
-          }}
-        >
-          <DetailItem label="Endereço IP" value={machine.address} />
-          <DetailItem label="Porta" value={machine.port} />
-          <DetailItem label="Node" value={machine.node} />
-        </Box>
-      )}
+        <Divider sx={{ mb: 3 }} />
 
-      {tab === 2 && (
-        <Box>
-          <Typography variant="body2" color="text.secondary">
-            Regras de segurança em breve...
-          </Typography>
-        </Box>
-      )}
-      {tab === 3 && (
-        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-          {history.length === 0 ? (
-            <Typography variant="body2" color="text.secondary">
-              Nenhum histórico disponível.
+        {tab === 0 && (
+          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+            <Box>
+              <Typography variant="h6" fontWeight="800" color="text.primary" sx={{ mb: 3, display: 'flex', alignItems: 'center', gap: 2, fontSize: '1rem' }}>
+                <ComputerIcon color="primary" />
+                Informações Básicas
+              </Typography>
+              <Box sx={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
+                gap: 2.5,
+              }}>
+                <DetailItem
+                  label="Nome do Node"
+                  value={machine.node}
+                  icon={<ComputerIcon />}
+                />
+                <DetailItem
+                  label="Datacenter"
+                  value={machine.datacenter}
+                  icon={<DatacenterIcon />}
+                />
+                <DetailItem
+                  label="Endereço IP"
+                  value={showIp ? machine.node_address : '•••.•••.•••.•••'}
+                  icon={<NetworkIcon />}
+                  action={
+                    <Tooltip title={showIp ? "Ocultar IP" : "Mostrar IP"}>
+                      <IconButton
+                        size="small"
+                        onClick={() => setShowIp(!showIp)}
+                        sx={{
+                          background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                          color: 'white',
+                          '&:hover': {
+                            background: 'linear-gradient(135deg, #764ba2 0%, #667eea 100%)',
+                          }
+                        }}
+                      >
+                        {showIp ? <VisibilityOffIcon /> : <VisibilityIcon />}
+                      </IconButton>
+                    </Tooltip>
+                  }
+                />
+                <DetailItem
+                  label="ID da Máquina"
+                  value={showId ? machine._id || 'N/A' : '••••••••••••••••••••••••'}
+                  icon={<FingerprintIcon />}
+                  action={
+                    <Tooltip title={showId ? "Ocultar ID" : "Mostrar ID"}>
+                      <IconButton
+                        size="small"
+                        onClick={() => setShowId(!showId)}
+                        sx={{
+                          background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                          color: 'white',
+                          '&:hover': {
+                            background: 'linear-gradient(135deg, #764ba2 0%, #667eea 100%)',
+                          }
+                        }}
+                      >
+                        {showId ? <VisibilityOffIcon /> : <VisibilityIcon />}
+                      </IconButton>
+                    </Tooltip>
+                  }
+                />
+                <DetailItem
+                  label="Hash de Configuração"
+                  value={machine.hash ? `${machine.hash.substring(0, 16)}...` : 'N/A'}
+                  icon={<SecurityIcon />}
+                  fullWidth
+                />
+              </Box>
+            </Box>
+            <Box>
+              <Typography variant="h5" fontWeight="700" color="text.primary" sx={{ mb: 3, display: 'flex', alignItems: 'center', gap: 2, fontSize: '1rem' }}>
+                <ServicesIcon color="primary" />
+                Resumo dos Serviços
+              </Typography>
+              <Box sx={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
+                gap: 2.5,
+                mb: 4
+              }}>
+                <DetailItem
+                  label="Total de Serviços"
+                  value={`${machine.services.length} serviço${machine.services.length !== 1 ? 's' : ''}`}
+                  icon={<ServicesIcon />}
+                />
+                <DetailItem
+                  label="Serviços Ativos"
+                  value={machine.services.filter(s => s.status === 'passing').length}
+                  icon={<CheckCircleIcon />}
+                />
+                <DetailItem
+                  label="Portas em Uso"
+                  value={machine.services.map(s => s.port).join(', ')}
+                  icon={<NetworkIcon />}
+                />
+              </Box>
+            </Box>
+            <Box>
+              <Typography variant="h5" fontWeight="700" color="text.primary" sx={{ mb: 3, display: 'flex', alignItems: 'center', gap: 2, fontSize: '1rem' }}>
+                <BuildIcon color="primary" />
+                Serviços Detalhados
+              </Typography>
+              <Grid container spacing={2.5}>
+                {machine.services.map((service, index) => (
+                  <Grid sx={{ xs: 12, md: 6, lg: 4 }} key={index}>
+                    <ServiceCard service={service} index={index} />
+                  </Grid>
+                ))}
+              </Grid>
+            </Box>
+          </Box>
+        )}
+
+        {tab === 1 && (
+          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+            <Typography variant="h5" fontWeight="700" color="text.primary" sx={{ mb: 2, display: 'flex', alignItems: 'center', gap: 2, fontSize: '1.3rem' }}>
+              <TimelineIcon color="primary" />
+              Histórico de Alterações
             </Typography>
-          ) : (
-            history.map((entry, index) => (
-              <Paper key={index} elevation={1} sx={{ p: 2 }}>
-                <Typography variant="caption" color="text.secondary">
-                  {new Date(entry.timestamp).toLocaleString()}
+            {history.length === 0 ? (
+              <Card sx={{
+                p: 4,
+                textAlign: 'center',
+                background: 'linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%)',
+                border: '2px dashed #cbd5e1'
+              }}>
+                <HistoryIcon sx={{ fontSize: 48, color: 'text.secondary', mb: 2 }} />
+                <Typography variant="h6" color="text.secondary" sx={{ mb: 1, fontSize: '1.1rem' }}>
+                  Nenhum histórico disponível
                 </Typography>
-                <Typography variant="body2">
-                  <strong>Ação:</strong> {entry.action || 'Alteração'}
+                <Typography variant="body2" color="text.secondary" sx={{ fontSize: '0.9rem' }}>
+                  Ainda não há registros de alterações para esta máquina.
                 </Typography>
-                <Typography variant="body2">
-                  <strong>Campo alterado:</strong> {entry.field || '-'}
-                </Typography>
-                <Typography variant="body2">
-                  <strong>Valor anterior:</strong> {entry.old_value || '-'}
-                </Typography>
-                <Typography variant="body2">
-                  <strong>Novo valor:</strong> {entry.new_value || '-'}
-                </Typography>
-              </Paper>
-            ))
-          )}
-        </Box>
-      )}
+              </Card>
+            ) : (
+              history.map((entry, index) => (
+                <Accordion
+                  key={index}
+                  sx={{
+                    borderRadius: 2,
+                    overflow: 'hidden',
+                    border: '1px solid #e2e8f0',
+                    '&:before': { display: 'none' },
+                    boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
+                    '&.Mui-expanded': {
+                      boxShadow: '0 4px 16px rgba(0,0,0,0.15)'
+                    }
+                  }}
+                >
+                  <AccordionSummary
+                    expandIcon={<ExpandMoreIcon />}
+                    aria-controls={`panel${index}-content`}
+                    id={`panel${index}-header`}
+                    sx={{
+                      background: 'linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%)',
+                      minHeight: 64,
+                      '&:hover': {
+                        background: 'linear-gradient(135deg, #e2e8f0 0%, #cbd5e1 100%)',
+                      },
+                      '& .MuiAccordionSummary-content': {
+                        alignItems: 'center'
+                      }
+                    }}
+                  >
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, width: '100%' }}>
+                      <HistoryIcon color="primary" />
+                      <Box sx={{ flex: 1 }}>
+                        <Typography variant="body1" fontWeight="600" color="text.primary" sx={{ fontSize: '0.95rem' }}>
+                          {formatDate(entry.timestamp)}
+                        </Typography>
+                        <Typography variant="caption" color="text.secondary" sx={{ fontSize: '0.75rem' }}>
+                          Clique para ver detalhes da alteração
+                        </Typography>
+                      </Box>
+                      {entry.action && (
+                        <Chip
+                          icon={<EditIcon />}
+                          label={entry.action}
+                          color="primary"
+                          variant="filled"
+                          size="small"
+                          sx={{
+                            fontWeight: 600,
+                            '& .MuiChip-icon': { fontSize: 16 }
+                          }}
+                        />
+                      )}
+                    </Box>
+                  </AccordionSummary>
 
+                  <AccordionDetails sx={{
+                    backgroundColor: '#fafbfc',
+                    borderTop: '1px solid #e2e8f0'
+                  }}>
+                    <Box sx={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 3 }}>
+                      <Card sx={{ p: 2, border: '1px solid #e2e8f0' }}>
+                        <Typography variant="subtitle2" color="primary" sx={{ mb: 1, fontWeight: 600, fontSize: '0.9rem' }}>
+                          Informações da Máquina
+                        </Typography>
+                        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+                          <Typography variant="body2" sx={{ fontSize: '0.85rem' }}>
+                            <strong>Node:</strong> {entry.node}
+                          </Typography>
+                          <Typography variant="body2" sx={{ fontSize: '0.85rem' }}>
+                            <strong>Datacenter:</strong> {entry.datacenter}
+                          </Typography>
+                          <Typography variant="body2" sx={{ fontSize: '0.85rem' }}>
+                            <strong>Serviços:</strong> {entry.services.map((s: any) => s.name).join(', ')}
+                          </Typography>
+                        </Box>
+                      </Card>
+
+                      {entry.action && (
+                        <Card sx={{ p: 2, border: '1px solid #e2e8f0' }}>
+                          <Typography variant="subtitle2" color="secondary" sx={{ mb: 1, fontWeight: 600, fontSize: '0.9rem' }}>
+                            Detalhes da Alteração
+                          </Typography>
+                          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+                            <Typography variant="body2" sx={{ fontSize: '0.85rem' }}>
+                              <strong>Campo alterado:</strong> {entry.field || '-'}
+                            </Typography>
+                            <Typography variant="body2" sx={{ fontSize: '0.85rem' }}>
+                              <strong>Valor anterior:</strong>
+                              <Chip
+                                label={entry.old_value || '-'}
+                                size="small"
+                                variant="outlined"
+                                sx={{ ml: 1 }}
+                              />
+                            </Typography>
+                            <Typography variant="body2" sx={{ fontSize: '0.85rem' }}>
+                              <strong>Novo valor:</strong>
+                              <Chip
+                                label={entry.new_value || '-'}
+                                size="small"
+                                color="success"
+                                variant="outlined"
+                                sx={{ ml: 1 }}
+                              />
+                            </Typography>
+                          </Box>
+                        </Card>
+                      )}
+                    </Box>
+                  </AccordionDetails>
+                </Accordion>
+              ))
+            )}
+          </Box>
+        )}
+      </Box>
     </Paper>
   );
 }

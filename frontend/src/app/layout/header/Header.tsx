@@ -48,8 +48,6 @@ const Header = ({ toggleMobileSidebar }: ItemType) => {
   return (
     <AppBarStyled position="fixed">
       <ToolbarStyled>
-
-        {/* Lado esquerdo */}
         <Stack direction="row" alignItems="center" spacing={2}>
           <IconButton
             onClick={handleMenuClick}
@@ -92,14 +90,7 @@ const Header = ({ toggleMobileSidebar }: ItemType) => {
               </MenuItem>
             ))}
           </Menu>
-
-
-          <Typography variant="h6" sx={{ color: 'white', fontWeight: 600 }}>
-            Portal
-          </Typography>
         </Stack>
-
-        {/* Centro - barra de busca */}
         <Box
           sx={{
             display: 'flex',

@@ -41,11 +41,11 @@ export default function MachinesPage() {
   ];
 
   return (
-    <Box sx={{ height: '100vh', display: 'flex', flexDirection: 'column' }}>
+    <Box sx={{ height: '90vh', display: 'flex', flexDirection: 'column' }}>
       <PanelGroup direction="vertical" style={{ flex: 1 }}>
-        <Panel defaultSize={60} minSize={30}>
+        <Panel defaultSize={30} minSize={20}>
           <Paper
-            elevation={3}
+            elevation={1}
             sx={{
               p: 2,
               height: '100%',
@@ -89,16 +89,16 @@ export default function MachinesPage() {
           }}
         />
 
-        <Panel defaultSize={40} minSize={40}>
+        <Panel defaultSize={70} minSize={20}>
           {selectedMachine ? (
             <Paper
               elevation={2}
               sx={{
-                p: 2,
+                p: 0,
                 height: '100%',
                 borderRadius: 2,
                 overflow: 'auto',
-                mt: 1,
+                mt: 0,
                 backgroundColor: (theme) =>
                   theme.palette.mode === 'dark' ? '#2e2e2e' : '#fff',
               }}

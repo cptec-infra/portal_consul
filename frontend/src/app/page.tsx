@@ -23,7 +23,7 @@ const stats = [
 export default function Dashboard() {
   return (
     <PageContainer title="Dashboard" description="Painel geral de consumo e status das máquinas.">
-      <Box>
+      <Box sx={{ height: '90vh', display: 'flex', flexDirection: 'column' }}>
         <Grid container spacing={3}>
           {stats.map((stat, index) => (
             <Grid sx={{ xs: 12, sm: 4 }} key={index}>
@@ -86,29 +86,6 @@ export default function Dashboard() {
           <Grid sx={{ xs: 12 }}>
             <Paper elevation={3} sx={{ p: 2 }}>
               <AlertsTable />
-            </Paper>
-          </Grid>
-
-          <Grid sx={{ xs: 12, md: 7 }}>
-            <Paper elevation={3} sx={{ p: 2 }}>
-              <MachineTable />
-            </Paper>
-          </Grid>
-
-          <Grid sx={{ xs: 12, md: 5 }}>
-            <Paper elevation={3} sx={{ p: 2 }}>
-              <UserSessions />
-            </Paper>
-          </Grid>
-          <Grid sx={{ xs: 12, md: 6 }}>
-            <Paper elevation={3} sx={{ p: 2 }}>
-              <CpuUsageChart />
-            </Paper>
-          </Grid>
-
-          <Grid sx={{ xs: 12, md: 6 }}>
-            <Paper elevation={3} sx={{ p: 2 }}>
-              <RamUsageChart />
             </Paper>
           </Grid>
 

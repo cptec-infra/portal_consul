@@ -2,7 +2,7 @@ import axios, { AxiosInstance, AxiosResponse, InternalAxiosRequestConfig } from 
 import { Machine } from '../utilities/machines/types';
 
 const api: AxiosInstance = axios.create({
-  baseURL: process.env.CONSUL_HOST_LOCAL || 'http://150.163.190.18:8000/api',
+  baseURL: process.env.CONSUL_HOST_LOCAL || 'http://localhost:8000/api',
   headers: {
     'Content-Type': 'application/json',
   },
@@ -28,10 +28,13 @@ export const fetchMachines = async (): Promise<Machine[]> => {
 
 
 export async function fetchMachineHistory(node: string) {
-  console.log('entrei?')
-  const res = await fetch(`/history/${node}`);
-  if (!res.ok) throw new Error('Erro ao buscar histórico');
-  return res.json();
+  try {
+    const res = await api.get(`/history/${node}`);
+    return res.data;
+  } catch (error) {
+    throw new Error('Erro ao buscar histórico');
+  }
 }
+
 
 export default api;

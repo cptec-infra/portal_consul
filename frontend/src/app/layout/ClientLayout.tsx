@@ -8,16 +8,20 @@ import Sidebar from "@/app/layout/sidebar/Sidebar";
 const MainWrapper = styled("div")(() => ({
   display: "flex",
   minHeight: "100vh",
+  height: "100vh",   
   width: "100%",
+  overflow: "hidden",
 }));
 
 const PageWrapper = styled("div")(() => ({
   display: "flex",
-  flexGrow: 1,  
+  flexGrow: 1,
   flexDirection: "column",
   zIndex: 2,
   backgroundColor: "transparent",
   paddingTop: "70px",
+  height: "100%",
+  overflow: "hidden",
 }));
 
 export default function ClientLayout({
@@ -38,9 +42,10 @@ export default function ClientLayout({
       <PageWrapper className="page-wrapper">
         <Header toggleMobileSidebar={() => setMobileSidebarOpen(true)} />
         <Container
-          sx={{ paddingTop: "1rem",
+          sx={{
+            paddingTop: "1rem",
             height: "100%",
-            overflow: "hidden",
+            overflow: "auto",
           }}
           maxWidth={false}
         >

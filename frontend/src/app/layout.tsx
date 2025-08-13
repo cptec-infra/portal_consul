@@ -1,17 +1,13 @@
 "use client";
-import { Container, Box, CssBaseline, ThemeProvider } from "@mui/material";
+import { CssBaseline, ThemeProvider } from "@mui/material";
 import React from "react";
 import theme from "@/utils/theme";
 import ClientLayout from "@/app/layout/ClientLayout";
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="pt-br">
-      <body style={{ margin: 0, padding: 0, overflow: 'hidden' }}>
+    <html lang="pt-br" style={{ height: "100%" }}>
+      <body style={{ margin: 0, height: "100%" }}>
         <ThemeProvider theme={theme}>
           <CssBaseline />
           <ClientLayout>{children}</ClientLayout>
