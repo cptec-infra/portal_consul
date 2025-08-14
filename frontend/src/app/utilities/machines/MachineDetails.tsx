@@ -99,7 +99,7 @@ export default function MachineDetails({ node }: Props) {
     action?: React.ReactNode;
   }) => (
     <Card sx={{
-      p: 2.5,
+      p: 1,
       background: 'linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%)',
       border: '1px solid #e2e8f0',
       transition: 'all 0.3s ease-in-out',
@@ -113,9 +113,9 @@ export default function MachineDetails({ node }: Props) {
     }}>
       <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 1.5 }}>
         <Box sx={{
-          p: 1.2,
+          p: 0.7,
           borderRadius: 2,
-          background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+          background: 'linear-gradient(12deg, #667eea 0%, #764ba2 100%)',
           color: 'white',
           display: 'flex',
           alignItems: 'center',
@@ -131,7 +131,7 @@ export default function MachineDetails({ node }: Props) {
       <Typography variant="h6" fontWeight="700" color="text.primary" sx={{
         wordBreak: 'break-all',
         lineHeight: 1.3,
-        fontSize: '1.1rem'
+        fontSize: '0.9rem'
       }}>
         {value === 0 ? '0' : value || '-'}
       </Typography>
@@ -280,14 +280,14 @@ export default function MachineDetails({ node }: Props) {
         mt: 4,
         p: 4,
         textAlign: 'center',
-        background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+        background: 'linear-gradient(135deg, #e8eaf3ff 0%, #e6dfecff 100%)',
         color: 'white'
       }}>
-        <CircularProgress sx={{ color: 'white', mb: 2 }} />
-        <Typography variant="h6" sx={{ mb: 1, fontSize: '1.1rem' }}>
+        <CircularProgress sx={{ color: 'black', mb: 2 }} />
+        <Typography variant="h6" sx={{ mb: 1, fontSize: '1.1rem', color: "black" }}>
           Carregando detalhes da máquina
         </Typography>
-        <Typography variant="body2" sx={{ opacity: 0.9, fontSize: '0.9rem' }}>
+        <Typography variant="body2" sx={{ opacity: 0.9, fontSize: '0.9rem', color: "black" }}>
           Aguarde enquanto buscamos as informações...
         </Typography>
       </Paper>
@@ -330,122 +330,134 @@ export default function MachineDetails({ node }: Props) {
         <Divider sx={{ mb: 3 }} />
 
         {tab === 0 && (
-          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
-            <Box>
-              <Typography variant="h6" fontWeight="800" color="text.primary" sx={{ mb: 3, display: 'flex', alignItems: 'center', gap: 2, fontSize: '1rem' }}>
-                <ComputerIcon color="primary" />
-                Informações Básicas
-              </Typography>
-              <Box sx={{
-                display: 'grid',
-                gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
-                gap: 2.5,
-              }}>
-                <DetailItem
-                  label="Nome do Node"
-                  value={machine.node}
-                  icon={<ComputerIcon />}
-                />
-                <DetailItem
-                  label="Datacenter"
-                  value={machine.datacenter}
-                  icon={<DatacenterIcon />}
-                />
-                <DetailItem
-                  label="Endereço IP"
-                  value={showIp ? machine.node_address : '•••.•••.•••.•••'}
-                  icon={<NetworkIcon />}
-                  action={
-                    <Tooltip title={showIp ? "Ocultar IP" : "Mostrar IP"}>
-                      <IconButton
-                        size="small"
-                        onClick={() => setShowIp(!showIp)}
-                        sx={{
-                          background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-                          color: 'white',
-                          '&:hover': {
-                            background: 'linear-gradient(135deg, #764ba2 0%, #667eea 100%)',
-                          }
-                        }}
-                      >
-                        {showIp ? <VisibilityOffIcon /> : <VisibilityIcon />}
-                      </IconButton>
-                    </Tooltip>
-                  }
-                />
-                <DetailItem
-                  label="ID da Máquina"
-                  value={showId ? machine._id || 'N/A' : '••••••••••••••••••••••••'}
-                  icon={<FingerprintIcon />}
-                  action={
-                    <Tooltip title={showId ? "Ocultar ID" : "Mostrar ID"}>
-                      <IconButton
-                        size="small"
-                        onClick={() => setShowId(!showId)}
-                        sx={{
-                          background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-                          color: 'white',
-                          '&:hover': {
-                            background: 'linear-gradient(135deg, #764ba2 0%, #667eea 100%)',
-                          }
-                        }}
-                      >
-                        {showId ? <VisibilityOffIcon /> : <VisibilityIcon />}
-                      </IconButton>
-                    </Tooltip>
-                  }
-                />
-                <DetailItem
-                  label="Hash de Configuração"
-                  value={machine.hash ? `${machine.hash.substring(0, 16)}...` : 'N/A'}
-                  icon={<SecurityIcon />}
-                  fullWidth
-                />
-              </Box>
-            </Box>
-            <Box>
-              <Typography variant="h5" fontWeight="700" color="text.primary" sx={{ mb: 3, display: 'flex', alignItems: 'center', gap: 2, fontSize: '1rem' }}>
-                <ServicesIcon color="primary" />
-                Resumo dos Serviços
-              </Typography>
-              <Box sx={{
-                display: 'grid',
-                gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
-                gap: 2.5,
-                mb: 4
-              }}>
-                <DetailItem
-                  label="Total de Serviços"
-                  value={`${machine.services.length} serviço${machine.services.length !== 1 ? 's' : ''}`}
-                  icon={<ServicesIcon />}
-                />
-                <DetailItem
-                  label="Serviços Ativos"
-                  value={machine.services.filter(s => s.status === 'passing').length}
-                  icon={<CheckCircleIcon />}
-                />
-                <DetailItem
-                  label="Portas em Uso"
-                  value={machine.services.map(s => s.port).join(', ')}
-                  icon={<NetworkIcon />}
-                />
-              </Box>
-            </Box>
-            <Box>
-              <Typography variant="h5" fontWeight="700" color="text.primary" sx={{ mb: 3, display: 'flex', alignItems: 'center', gap: 2, fontSize: '1rem' }}>
-                <BuildIcon color="primary" />
-                Serviços Detalhados
-              </Typography>
-              <Grid container spacing={2.5}>
-                {machine.services.map((service, index) => (
-                  <Grid sx={{ xs: 12, md: 6, lg: 4 }} key={index}>
-                    <ServiceCard service={service} index={index} />
-                  </Grid>
-                ))}
-              </Grid>
-            </Box>
+          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+            <Accordion>
+              <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                <ComputerIcon color="primary" sx={{ mr: 1 }} />
+                <Typography variant="h6" sx={{ fontSize: '0.9rem' }} fontWeight="800">Informações Básicas</Typography>
+              </AccordionSummary>
+              <AccordionDetails>
+                <Box
+                  sx={{
+                    display: 'grid',
+                    gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
+                    gap: 2.5,
+                  }}
+                >
+                  <DetailItem
+                    label="Nome do Node"
+                    value={machine.node}
+                    icon={<ComputerIcon />}
+                  />
+                  <DetailItem
+                    label="Datacenter"
+                    value={machine.datacenter}
+                    icon={<DatacenterIcon />}
+                  />
+                  <DetailItem
+                    label="Endereço IP"
+                    value={showIp ? machine.node_address : '•••.•••.•••.•••'}
+                    icon={<NetworkIcon />}
+                    action={
+                      <Tooltip title={showIp ? "Ocultar IP" : "Mostrar IP"}>
+                        <IconButton
+                          size="small"
+                          onClick={() => setShowIp(!showIp)}
+                          sx={{
+                            background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                            color: 'white',
+                            '&:hover': {
+                              background: 'linear-gradient(135deg, #764ba2 0%, #667eea 100%)',
+                            }
+                          }}
+                        >
+                          {showIp ? <VisibilityOffIcon /> : <VisibilityIcon />}
+                        </IconButton>
+                      </Tooltip>
+                    }
+                  />
+                  <DetailItem
+                    label="ID da Máquina"
+                    value={showId ? machine._id || 'N/A' : '••••••••••••••••••••••••'}
+                    icon={<FingerprintIcon />}
+                    action={
+                      <Tooltip title={showId ? "Ocultar ID" : "Mostrar ID"}>
+                        <IconButton
+                          size="small"
+                          onClick={() => setShowId(!showId)}
+                          sx={{
+                            background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                            color: 'white',
+                            '&:hover': {
+                              background: 'linear-gradient(135deg, #764ba2 0%, #667eea 100%)',
+                            }
+                          }}
+                        >
+                          {showId ? <VisibilityOffIcon /> : <VisibilityIcon />}
+                        </IconButton>
+                      </Tooltip>
+                    }
+                  />
+                  <DetailItem
+                    label="Hash de Configuração"
+                    value={machine.hash ? `${machine.hash.substring(0, 16)}...` : 'N/A'}
+                    icon={<SecurityIcon />}
+                    fullWidth
+                  />
+                </Box>
+              </AccordionDetails>
+            </Accordion>
+            <Accordion>
+              <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                <ServicesIcon color="primary" sx={{ mr: 1 }} />
+                <Typography variant="h6" sx={{ fontSize: '0.9rem' }} fontWeight="800">Resumo dos Serviços</Typography>
+              </AccordionSummary>
+              <AccordionDetails>
+                <Box
+                  sx={{
+                    display: 'grid',
+                    gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
+                    gap: 2.5,
+                    mb: 2
+                  }}
+                >
+                  <DetailItem
+                    label="Total de Serviços"
+                    value={`${machine.services.length} serviço${machine.services.length !== 1 ? 's' : ''}`}
+                    icon={<ServicesIcon />}
+                  />
+                  <DetailItem
+                    label="Serviços Ativos"
+                    value={machine.services.filter(s => s.status === 'passing').length}
+                    icon={<CheckCircleIcon />}
+                  />
+                  <DetailItem
+                    label="Portas em Uso"
+                    value={machine.services.map(s => s.port).join(', ')}
+                    icon={<NetworkIcon />}
+                  />
+                </Box>
+              </AccordionDetails>
+            </Accordion>
+            <Accordion>
+              <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                <BuildIcon color="primary" sx={{ mr: 1 }} />
+                <Typography variant="h6" sx={{ fontSize: '0.9rem' }} fontWeight="800">Serviços Detalhados</Typography>
+              </AccordionSummary>
+              <AccordionDetails>
+                <Grid container spacing={2.5}>
+                  {machine.services.map((service, index) => (
+                    <Grid sx={{ xs: 12, md: 6, lg: 4 }} key={index}>
+                      <ServiceCard service={service} index={index} />
+                    </Grid>
+                  ))}
+                </Grid>
+              </AccordionDetails>
+            </Accordion>
+
           </Box>
         )}
+
 
         {tab === 1 && (
           <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>

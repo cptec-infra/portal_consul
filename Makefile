@@ -3,7 +3,7 @@ COMPOSE_TIMEOUT = 240
 
 # Comando base (o arquivo muda conforme o alvo chamado)
 define compose
-	COMPOSE_HTTP_TIMEOUT=$(COMPOSE_TIMEOUT) docker-compose -f $(1)
+	COMPOSE_HTTP_TIMEOUT=$(COMPOSE_TIMEOUT) docker compose -f $(1)
 endef
 
 # Ambiente de desenvolvimento
