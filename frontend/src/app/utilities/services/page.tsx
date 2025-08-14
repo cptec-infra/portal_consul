@@ -44,8 +44,6 @@ export default function ServicesPage() {
           hasWarning: group.some((s) => s.status === 'warning'),
         }));
 
-        console.log('Serviços agrupados:', groupedServices);
-
         setServices(groupedServices);
       } catch (error) {
         console.error('Erro ao buscar serviços:', error);
