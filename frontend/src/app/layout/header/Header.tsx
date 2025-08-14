@@ -1,17 +1,19 @@
 import React, { useState } from 'react';
-import {Box,AppBar,Toolbar,styled,Stack,IconButton,InputBase,Typography,Button, Menu, MenuItem} from '@mui/material';
-import PropTypes from 'prop-types';
+import { Box, AppBar, Toolbar, styled, Stack, IconButton, InputBase, Menu, MenuItem } from '@mui/material';
 import Link from 'next/link';
-import { IconBellRinging, IconMenu2, IconGridDots, IconSearch } from '@tabler/icons-react';
+import { IconSearch } from '@tabler/icons-react';
 import Profile from './Profile';
 import AppsIcon from '@mui/icons-material/Apps';
 import Menuitems from "@/app/layout/sidebar/MenuItems"; 
+import { useDispatch } from 'react-redux';
+import { setSearch } from '../../../utils/store/searchSlice';
 
 interface ItemType {
   toggleMobileSidebar: (event: React.MouseEvent<HTMLElement>) => void;
 }
 
 const Header = ({ toggleMobileSidebar }: ItemType) => {
+  const dispatch = useDispatch();
   const links = Menuitems?.filter((item) => item?.href);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
@@ -49,11 +51,7 @@ const Header = ({ toggleMobileSidebar }: ItemType) => {
     <AppBarStyled position="fixed">
       <ToolbarStyled>
         <Stack direction="row" alignItems="center" spacing={2}>
-          <IconButton
-            onClick={handleMenuClick}
-            sx={{ color: 'white' }}
-            size="small"
-          >
+          <IconButton onClick={handleMenuClick} sx={{ color: 'white' }} size="small">
             <AppsIcon />
           </IconButton>
 
@@ -91,6 +89,7 @@ const Header = ({ toggleMobileSidebar }: ItemType) => {
             ))}
           </Menu>
         </Stack>
+
         <Box
           sx={{
             display: 'flex',
@@ -106,30 +105,16 @@ const Header = ({ toggleMobileSidebar }: ItemType) => {
           <InputBase
             placeholder="Search"
             sx={{ ml: 1, fontSize: 14, width: '100%' }}
+            onChange={(e) => dispatch(setSearch(e.target.value))}
           />
         </Box>
 
-        {/* Lado direito */}
         <Stack direction="row" spacing={1} alignItems="center">
-          <Button
-            variant="contained"
-            component={Link}
-            href="/authentication/login"
-            disableElevation
-            color="primary"
-            size="small"
-          >
-            Login
-          </Button>
           <Profile />
         </Stack>
       </ToolbarStyled>
     </AppBarStyled>
   );
-};
-
-Header.propTypes = {
-  sx: PropTypes.object,
 };
 
 export default Header;
