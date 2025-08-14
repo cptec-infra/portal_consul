@@ -26,7 +26,7 @@ export default function ServicesPage() {
     const getServices = async () => {
       try {
         const rawData = await fetchMachinesDetails();
-        
+       
         const groupedServices = Object.values(
           rawData.reduce((acc: { [key: string]: Service[] }, service) => {
             if (service.node) {
@@ -60,13 +60,13 @@ export default function ServicesPage() {
   return (
     <Box
       sx={{
-        height: '100vh',
+        height: '100%',
         display: 'flex',
         flexDirection: 'column',
       }}
     >
     <PanelGroup direction="vertical" style={{ flex: 1}}>
-      <Panel defaultSize={100} minSize={30} style={{ display: 'flex', flexDirection: 'column' }}>
+      <Panel defaultSize={100} minSize={30}   className="custom-scroll" style={{ display: 'flex', flexDirection: 'column', overflow: 'auto' }}>
         <Paper
           elevation={3}
           sx={{
