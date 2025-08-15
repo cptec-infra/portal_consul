@@ -233,7 +233,7 @@ export default function MachineDetails({ node }: Props) {
                     <Typography variant="body2" fontWeight="600" sx={{ mb: 0.5, fontSize: '0.85rem' }}>
                       Output
                     </Typography>
-                    <Typography variant="body2" color={getStatusColor(service.status) as any} sx={{ fontSize: '0.85rem' }}>
+                    <Typography variant="body2" color='#ffffffff' sx={{ fontSize: '0.85rem' }}>
                       {(service?.output?.length ?? 0) > 50
                         ? service.output.slice(0, 71) + '...'
                         : service.output || 'Sem dados'}
