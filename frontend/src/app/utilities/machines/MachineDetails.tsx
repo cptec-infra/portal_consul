@@ -134,9 +134,9 @@ export default function MachineDetails({ node }: Props) {
 
   const getStatusColorCard = (status: string) => {
       switch (status) {
-        case 'passing': return '#10b981';
-        case 'warning': return '#f59e0b';
-        case 'critical': return '#dc2626';
+        case 'passing': return '#7edfbeff';
+        case 'warning': return '#ddaf60ff';
+        case 'critical': return '#db6c6cff';
         default: return 'default';
       }
     };
