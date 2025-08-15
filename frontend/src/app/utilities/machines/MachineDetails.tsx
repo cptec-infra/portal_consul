@@ -1,24 +1,11 @@
 'use client';
 
-import { fetchMachineHistory } from '@/app/api/api';
+import { fetchMachineHistory, fetchMachineFromConsul } from '@/app/api/api';
 import {
-  Tabs,
-  Tab,
-  Box,
-  Typography,
-  Paper,
-  Divider,
-  CircularProgress,
-  Accordion,
-  AccordionSummary,
-  AccordionDetails,
-  Chip,
-  Card,
-  CardContent,
-  IconButton,
-  Tooltip,
-  Grid,
-  Stack
+  Tabs, Tab, Box, Typography, Paper, Divider, CircularProgress,
+  Accordion, AccordionSummary, AccordionDetails, Chip, Card, IconButton,
+  Tooltip, Grid, Stack
+
 } from '@mui/material';
 import {
   ExpandMore as ExpandMoreIcon,
@@ -59,37 +46,45 @@ interface Machine {
 export default function MachineDetails({ node }: Props) {
   const [tab, setTab] = useState(0);
   const [machine, setMachine] = useState<Machine | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [loadingMachine, setLoadingMachine] = useState(true);
+  const [loadingHistory, setLoadingHistory] = useState(true);
   const [history, setHistory] = useState<any[]>([]);
   const [showId, setShowId] = useState(false);
   const [showIp, setShowIp] = useState(false);
 
-  useEffect(() => {
-    async function loadDetails() {
-      try {
-        const historyData = await fetchMachineHistory(node);
-        if (historyData.length > 0) {
-          const latest = historyData[0];
-          setMachine({
-            node: latest.node,
-            node_address: latest.node_address,
-            datacenter: latest.datacenter,
-            services: latest.services,
-            _id: latest._id,
-            hash: latest.hash
-          });
-        }
 
-        setHistory(historyData);
+  useEffect(() => {
+    async function loadData() {
+      setLoadingMachine(true);
+      setLoadingHistory(true);
+      try {
+        const [consulData, machineHistory] = await Promise.all([
+          fetchMachineFromConsul(node),
+          fetchMachineHistory(node)
+        ]);
+
+        const updatedHistory = machineHistory.map(historyEntry => ({
+          ...historyEntry,
+          services: consulData
+        }));
+        console.log('Histórico atualizado:', updatedHistory);
+        setMachine({ ...updatedHistory[0] });
+
+        setHistory(updatedHistory);
       } catch (error) {
         console.error('Erro ao carregar dados da máquina:', error);
       } finally {
-        setLoading(false);
+        setLoadingMachine(false);
+        setLoadingHistory(false);
       }
     }
 
-    loadDetails();
+    loadData();
   }, [node]);
+
+  const handleTabChange = (_: any, val: number) => {
+    setTab(val);
+  };
 
   const DetailItem = ({ label, value, icon, fullWidth = false, action }: {
     label: string;
@@ -128,7 +123,7 @@ export default function MachineDetails({ node }: Props) {
         </Typography>
         {action}
       </Box>
-      <Typography variant="h6" fontWeight="700" color="text.primary" sx={{
+      <Typography variant="h6" sx={{ fontSize: '0.9rem' }} fontWeight="700" color="text.primary" sx={{
         wordBreak: 'break-all',
         lineHeight: 1.3,
         fontSize: '0.9rem'
@@ -138,7 +133,7 @@ export default function MachineDetails({ node }: Props) {
     </Card>
   );
 
-  const ServiceCard = ({ service, index }: { service: any, index: number }) => {
+  const ServiceCard = ({ service }: { service: any }) => {
     const getStatusColor = (status: string) => {
       switch (status) {
         case 'passing': return 'success';
@@ -147,7 +142,6 @@ export default function MachineDetails({ node }: Props) {
         default: return 'default';
       }
     };
-
     return (
       <Card sx={{
         p: 2.5,
@@ -174,7 +168,7 @@ export default function MachineDetails({ node }: Props) {
             <ServicesIcon />
           </Box>
           <Box sx={{ flex: 1 }}>
-            <Typography variant="h6" fontWeight="700" color="text.primary" sx={{ fontSize: '1.1rem' }}>
+            <Typography variant="h6" sx={{ fontSize: '0.9rem' }} fontWeight="700" color="text.primary" sx={{ fontSize: '1.1rem' }}>
               {service.name}
             </Typography>
             <Chip
@@ -186,7 +180,6 @@ export default function MachineDetails({ node }: Props) {
             />
           </Box>
         </Box>
-
         <Divider sx={{ my: 2 }} />
 
         <Grid container spacing={2}>
@@ -269,45 +262,23 @@ export default function MachineDetails({ node }: Props) {
 
   const formatDate = (timestamp: string) => {
     const date = new Date(timestamp);
-    return `${String(date.getDate()).padStart(2, '0')}/${String(
-      date.getMonth() + 1
-    ).padStart(2, '0')}/${date.getFullYear()} ${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}:${date.getSeconds().toString().padStart(2, '0')}`;
+    return `${String(date.getDate()).padStart(2, '0')}/${String(date.getMonth() + 1).padStart(2, '0')}/${date.getFullYear()} ${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}:${date.getSeconds().toString().padStart(2, '0')}`;
   };
 
-  if (loading) {
+  if (loadingMachine) {
     return (
-      <Paper sx={{
-        mt: 4,
-        p: 4,
-        textAlign: 'center',
-        background: 'linear-gradient(135deg, #e8eaf3ff 0%, #e6dfecff 100%)',
-        color: 'white'
-      }}>
+      <Paper sx={{ mt: 4, p: 4, textAlign: 'center' }}>
         <CircularProgress sx={{ color: 'black', mb: 2 }} />
-        <Typography variant="h6" sx={{ mb: 1, fontSize: '1.1rem', color: "black" }}>
-          Carregando detalhes da máquina
-        </Typography>
-        <Typography variant="body2" sx={{ opacity: 0.9, fontSize: '0.9rem', color: "black" }}>
-          Aguarde enquanto buscamos as informações...
-        </Typography>
+        <Typography variant="h6" sx={{ fontSize: '0.9rem' }} sx={{ mb: 1 }}>Carregando detalhes da máquina...</Typography>
       </Paper>
     );
   }
 
   if (!machine) {
     return (
-      <Paper sx={{
-        mt: 4,
-        p: 4,
-        textAlign: 'center',
-        background: 'linear-gradient(135deg, #ff6b6b 0%, #ee5a52 100%)',
-        color: 'white'
-      }}>
-        <InfoIcon sx={{ fontSize: 48, mb: 2, opacity: 0.9 }} />
-        <Typography variant="h6" sx={{ fontSize: '1.1rem' }}>Máquina não encontrada</Typography>
-        <Typography variant="body2" sx={{ mt: 1, opacity: 0.9, fontSize: '0.9rem' }}>
-          Não foi possível localizar as informações desta máquina.
-        </Typography>
+      <Paper sx={{ mt: 4, p: 4, textAlign: 'center' }}>
+        <InfoIcon sx={{ fontSize: 48, mb: 2 }} />
+        <Typography variant="h6" sx={{ fontSize: '0.9rem' }}>Máquina não encontrada</Typography>
       </Paper>
     );
   }
@@ -315,14 +286,7 @@ export default function MachineDetails({ node }: Props) {
   return (
     <Paper sx={{ mt: 4, p: 4 }}>
       <Box>
-        <Tabs
-          value={tab}
-          onChange={(_, val) => setTab(val)}
-          aria-label="Machine details tabs"
-          textColor="primary"
-          indicatorColor="primary"
-          sx={{ mb: 3 }}
-        >
+        <Tabs value={tab} onChange={handleTabChange} textColor="primary" indicatorColor="primary" sx={{ mb: 3 }}>
           <Tab label="Detalhes da Máquina" />
           <Tab label="Histórico de Alterações" />
         </Tabs>
@@ -337,40 +301,16 @@ export default function MachineDetails({ node }: Props) {
                 <Typography variant="h6" sx={{ fontSize: '0.9rem' }} fontWeight="800">Informações Básicas</Typography>
               </AccordionSummary>
               <AccordionDetails>
-                <Box
-                  sx={{
-                    display: 'grid',
-                    gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
-                    gap: 2.5,
-                  }}
-                >
-                  <DetailItem
-                    label="Nome do Node"
-                    value={machine.node}
-                    icon={<ComputerIcon />}
-                  />
-                  <DetailItem
-                    label="Datacenter"
-                    value={machine.datacenter}
-                    icon={<DatacenterIcon />}
-                  />
+                <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 2.5 }}>
+                  <DetailItem label="Nome do Node" value={machine.node} icon={<ComputerIcon />} />
+                  <DetailItem label="Datacenter" value={machine.datacenter} icon={<DatacenterIcon />} />
                   <DetailItem
                     label="Endereço IP"
                     value={showIp ? machine.node_address : '•••.•••.•••.•••'}
                     icon={<NetworkIcon />}
                     action={
                       <Tooltip title={showIp ? "Ocultar IP" : "Mostrar IP"}>
-                        <IconButton
-                          size="small"
-                          onClick={() => setShowIp(!showIp)}
-                          sx={{
-                            background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-                            color: 'white',
-                            '&:hover': {
-                              background: 'linear-gradient(135deg, #764ba2 0%, #667eea 100%)',
-                            }
-                          }}
-                        >
+                        <IconButton size="small" onClick={() => setShowIp(!showIp)}>
                           {showIp ? <VisibilityOffIcon /> : <VisibilityIcon />}
                         </IconButton>
                       </Tooltip>
@@ -382,17 +322,7 @@ export default function MachineDetails({ node }: Props) {
                     icon={<FingerprintIcon />}
                     action={
                       <Tooltip title={showId ? "Ocultar ID" : "Mostrar ID"}>
-                        <IconButton
-                          size="small"
-                          onClick={() => setShowId(!showId)}
-                          sx={{
-                            background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-                            color: 'white',
-                            '&:hover': {
-                              background: 'linear-gradient(135deg, #764ba2 0%, #667eea 100%)',
-                            }
-                          }}
-                        >
+                        <IconButton size="small" onClick={() => setShowId(!showId)}>
                           {showId ? <VisibilityOffIcon /> : <VisibilityIcon />}
                         </IconButton>
                       </Tooltip>
@@ -407,6 +337,7 @@ export default function MachineDetails({ node }: Props) {
                 </Box>
               </AccordionDetails>
             </Accordion>
+
             <Accordion>
               <AccordionSummary expandIcon={<ExpandMoreIcon />}>
                 <ServicesIcon color="primary" sx={{ mr: 1 }} />
@@ -423,22 +354,23 @@ export default function MachineDetails({ node }: Props) {
                 >
                   <DetailItem
                     label="Total de Serviços"
-                    value={`${machine.services.length} serviço${machine.services.length !== 1 ? 's' : ''}`}
+                    value={`${machine?.services?.length} serviço${machine?.services?.length !== 1 ? 's' : ''}`}
                     icon={<ServicesIcon />}
                   />
                   <DetailItem
                     label="Serviços Ativos"
-                    value={machine.services.filter(s => s.status === 'passing').length}
+                    value={machine?.services?.filter(s => s.status === 'passing').length}
                     icon={<CheckCircleIcon />}
                   />
                   <DetailItem
                     label="Portas em Uso"
-                    value={machine.services.map(s => s.port).join(', ')}
+                    value={machine?.services?.map(s => s.port).join(', ')}
                     icon={<NetworkIcon />}
                   />
                 </Box>
               </AccordionDetails>
             </Accordion>
+
             <Accordion>
               <AccordionSummary expandIcon={<ExpandMoreIcon />}>
                 <BuildIcon color="primary" sx={{ mr: 1 }} />
@@ -446,19 +378,17 @@ export default function MachineDetails({ node }: Props) {
               </AccordionSummary>
               <AccordionDetails>
                 <Grid container spacing={2.5}>
-                  {machine.services.map((service, index) => (
+                  {machine?.services?.map((service, index) => (
                     <Grid sx={{ xs: 12, md: 6, lg: 4 }} key={index}>
-                      <ServiceCard service={service} index={index} />
+                      <ServiceCard service={service} />
+                      {console.log('entrei', service)}
                     </Grid>
                   ))}
                 </Grid>
               </AccordionDetails>
             </Accordion>
-
           </Box>
         )}
-
-
         {tab === 1 && (
           <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
             <Typography variant="h5" fontWeight="700" color="text.primary" sx={{ mb: 2, display: 'flex', alignItems: 'center', gap: 2, fontSize: '1.3rem' }}>
@@ -596,6 +526,7 @@ export default function MachineDetails({ node }: Props) {
             )}
           </Box>
         )}
+
       </Box>
     </Paper>
   );

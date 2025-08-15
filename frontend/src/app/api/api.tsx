@@ -40,5 +40,13 @@ export async function fetchMachineHistory(node: string) {
   }
 }
 
+export async function fetchMachineFromConsul(node: string) {
+  try {
+    const res = await api.get(`/history/detail/${node}`);
+    return res.data;
+  } catch (error) {
+    throw new Error('Erro ao buscar dados do Consul');
+  }
+}
 
 export default api;

@@ -82,6 +82,64 @@ def get_services():
         return []
     
 
+def get_services_by_node(node_name: str):
+    try:
+        health_resp = requests.get(f"{BASE_URL}/v1/health/node/{node_name}")
+        health_resp.raise_for_status()
+        node_services_checks = health_resp.json()
+        
+        services_map = {}
+        
+        for entry in node_services_checks:
+            service_id = entry.get("ServiceID", "")
+            if not service_id:
+                continue
+            if service_id not in services_map:
+                services_map[service_id] = {
+                    "ServiceName": entry.get("ServiceName"),
+                    "ServiceID": entry.get("ServiceID"),
+                    "ServiceTags": entry.get("ServiceTags", []),
+                    "ServiceAddress": entry.get("ServiceAddress"),
+                    "ServicePort": entry.get("ServicePort"),
+                    "Node": entry.get("Node"),
+                    "Datacenter": entry.get("Datacenter"),
+                    "Address": entry.get("Address"),
+                    "Checks": []
+                }
+
+            services_map[service_id]["Checks"].append(entry)
+
+        detailed_services = []
+
+        for service_id, service_info in services_map.items():
+            checks = service_info["Checks"]
+            status = "unknown"
+
+            if all(check["Status"] == "passing" for check in checks):
+                status = "passing"
+            elif any(check["Status"] == "critical" for check in checks):
+                status = "critical"
+            elif any(check["Status"] == "warning" for check in checks):
+                status = "warning"
+            
+            detailed_services.append({
+                "name": service_info.get("ServiceName"),
+                "id": service_info.get("ServiceID"),
+                "tags": service_info.get("ServiceTags"),
+                "address": service_info.get("ServiceAddress") or service_info.get("Address"),
+                "port": service_info.get("ServicePort"),
+                "datacenter": service_info.get("Datacenter"),
+                "node": service_info.get("Node"),
+                "status": status,
+            })
+        
+        return detailed_services
+
+    except requests.RequestException as e:
+        print(f"Erro ao consultar Consul para node {node_name}: {e}")
+        return []
+
+
 def get_detailed_services():
     catalog_url = f"{BASE_URL}/v1/catalog/services"
     try:
