@@ -104,7 +104,8 @@ def get_services_by_node(node_name: str):
                     "Node": entry.get("Node"),
                     "Datacenter": entry.get("Datacenter"),
                     "Address": entry.get("Address"),
-                    "Checks": []
+                    "Checks": [],
+                    "Output": entry.get("Output", "")
                 }
 
             services_map[service_id]["Checks"].append(entry)
@@ -126,11 +127,9 @@ def get_services_by_node(node_name: str):
                 "name": service_info.get("ServiceName"),
                 "id": service_info.get("ServiceID"),
                 "tags": service_info.get("ServiceTags"),
-                "address": service_info.get("ServiceAddress") or service_info.get("Address"),
-                "port": service_info.get("ServicePort"),
-                "datacenter": service_info.get("Datacenter"),
                 "node": service_info.get("Node"),
                 "status": status,
+                "output": service_info.get("Output"),
             })
         
         return detailed_services

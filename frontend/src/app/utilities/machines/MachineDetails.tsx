@@ -185,20 +185,6 @@ export default function MachineDetails({ node }: Props) {
         <Grid container spacing={2}>
           <Grid sx={{ xs: 4 }}>
             <Typography variant="caption" color="text.secondary" fontWeight="600" sx={{ fontSize: '0.75rem' }}>
-              PORTA
-            </Typography>
-            <Typography variant="body1" fontWeight="600" sx={{ fontSize: '0.95rem' }}>
-              :{service.port}
-            </Typography>
-            <Typography variant="caption" color="text.secondary" fontWeight="600" sx={{ fontSize: '0.75rem' }}>
-              KIND
-            </Typography>
-            <Typography variant="body1" fontWeight="600" sx={{ fontSize: '0.95rem' }}>
-              {service.kind}
-            </Typography>
-          </Grid>
-          <Grid sx={{ xs: 4 }}>
-            <Typography variant="caption" color="text.secondary" fontWeight="600" sx={{ fontSize: '0.75rem' }}>
               TAGS
             </Typography>
             <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.5, mt: 0.5 }}>
@@ -225,27 +211,53 @@ export default function MachineDetails({ node }: Props) {
             <Typography variant="caption" color="text.secondary" fontWeight="600" sx={{ fontSize: '0.75rem' }}>
               HEALTH CHECK
             </Typography>
-            {service.checks && service.checks.length > 0 ? (
+            {service?.output && service?.output.length > 0 ? (
               <Stack spacing={1} sx={{ mt: 1 }}>
-                {service.checks.map((check: any, checkIndex: number) => (
-                  <Box key={checkIndex} sx={{
-                    p: 1.5,
-                    backgroundColor: check.status === 'passing' ? '#f0fdf4' : '#fef3c7',
-                    borderRadius: 1,
-                    border: `1px solid ${check.status === 'passing' ? '#bbf7d0' : '#fde68a'}`
-                  }}>
+                {Array.isArray(service?.output) ? (
+                  service.output.map((check: any, checkIndex: number) => (
+                    <Box
+                      key={checkIndex}
+                      sx={{
+                        p: 1.5,
+                        backgroundColor: check.status === 'passing' ? '#f0fdf4' : '#fef3c7',
+                        borderRadius: 1,
+                        border: `1px solid ${check.status === 'passing' ? '#bbf7d0' : '#fde68a'}`,
+                      }}
+                    >
+                      <Typography variant="body2" fontWeight="600" sx={{ mb: 0.5, fontSize: '0.85rem' }}>
+                        {check.name}
+                      </Typography>
+                      <Chip
+                        label={check.status}
+                        size="small"
+                        color={getStatusColor(check.status) as any}
+                        variant="filled"
+                      />
+                    </Box>
+                  ))
+                ) : (
+                  <Box
+                    sx={{
+                      p: 1.5,
+                      backgroundColor: '#fee2e2',
+                      borderRadius: 1,
+                      border: '1px solid #fca5a5',
+                    }}
+                  >
                     <Typography variant="body2" fontWeight="600" sx={{ mb: 0.5, fontSize: '0.85rem' }}>
-                      {check.name}
+                      Output
                     </Typography>
-                    <Chip
-                      label={check.status}
-                      size="small"
-                      color={getStatusColor(check.status) as any}
-                      variant="filled"
-                    />
+                    <Typography variant="body2" color="error" sx={{ fontSize: '0.85rem' }}>
+                      {(service?.output?.length ?? 0) > 40
+                        ? service.output.slice(0, 40) + '...'
+                        : service.output || 'Sem dados'}
+                    </Typography>
+
                   </Box>
-                ))}
+                )}
               </Stack>
+
+
             ) : (
               <Typography variant="body2" color="text.secondary" sx={{ fontSize: '0.85rem', mt: 0.5 }}>
                 Nenhum check
