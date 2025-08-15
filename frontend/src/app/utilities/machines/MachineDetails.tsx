@@ -67,7 +67,6 @@ export default function MachineDetails({ node }: Props) {
           ...historyEntry,
           services: consulData
         }));
-        console.log('Histórico atualizado:', updatedHistory);
         setMachine({ ...updatedHistory[0] });
 
         setHistory(updatedHistory);
@@ -213,48 +212,26 @@ export default function MachineDetails({ node }: Props) {
             </Typography>
             {service?.output && service?.output.length > 0 ? (
               <Stack spacing={1} sx={{ mt: 1 }}>
-                {Array.isArray(service?.output) ? (
-                  service.output.map((check: any, checkIndex: number) => (
-                    <Box
-                      key={checkIndex}
-                      sx={{
-                        p: 1.5,
-                        backgroundColor: check.status === 'passing' ? '#f0fdf4' : '#fef3c7',
-                        borderRadius: 1,
-                        border: `1px solid ${check.status === 'passing' ? '#bbf7d0' : '#fde68a'}`,
-                      }}
-                    >
-                      <Typography variant="body2" fontWeight="600" sx={{ mb: 0.5, fontSize: '0.85rem' }}>
-                        {check.name}
-                      </Typography>
-                      <Chip
-                        label={check.status}
-                        size="small"
-                        color={getStatusColor(check.status) as any}
-                        variant="filled"
-                      />
-                    </Box>
-                  ))
-                ) : (
+                {
                   <Box
                     sx={{
                       p: 1.5,
                       backgroundColor: '#fee2e2',
                       borderRadius: 1,
-                      border: '1px solid #fca5a5',
+                      border: getStatusColor(service.status) as any,
                     }}
                   >
                     <Typography variant="body2" fontWeight="600" sx={{ mb: 0.5, fontSize: '0.85rem' }}>
                       Output
                     </Typography>
                     <Typography variant="body2" color="error" sx={{ fontSize: '0.85rem' }}>
-                      {(service?.output?.length ?? 0) > 40
-                        ? service.output.slice(0, 40) + '...'
+                      {(service?.output?.length ?? 0) > 50
+                        ? service.output.slice(0, 71) + '...'
                         : service.output || 'Sem dados'}
                     </Typography>
 
                   </Box>
-                )}
+                }
               </Stack>
 
 
@@ -393,7 +370,6 @@ export default function MachineDetails({ node }: Props) {
                   {machine?.services?.map((service, index) => (
                     <Grid sx={{ xs: 12, md: 6, lg: 4 }} key={index}>
                       <ServiceCard service={service} />
-                      {console.log('entrei', service)}
                     </Grid>
                   ))}
                 </Grid>
