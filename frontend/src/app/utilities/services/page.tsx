@@ -16,6 +16,7 @@ interface Service {
   id?: string;
   node?: string;
   status?: string;
+  port?: string;
 }
 
 export default function ServicesPage() {
@@ -116,7 +117,7 @@ export default function ServicesPage() {
                     <TableHead>
                       <TableRow>
                         <TableCell>Serviço</TableCell>
-                        <TableCell>ID</TableCell>
+                        <TableCell>Porta</TableCell>
                         <TableCell>Status</TableCell>
                       </TableRow>
                     </TableHead>
@@ -130,7 +131,7 @@ export default function ServicesPage() {
                           }}
                         >
                           <TableCell>{service.name}</TableCell>
-                          <TableCell>{service.id || 'N/A'}</TableCell>
+                          <TableCell>{service.port || 'N/A'}</TableCell>
                           <TableCell>
                             <Typography
                               color={
