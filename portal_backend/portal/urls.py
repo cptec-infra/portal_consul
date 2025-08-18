@@ -9,9 +9,6 @@ urlpatterns = [
     path('api/nodes/', views.home, name='api_nodes'),
     path('api/servicos/', views.servicos, name='api_servicos'),
     path('api/', include('machines.urls')),
-
-    path('api/servidores/exportar/excel/', views.export_excel, name='api_export_excel'),
-    path('api/servidores/exportar/pdf/', views.export_pdf, name='api_export_pdf'),
     path("api/freeipa/users", freeipa_views.users_all, name="users_all"), 
     path("api/freeipa/groups", freeipa_views.groups_all, name="groups_all"),
 ]
