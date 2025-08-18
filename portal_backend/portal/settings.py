@@ -30,6 +30,13 @@ MONGO_PASSWORD = os.getenv('MONGO_INITDB_ROOT_PASSWORD')
 MONGO_BD = os.getenv('MONGO_INITDB_DATABASE')
 MONGO_HOST = os.getenv('MONGO_HOST')
 
+# FreeIPA config
+IPA_AUTH_SERVER = os.getenv('IPA_AUTH_SERVER')
+IPA_AUTH_USER =  os.getenv('IPA_AUTH_USER')
+IPA_AUTH_PASSWORD = os.getenv('IPA_AUTH_PASSWORD')
+IPA_AUTH_SERVER_SSL_VERIFY = BASE_DIR / os.getenv('IPA_AUTH_FILE')
+IPA_AUTH_SERVER_API_VERSION = "2.229"
+
 CELERY_BROKER_URL = 'redis://portal_redis:6379/0'  
 CELERY_RESULT_BACKEND = 'redis://portal_redis:6379/0'
 CELERY_ACCEPT_CONTENT = ['json']
@@ -63,6 +70,7 @@ INSTALLED_APPS = [
     'consulviewer',
     'machines',
     'corsheaders',
+    'freeipa',
 ]
 
 

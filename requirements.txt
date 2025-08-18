@@ -15,6 +15,8 @@ django-cors-headers==4.7.0
 django-timezone-field==7.1
 django_celery_results==2.6.0
 djangorestframework==3.16.0
+python-freeipa==1.0.9
+django-freeipa-auth-json==0.1.2.dev1
 dnspython==2.7.0
 et_xmlfile==2.0.0
 gunicorn==23.0.0

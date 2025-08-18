@@ -3,7 +3,9 @@ import {
   IconLayoutDashboard,
   IconServer,
   IconSettings,
-  IconActivity
+  IconActivity,
+  IconUser,
+  IconUsersGroup
 } from "@tabler/icons-react";
 
 import { uniqueId } from "lodash";
@@ -34,6 +36,22 @@ const Menuitems = [
     title: "Serviços",
     icon: IconActivity,
     href: "/utilities/services",
+  },
+  {
+    navlabel: true,
+    subheader: "LDAP",
+  },
+  {
+    id: uniqueId(),
+    title: "Usuários",
+    icon: IconUser,
+    href: "/utilities/users",
+  },
+    {
+    id: uniqueId(),
+    title: "Grupos",
+    icon: IconUsersGroup,
+    href: "/utilities/groups",
   },
 ];
 
