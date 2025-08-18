@@ -1,6 +1,6 @@
 from django.http import JsonResponse, HttpResponse
 from django.views.decorators.csrf import csrf_exempt
-from .consul_client import get_nodes, get_detailed_services, get_services, group_by_node, save_history
+from .consul_client import get_nodes, get_detailed_services, get_services, group_by_node, save_history, get_services_by_node
 from portal.mongo_client import history_collection
 import openpyxl
 from io import BytesIO
@@ -24,108 +24,6 @@ def home(request):
 def servicos(request):
     services = get_services()
     return JsonResponse(services, safe=False)
-
-def servers_list(request):
-    servidores = SERVIDORES_DATA
-
-    search = request.GET.get('search', '').lower()
-    status_filter = request.GET.get('status', '')
-    sistema_filter = request.GET.get('sistema', '')
-
-    if search:
-        servidores = [s for s in servidores if search in s["nome"].lower() or search in s["ip"] or search in s["sistema_operacional"].lower()]
-
-    if status_filter:
-        servidores = [s for s in servidores if s["status"] == status_filter]
-
-    if sistema_filter:
-        servidores = [s for s in servidores if s["sistema_operacional"] == sistema_filter]
-
-    return JsonResponse(servidores, safe=False)
-
-
-def servers_details(request):
-    servidor_id = request.GET.get("id")
-    if not servidor_id:
-        return JsonResponse({"error": "ID do servidor não fornecido"}, status=400)
-    try:
-        servidor_id = int(servidor_id)
-    except ValueError:
-        return JsonResponse({"error": "ID inválido"}, status=400)
-
-    servidor = next((s for s in SERVIDORES_DATA if s["id"] == servidor_id), None)
-    if not servidor:
-        return JsonResponse({"error": "Servidor não encontrado"}, status=404)
-
-    return JsonResponse(servidor)
-
-
-def export_excel(request):
-    servidores = SERVIDORES_DATA
-
-    search = request.GET.get('search', '').lower()
-    status_filter = request.GET.get('status', '')
-    sistema_filter = request.GET.get('sistema', '')
-
-    if search:
-        servidores = [s for s in servidores if search in s["nome"].lower() or search in s["ip"] or search in s["sistema_operacional"].lower()]
-    if status_filter:
-        servidores = [s for s in servidores if s["status"] == status_filter]
-    if sistema_filter:
-        servidores = [s for s in servidores if s["sistema_operacional"] == sistema_filter]
-
-    wb = openpyxl.Workbook()
-    ws = wb.active
-    ws.append(["Nome", "IP", "Sistema", "Status", "Descrição"])
-    for s in servidores:
-        ws.append([s["nome"], s["ip"], s["sistema_operacional"], s["status"], s["descricao"]])
-
-    buffer = BytesIO()
-    wb.save(buffer)
-    buffer.seek(0)
-
-    response = HttpResponse(buffer, content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
-    response['Content-Disposition'] = 'attachment; filename=servidores.xlsx'
-    return response
-
-
-def export_pdf(request):
-    servidores = SERVIDORES_DATA
-
-    search = request.GET.get('search', '').lower()
-    status_filter = request.GET.get('status', '')
-    sistema_filter = request.GET.get('sistema', '')
-
-    if search:
-        servidores = [s for s in servidores if search in s["nome"].lower() or search in s["ip"] or search in s["sistema_operacional"].lower()]
-    if status_filter:
-        servidores = [s for s in servidores if s["status"] == status_filter]
-    if sistema_filter:
-        servidores = [s for s in servidores if s["sistema_operacional"] == sistema_filter]
-
-    buffer = BytesIO()
-    p = canvas.Canvas(buffer, pagesize=letter)
-    width, height = letter
-
-    y = height - 50
-    p.setFont("Helvetica", 12)
-    p.drawString(50, y, "Lista de Servidores")
-
-    y -= 30
-    for s in servidores:
-        texto = f"{s['nome']} - {s['ip']} - {s['sistema_operacional']} - {s['status']}"
-        p.drawString(50, y, texto)
-        y -= 20
-        if y < 50:
-            p.showPage()
-            y = height - 50
-
-    p.save()
-    buffer.seek(0)
-
-    response = HttpResponse(buffer, content_type='application/pdf')
-    response['Content-Disposition'] = 'attachment; filename=servidores.pdf'
-    return response
 
 
 def history_event(event, level="INFO"):

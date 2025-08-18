@@ -51,5 +51,13 @@ export const fetchGroups = async (): Promise<Group[]> => {
   const response = await api.get<Group[]>('/freeipa/groups');
   return response.data;
 };
+export async function fetchMachineFromConsul(node: string) {
+  try {
+    const res = await api.get(`/history/detail/${node}`);
+    return res.data;
+  } catch (error) {
+    throw new Error('Erro ao buscar dados do Consul');
+  }
+}
 
 export default api;

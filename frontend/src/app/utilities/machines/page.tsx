@@ -56,9 +56,9 @@ export default function MachinesPage() {
   ];
 
   return (
-    <Box sx={{ height: '90vh', display: 'flex', flexDirection: 'column' }}>
+    <Box sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
       <PanelGroup direction="vertical" style={{ flex: 1 }}>
-        <Panel defaultSize={30} minSize={20}>
+        <Panel defaultSize={50} minSize={20}>
           <Paper
             elevation={1}
             sx={{
@@ -104,7 +104,7 @@ export default function MachinesPage() {
           }}
         />
 
-        <Panel defaultSize={70} minSize={20}>
+        <Panel defaultSize={50} minSize={20}>
           {selectedMachine ? (
             <Paper
               elevation={2}
