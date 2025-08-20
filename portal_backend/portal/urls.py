@@ -1,7 +1,6 @@
 from django.contrib import admin
 from django.urls import path, include
 from consulviewer import views
-from freeipa import views as freeipa_views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
