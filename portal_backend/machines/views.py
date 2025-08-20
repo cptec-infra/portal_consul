@@ -3,25 +3,18 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from pymongo import MongoClient
-import os
-
-mongo_user = os.getenv("MONGO_INITDB_ROOT_USERNAME", "admin")
-mongo_pass = os.getenv("MONGO_INITDB_ROOT_PASSWORD", "admin123")
-mongo_db   = os.getenv("MONGO_INITDB_DATABASE", "portal_mongo")
-mongo_host = os.getenv("MONGO_HOST", "mongodb")
-mongo_port = os.getenv("MONGO_PORT", "27017")
-
+from django.conf import settings
 
 class MachineHistoryView(APIView):
     def get(self, request, node):
         try:
             client = MongoClient(
-                f"mongodb://{mongo_user}:{mongo_pass}@{mongo_host}:{mongo_port}/",
+                    f"mongodb://{settings.MONGO_USER}:{settings.MONGO_PASSWORD}@{settings.MONGO_HOST}:{settings.MONGO_PORT}/",
                 serverSelectionTimeoutMS=5000
             )
-            db = client[mongo_db]
+            db = client[settings.MONGO_BD]
             collection = db['history']
-
+            
             pipeline = [
                 {"$match": {"node": node}},
                 {"$sort": {"last_update": -1}},

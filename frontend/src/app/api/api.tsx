@@ -22,17 +22,19 @@ api.interceptors.request.use(
   (error) => Promise.reject(error)
 );
 
-
+//  Fetching Machine
 export const fetchMachines = async (): Promise<Machine[]> => {
   const response = await api.get<{nodes: Machine[]}>('/nodes/');
   return response.data.nodes;
 };
 
-export const fetchMachinesDetails = async (): Promise<Machine[]> => {
+//  Fetching Services
+export const fetchServices = async (): Promise<Machine[]> => {
   const response = await api.get<Machine[]>('/servicos/');
   return response.data;
 };
 
+// Fetching Machine History
 export async function fetchMachineHistory(node: string) {
   try {
     const res = await api.get(`/history/${node}`);
@@ -42,6 +44,16 @@ export async function fetchMachineHistory(node: string) {
   }
 }
 
+export async function fetchMachineFromConsul(node: string) {
+  try {
+    const res = await api.get(`/history/detail/${node}`);
+    return res.data;
+  } catch (error) {
+    throw new Error('Erro ao buscar dados do Consul');
+  }
+}
+
+// Fetching LDAP
 export const fetchUsers = async (): Promise<User[]> => {
   const response = await api.get<User[]>('/freeipa/users');
   return response.data;
@@ -51,13 +63,5 @@ export const fetchGroups = async (): Promise<Group[]> => {
   const response = await api.get<Group[]>('/freeipa/groups');
   return response.data;
 };
-export async function fetchMachineFromConsul(node: string) {
-  try {
-    const res = await api.get(`/history/detail/${node}`);
-    return res.data;
-  } catch (error) {
-    throw new Error('Erro ao buscar dados do Consul');
-  }
-}
 
 export default api;

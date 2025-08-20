@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import { Box, Typography, Paper, CircularProgress, Accordion, AccordionSummary, AccordionDetails, Table, TableBody, TableCell, TableHead, TableRow } from '@mui/material';
 import { Panel, PanelGroup, PanelResizeHandle } from 'react-resizable-panels';
-import { fetchMachinesDetails } from '@/app/api/api';
+import { fetchServices } from '@/app/api/api';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ErrorIcon from '@mui/icons-material/Error';
 import WarningIcon from '@mui/icons-material/Warning';
@@ -26,7 +26,7 @@ export default function ServicesPage() {
   useEffect(() => {
     const getServices = async () => {
       try {
-        const rawData = await fetchMachinesDetails();
+        const rawData = await fetchServices();
        
         const groupedServices = Object.values(
           rawData.reduce((acc: { [key: string]: Service[] }, service) => {
