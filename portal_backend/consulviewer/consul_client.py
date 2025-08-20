@@ -196,8 +196,6 @@ def get_detailed_services():
                     {
                         "name": check["Name"],
                         "status": check["Status"], 
-                        "output": check.get("Output", ""),
-                        "type": check.get("CheckType", "N/A")
                     } for check in checks
                 ]
             })

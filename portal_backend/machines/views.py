@@ -17,13 +17,7 @@ class MachineHistoryView(APIView):
             
             pipeline = [
                 {"$match": {"node": node}},
-                {"$sort": {"last_update": -1}},
-                {"$group": {
-                    "_id": "$hostname",
-                    "doc": {"$first": "$$ROOT"}
-                }},
-                {"$replaceRoot": {"newRoot": "$doc"}},
-                {"$sort": {"last_update": -1}}
+                {"$sort": {"_id": -1}},
             ]
 
             history = list(collection.aggregate(pipeline))
