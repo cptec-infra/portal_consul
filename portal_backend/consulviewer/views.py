@@ -1,12 +1,7 @@
-from django.http import JsonResponse, HttpResponse
-from django.views.decorators.csrf import csrf_exempt
-from .consul_client import get_nodes, get_detailed_services, get_services, group_by_node, save_history, get_services_by_node
-from portal.mongo_client import history_collection
-import openpyxl
-from io import BytesIO
-from reportlab.pdfgen import canvas
-from reportlab.lib.pagesizes import letter
 import datetime
+from django.http import JsonResponse
+from portal.mongo_client import history_collection
+from .consul_client import (get_nodes,get_services,save_history)
 
 SERVIDORES_DATA = [
     {"id": 1, "nome": "vm-database-01", "ip": "172.27.1.10", "sistema_operacional": "Ubuntu 22.04", "status": "ativo", "descricao": "Servidor de banco de dados PostgreSQL rodando em VM dedicada"},
