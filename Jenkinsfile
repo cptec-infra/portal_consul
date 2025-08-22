@@ -65,23 +65,8 @@ pipeline {
         }
       }
     }
-
-/*
-    stage('Deploy') {
-      steps {
-        script {
-          try {
-            echo "Deploying image $DOCKER_REGISTRY/$REPOSITORY/$IMAGE_NAME:$IMAGE_TAG to live"
-            sh 'deploy ${REPOSITORY} ${IMAGE_NAME} ${IMAGE_TAG}'
-          } catch (Exception e) {
-            currentBuild.result = 'FAILURE'
-            throw e
-          }
-        }
-      }
-    }
   }
-*/
+  
   post {
     always {
       // Garantir que a limpeza de imagens será sempre executada no final
@@ -100,3 +85,4 @@ pipeline {
     }
   }
 }
+
