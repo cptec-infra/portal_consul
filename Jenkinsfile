@@ -34,6 +34,7 @@ pipeline {
 
           echo "$JSON_OUTPUT generated successfully:"
           sh "cat portal/${JSON_OUTPUT}"
+          sh "cp .env_example .env"
         }
       }
     }        
@@ -42,7 +43,7 @@ pipeline {
       steps {
         script {
           try {
-            sh 'docker build -t $DOCKER_REGISTRY/$REPOSITORY/$IMAGE_NAME:$IMAGE_TAG -t $DOCKER_REGISTRY/$REPOSITORY/$IMAGE_NAME:latest .'
+            sh 'docker build -t $DOCKER_REGISTRY/$REPOSITORY/$IMAGE_NAME:$IMAGE_TAG -t $DOCKER_REGISTRY/$REPOSITORY/$IMAGE_NAME:latest -f docker/Dockerfile-web .'
           } catch (Exception e) {
             currentBuild.result = 'FAILURE'
             throw e
