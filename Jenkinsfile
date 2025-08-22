@@ -43,7 +43,7 @@ pipeline {
       steps {
         script {
           try {
-            sh 'docker build -t $DOCKER_REGISTRY/$REPOSITORY/$IMAGE_NAME:$IMAGE_TAG -t $DOCKER_REGISTRY/$REPOSITORY/$IMAGE_NAME:latest -f docker/Dockerfile-web .'
+            sh 'docker build -t $DOCKER_REGISTRY/$REPOSITORY/$IMAGE_NAME:$IMAGE_TAG -t $DOCKER_REGISTRY/$REPOSITORY/$IMAGE_NAME:latest -f docker/Dockerfile.web .'
           } catch (Exception e) {
             currentBuild.result = 'FAILURE'
             throw e
