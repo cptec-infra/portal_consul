@@ -87,7 +87,7 @@ export default function GroupsPage() {
                   border: 'none',
                   height: '100%',
                   '& .MuiDataGrid-cell': {
-                    borderBottom: '1px solid rgba(224, 224, 224, 0.2)',
+                    borderBottom: '1px solid rgba(223, 224, 224, 0.2)',
                   },
                   '& .MuiDataGrid-columnHeaders': {
                     backgroundColor: 'rgba(0,0,0,0.05)',
