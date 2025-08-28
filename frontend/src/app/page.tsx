@@ -24,7 +24,7 @@ export default function Dashboard() {
   return (
     <PageContainer title="Dashboard" description="Painel geral de consumo e status das máquinas.">
       <Box sx={{ height: '90vh', display: 'flex', flexDirection: 'column' }}>
-        <Grid container spacing={3}>
+        {/* <Grid container spacing={3}>
           {stats.map((stat, index) => (
             <Grid sx={{ xs: 12, sm: 4 }} key={index}>
               <Paper elevation={1} sx={{ padding: 4, textAlign: 'center' }}>
@@ -35,7 +35,45 @@ export default function Dashboard() {
               </Paper>
             </Grid>
           ))}
+        </Grid> */}
+
+        <Grid sx={{ xs: 12, md: 6 }}>
+          <Paper
+            elevation={3}
+            sx={{
+              padding: 2,
+              minHeight: 300,
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "space-between"
+            }}
+          >
+            <Typography variant="h6" gutterBottom>
+              Consumo CPU (Grafana)
+            </Typography>
+
+            <Box sx={{ flex: 1 }}>
+              {/* <iframe 
+                  src="http://grafana.coids.inpe.br//d-solo/bele8igbwfncwb/coids?orgId=1&from=1756227236562&to=1756313636562&timezone=browser&panelId=7&__feature.dashboardSceneSolo" 
+                  width="100%"
+                  height="300"
+                  frameBorder="0"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen
+                  /> */}
+
+                {/* <iframe src="http://150.163.212.76:9090" width="720" height="480" frameborder="0"></iframe> */}
+
+                <iframe
+                  src="https://observablehq.com/embed/@d3/bar-chart?cell=chart"
+                  width="100%"
+                  height="400"
+                  frameBorder="0"
+                />
+            </Box>
+          </Paper>
         </Grid>
+
 
         <Divider sx={{ my: 4 }} />
 
