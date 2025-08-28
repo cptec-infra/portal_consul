@@ -51,7 +51,7 @@ def get_all_groups():
     logger = logging.getLogger("freeipa")
     try:
         logger.debug("vai iniciar a chamada group_find")
-        response = client._request("group_find",[],{"sizelimit": 0,"no_members": True})
+        response = client._request("group_find",[],{"sizelimit": 0,"no_members": True, "all": True})
 
         if not isinstance(response, dict):
             logger.warning("Retorno inesperado do FreeIPA: %r", response)
@@ -64,7 +64,8 @@ def get_all_groups():
             filtered_groups.append({
                 "cn": g.get("cn", [""])[0] if "cn" in g and g["cn"] else "",
                 "description": g.get("description", [""])[0] if "description" in g and g["description"] else "",
-                "gidnumber": g.get("gidnumber", [""])[0] if "gidnumber" in g and g["gidnumber"] else ""
+                "gidnumber": g.get("gidnumber", [""])[0] if "gidnumber" in g and g["gidnumber"] else "",
+                "member_user": g.get("member_user", []) if "member_user" in g and g["member_user"] else [],
             })
 
         return filtered_groups
