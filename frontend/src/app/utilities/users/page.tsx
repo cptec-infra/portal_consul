@@ -150,7 +150,7 @@ export default function UsersPage() {
               }}
             >
               <Typography variant="body1">
-                Select a server to see details.
+                Selecione o usuário para ver os detalhes.
               </Typography>
             </Paper>
           )}

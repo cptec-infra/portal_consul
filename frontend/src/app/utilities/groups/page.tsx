@@ -140,7 +140,7 @@ export default function GroupsPage() {
               }}
             >
               <Typography variant="body1">
-                Selecione o Grupo para ver os detalhes.
+                Selecione o grupo para ver os detalhes.
               </Typography>
             </Paper>
           )}
