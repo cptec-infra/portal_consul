@@ -5,4 +5,9 @@ export interface User {
   title: string;
   firstname: string;
   lastname: string;
+  passwordExpiration: string;
+  macs?: string[];
+  telephoneNumber?: string;
+  homeDirectory?: string;
+  memberGroup?: string[];
 }
