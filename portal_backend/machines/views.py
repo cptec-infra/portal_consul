@@ -84,12 +84,10 @@ class GrafanaProxyView(APIView):
 
         content_type = grafana_resp.headers.get("Content-Type", "text/plain")
 
-        # Se for HTML → reescreve os caminhos
         if "text/html" in content_type:
             text = grafana_resp.text
             text = text.replace('href="/', 'href="/api/grafana/')
             text = text.replace('src="/', 'src="/api/grafana/')
-            # text = text.replace('fetch("/', 'fetch("/api/grafana/')
 
             response = HttpResponse(text, status=grafana_resp.status_code, content_type=content_type)
         else:
