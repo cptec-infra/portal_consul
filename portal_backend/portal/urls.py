@@ -1,5 +1,5 @@
 from django.contrib import admin
-from django.urls import path, include
+from django.urls import path, include, re_path
 from consulviewer import views
 from machines import views as machine_views
 
@@ -10,5 +10,5 @@ urlpatterns = [
     path('api/servicos/', views.servicos, name='api_servicos'),
     path('api/', include('machines.urls')),
     path('api/', include('freeipa.urls')),
-    path("api/grafana/<path:grafana_path>", machine_views.GrafanaProxyView.grafana_proxy, name="grafana_proxy"),
+    re_path(r'^api/grafana/(?P<grafana_path>.*)$', machine_views.GrafanaProxyView.as_view(), name='grafana_proxy'),
 ]
