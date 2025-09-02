@@ -61,7 +61,6 @@ class GrafanaProxyView(APIView):
     def _proxy_request(self, request, grafana_path):
 
         target_url = f"{settings.GRAFANA_URL}/{grafana_path}"
-        params = request.GET.dict()
 
         headers = {
             "Authorization": f"Bearer {settings.GRAFANA_API_KEY}",
