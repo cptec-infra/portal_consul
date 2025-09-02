@@ -8,6 +8,8 @@ import MachineTable from './components/charts/MachineTable';
 import AlertsTable from './components/charts/AlertsTable';
 import UserSessions from './components/charts/UserSessions';
 
+const API_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
+
 const machineStatusData = [
   { name: 'Rodando', value: 80, color: '#4CAF50' },
   { name: 'Parado', value: 32, color: '#FFC107' },
@@ -24,19 +26,6 @@ export default function Dashboard() {
   return (
     <PageContainer title="Dashboard" description="Painel geral de consumo e status das máquinas.">
       <Box sx={{ height: '90vh', display: 'flex', flexDirection: 'column' }}>
-        {/* <Grid container spacing={3}>
-          {stats.map((stat, index) => (
-            <Grid sx={{ xs: 12, sm: 4 }} key={index}>
-              <Paper elevation={1} sx={{ padding: 4, textAlign: 'center' }}>
-                <Typography variant="h6">{stat.label}</Typography>
-                <Typography variant="h4" sx={{ color: stat.color || 'primary.main' }}>
-                  {stat.value}
-                </Typography>
-              </Paper>
-            </Grid>
-          ))}
-        </Grid> */}
-
         <Grid sx={{ xs: 12, md: 6 }}>
           <Paper
             elevation={3}
@@ -53,23 +42,19 @@ export default function Dashboard() {
             </Typography>
 
             <Box sx={{ flex: 1 }}>
-              {/* <iframe 
-                  src="http://grafana.coids.inpe.br//d-solo/bele8igbwfncwb/coids?orgId=1&from=1756227236562&to=1756313636562&timezone=browser&panelId=7&__feature.dashboardSceneSolo" 
-                  width="100%"
-                  height="300"
-                  frameBorder="0"
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                  allowFullScreen
-                  /> */}
-
-                {/* <iframe src="http://150.163.212.76:9090" width="720" height="480" frameborder="0"></iframe> */}
-
                 <iframe
+                  src={`${API_URL}/grafana/d-solo/bele8igbwfncwb/coids?orgId=1&from=1756729139872&to=1756815539872&timezone=browser&panelId=7&__feature.dashboardSceneSolo`}
+                  width="450"
+                  height="200"
+                  frameBorder="0">
+                </iframe>
+
+                {/* <iframe
                   src="https://observablehq.com/embed/@d3/bar-chart?cell=chart"
                   width="100%"
                   height="400"
                   frameBorder="0"
-                />
+                /> */}
             </Box>
           </Paper>
         </Grid>
