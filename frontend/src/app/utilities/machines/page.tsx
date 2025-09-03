@@ -135,7 +135,7 @@ export default function MachinesPage() {
               }}
             >
               <Typography variant="body1">
-                Select a server to see details.
+                Selecione o host para ver os detalhes.
               </Typography>
             </Paper>
           )}

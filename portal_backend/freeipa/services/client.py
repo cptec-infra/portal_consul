@@ -51,7 +51,7 @@ def get_all_groups():
     logger = logging.getLogger("freeipa")
     try:
         logger.debug("vai iniciar a chamada group_find")
-        response = client._request("group_find",[],{"sizelimit": 0,"no_members": True})
+        response = client._request("group_find",[],{"sizelimit": 0,"no_members": True, "all": True})
 
         if not isinstance(response, dict):
             logger.warning("Retorno inesperado do FreeIPA: %r", response)
@@ -64,7 +64,8 @@ def get_all_groups():
             filtered_groups.append({
                 "cn": g.get("cn", [""])[0] if "cn" in g and g["cn"] else "",
                 "description": g.get("description", [""])[0] if "description" in g and g["description"] else "",
-                "gidnumber": g.get("gidnumber", [""])[0] if "gidnumber" in g and g["gidnumber"] else ""
+                "gidnumber": g.get("gidnumber", [""])[0] if "gidnumber" in g and g["gidnumber"] else "",
+                "member_user": g.get("member_user", []) if "member_user" in g and g["member_user"] else [],
             })
 
         return filtered_groups
@@ -78,7 +79,7 @@ def get_all_users():
     logger = logging.getLogger("freeipa")
     try:
         logger.debug("vai iniciar a chamada user_find")
-        response = client._request("user_find", [], {"sizelimit": 0, "no_members": True, "nsaccountlock": False, "whoami": False})
+        response = client._request("user_find", [], {"sizelimit": 0, "no_members": True, "nsaccountlock": False, "whoami": False, "all": True})
 
         if not isinstance(response, dict):
             logger.warning("Retorno inesperado do FreeIPA: %r", response)
@@ -86,6 +87,7 @@ def get_all_users():
 
         users = response.get("result", [])
 
+        # print(users)
         filtered_users = []
         for u in users:
             title = u.get("title", [""])[0] if "title" in u and u["title"] else ""
@@ -99,6 +101,11 @@ def get_all_users():
                 "mail": u.get("mail", [""])[0] if "mail" in u and u["mail"] else "",
                 "firstname": u.get("givenname", [""])[0] if "givenname" in u and u["givenname"] else "",
                 "lastname": u.get("sn", [""])[0] if "sn" in u and u["sn"] else "",
+                "passwordexpiration": (u["krbpasswordexpiration"][0].get("__datetime__", "")if "krbpasswordexpiration" in u and u["krbpasswordexpiration"]else ""),
+                "macs": u.get("pager", []) if "pager" in u and u["pager"] else [],
+                "telephonenumber": u.get("telephonenumber", [""])[0] if "telephonenumber" in u and u["telephonenumber"] else "",
+                "homedirectory": u.get("homedirectory", [""])[0] if "homedirectory" in u and u["homedirectory"] else "",
+                "memberof_group": u.get("memberof_group", []) if "memberof_group" in u and u["memberof_group"] else [],
             })
 
         return filtered_users
