@@ -1,13 +1,14 @@
 'use client';
 
 import { useEffect, useState, useMemo } from 'react';
-import { Box, Paper, CircularProgress } from '@mui/material';
+import { Box, Paper, CircularProgress, Typography } from '@mui/material';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
-import { Panel, PanelGroup } from 'react-resizable-panels';
+import { Panel, PanelGroup, PanelResizeHandle } from 'react-resizable-panels';
 import { fetchGroups } from '@/app/api/api';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/utils/store/store';
 import { Group } from './types';
+import GroupDetails from './GroupDetails';
 
 export default function GroupsPage() {
   const [groups, setGroups] = useState<Group[]>([]);
@@ -26,6 +27,7 @@ export default function GroupsPage() {
           cn: String(u.cn || `group-${index}`), 
           description: String(u.description || '-'),
           gidNumber: String(u.gidnumber || '-'),
+          memberUser: Array.isArray(u.member_user) ? u.member_user.map(String) : [],
         }));
 
         setGroups(normalized); 
@@ -59,7 +61,7 @@ export default function GroupsPage() {
   return (
     <Box sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
       <PanelGroup direction="vertical" style={{ flex: 1 }}>
-        <Panel defaultSize={30} minSize={20}>
+        <Panel defaultSize={60} minSize={20}>
           <Paper
             elevation={1}
             sx={{
@@ -80,7 +82,7 @@ export default function GroupsPage() {
               <DataGrid
                 rows={filteredGroups}
                 columns={columns}
-                getRowId={(row) => row.cn || `group-${Math.random()}`} // Fallback seguro
+                getRowId={(row) => row.cn || `group-${Math.random()}`}
                 onRowClick={(params) => setSelectedGroup(params.row)}
                 hideFooter
                 sx={{
@@ -97,6 +99,51 @@ export default function GroupsPage() {
               />
             )}
           </Paper>
+        </Panel>
+        
+        <PanelResizeHandle
+          style={{
+            height: '6px',
+            background: '#ccc',
+            cursor: 'row-resize',
+          }}
+        />
+
+        <Panel defaultSize={50} minSize={20}>
+          {selectedGroup ? (
+            <Paper
+              elevation={2}
+              sx={{
+                p: 0,
+                height: '100%',
+                borderRadius: 2,
+                overflow: 'auto',
+                mt: 0,
+                backgroundColor: (theme) =>
+                  theme.palette.mode === 'dark' ? '#2e2e2e' : '#fff',
+              }}
+            >
+              <GroupDetails
+                group={selectedGroup || ''}
+                onClose={() => setSelectedGroup(null)}
+              />
+            </Paper>
+          ) : (
+            <Paper
+              sx={{
+                p: 2,
+                height: '100%',
+                borderRadius: 2,
+                mt: 1,
+                backgroundColor: (theme) =>
+                  theme.palette.mode === 'dark' ? '#2e2e2e' : '#fff',
+              }}
+            >
+              <Typography variant="body1">
+                Selecione o grupo para ver os detalhes.
+              </Typography>
+            </Paper>
+          )}
         </Panel>
       </PanelGroup>
     </Box>
