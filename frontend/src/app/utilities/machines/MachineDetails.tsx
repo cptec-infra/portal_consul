@@ -32,6 +32,8 @@ import {
 } from '@mui/icons-material';
 import { useEffect, useState } from 'react';
 
+const API_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
+
 interface Props {
   node: string;
   onClose?: () => void;
@@ -164,14 +166,15 @@ export default function MachineDetails({ node }: Props) {
   }
 
   return (
-    <Paper sx={{ mt: 4, p: 4 }}>
-      <Box>
+    <Paper sx={{ mt: 4, p: 4, flexGrow: 1, display: 'flex', flexDirection: 'column', height: '100%' }}>
+      <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3, boxSizing: 'border-box', height: '100%' }}>
         <Tabs value={tab} onChange={handleTabChange} textColor="primary" indicatorColor="primary" sx={{ mb: 3 }}>
           <Tab label="Detalhes da Máquina" />
+          <Tab label="Monitoramento" />
           <Tab label="Histórico de Alterações" />
         </Tabs>
 
-        <Divider sx={{ mb: 3 }} />
+        <Divider sx={{ mb: 2 }} />
 
         {tab === 0 && (
           <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
@@ -250,7 +253,33 @@ export default function MachineDetails({ node }: Props) {
         )}
 
         {tab === 1 && (
-          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+          <Box sx={{ flexGrow: 1, height: '100%' }}>
+            {/* <iframe
+              src={`${API_URL}/grafana/d-solo/bele8igbwfncwb/coids?orgId=1&from=1756729139872&to=1756815539872&timezone=browser&panelId=7&__feature.dashboardSceneSolo`}
+              style={{
+                border: 'none',
+                width: '100%',
+                height: '100%',
+              }}
+              sandbox="allow-scripts allow-same-origin allow-popups"
+            /> */}
+            <iframe
+              src={`${API_URL}/d/rYdddlPWk/node-exporter-full?orgId=1&from=now-1h&to=now&timezone=browser&var-datasource=dejpdm2ltl2bkd&var-job=node_exporter&var-nodename=caete.coids.inpe.br&var-node=150.163.212.252:9100&var-diskdevices=%5Ba-z%5D%2B%7Cnvme%5B0-9%5D%2Bn%5B0-9%5D%2B%7Cmmcblk%5B0-9%5D%2B&refresh=1m`}
+              width="100%"
+              height="300"
+              frameBorder="0"
+            />
+            <iframe
+              src={`${API_URL}/grafana/d-solo/bele8igbwfncwb/node-exporter-full?orgId=1&panelId=4&var-node=${node}&fullscreen&theme=light`}
+              width="100%"
+              height="300"
+              frameBorder="0"
+            />
+          </Box>
+        )}
+
+        {tab === 2 && (
+          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, flexGrow: 1 }}>
             <Typography variant="h5" fontWeight="700" color="text.primary" sx={{ mb: 2, display: 'flex', alignItems: 'center', gap: 2, fontSize: '1.3rem' }}>
               <TimelineIcon color="primary" />
               Histórico de Alterações
