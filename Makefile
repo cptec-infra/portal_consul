@@ -8,7 +8,7 @@ endef
 
 # Ambiente de desenvolvimento
 start-dev:
-	$(call compose,docker-compose_dev.yml) up -d
+	$(call compose,docker-compose_dev.yml) up
 
 # Ambiente de produção
 start-prod:

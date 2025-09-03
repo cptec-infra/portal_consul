@@ -9,4 +9,5 @@ urlpatterns = [
     path('api/servicos/', views.servicos, name='api_servicos'),
     path('api/', include('machines.urls')),
     path('api/', include('freeipa.urls')),
+    path('api/', include('consulviewer.urls')),
 ]
