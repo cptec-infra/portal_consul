@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Box, Typography, CircularProgress, Dialog, DialogTitle, DialogContent, Table, TableBody, TableCell, TableHead, TableRow, Paper, } from '@mui/material'; 
 import ErrorIcon from '@mui/icons-material/Error';
 import WarningIcon from '@mui/icons-material/Warning';
@@ -9,12 +9,17 @@ import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import { fetchServices } from '@/app/api/api';
 import { Service, Grouped } from './types';
 import { Panel, PanelGroup } from 'react-resizable-panels';
+import { useSelector } from 'react-redux';
+import { RootState } from '@/utils/store/store';
+
 
 export default function ServicesPage() {
   const [services, setServices] = useState<Grouped[]>([]);
   const [loading, setLoading] = useState(true);
   const [selected, setSelected] = useState<Grouped | null>(null);
 
+  const searchTerm = useSelector((state: RootState) => state.search.value);
+  
   useEffect(() => {
     const getServices = async () => {
       try {
@@ -79,14 +84,25 @@ export default function ServicesPage() {
       },
     },
   ];
+  const filteredServices = useMemo(() => {
+    if (!searchTerm) return services;
+    return services.filter((service) =>
+      Object.values(service)
+        .filter((v) => typeof v === 'string')
+        .some((value) =>
+          (value as string).toLowerCase().includes(searchTerm.toLowerCase())
+        )
+    );
+  }, [services, searchTerm]);
 
-  const rows = services.map((svc, index) => ({
+  const rows = filteredServices.map((svc, index) => ({
     id: index, 
     name: svc.name,
     nodes: svc.nodes,
     hasCritical: svc.hasCritical,
     hasWarning: svc.hasWarning,
   }));
+
 
   return (
     <Box sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
