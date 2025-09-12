@@ -1,46 +1,36 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { Box, Typography, Paper, CircularProgress, Accordion, AccordionSummary, AccordionDetails, Table, TableBody, TableCell, TableHead, TableRow } from '@mui/material';
-import { Panel, PanelGroup, PanelResizeHandle } from 'react-resizable-panels';
-import { fetchServices } from '@/app/api/api';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import { Box, Typography, CircularProgress, Dialog, DialogTitle, DialogContent, Table, TableBody, TableCell, TableHead, TableRow, Paper, } from '@mui/material'; 
 import ErrorIcon from '@mui/icons-material/Error';
 import WarningIcon from '@mui/icons-material/Warning';
 import SuccessIcon from '@mui/icons-material/CheckCircle';
-
-interface Service {
-  name: string;
-  address?: string;
-  datacenter?: string;
-  id?: string;
-  node?: string;
-  status?: string;
-  port?: string;
-}
+import { DataGrid, GridColDef } from '@mui/x-data-grid';
+import { fetchServices } from '@/app/api/api';
+import { Service, Grouped } from './types';
+import { Panel, PanelGroup } from 'react-resizable-panels';
 
 export default function ServicesPage() {
-  const [services, setServices] = useState<{ node: string; services: Service[]; hasCritical: boolean; hasWarning: boolean }[]>([]);
+  const [services, setServices] = useState<Grouped[]>([]);
   const [loading, setLoading] = useState(true);
+  const [selected, setSelected] = useState<Grouped | null>(null);
 
   useEffect(() => {
     const getServices = async () => {
       try {
         const rawData = await fetchServices();
-       
+
         const groupedServices = Object.values(
-          rawData.reduce((acc: { [key: string]: Service[] }, service) => {
-            if (service.node) {
-              if (!acc[service.node]) {
-                acc[service.node] = [];
-              }
-              acc[service.node].push(service);
+          rawData.reduce((acc: { [key: string]: any[] }, item: Service) => {
+            if (item.name) {
+              if (!acc[item.name]) acc[item.name] = [];
+              acc[item.name].push(item);
             }
             return acc;
           }, {})
         ).map((group) => ({
-          node: group[0].node,
-          services: group,
+          name: group[0].name,
+          nodes: group,
           hasCritical: group.some((s) => s.status === 'critical'),
           hasWarning: group.some((s) => s.status === 'warning'),
         }));
@@ -56,27 +46,64 @@ export default function ServicesPage() {
     getServices();
   }, []);
 
+  // DataGrid columns
+  const columns: GridColDef[] = [
+    {
+      field: 'statusIcon',
+      headerName: '',
+      width: 30,
+      sortable: false,
+      renderCell: (params) => {
+        const row = params.row as Grouped;
+        return row.hasCritical ? (
+          <ErrorIcon color="error" />
+        ) : row.hasWarning ? (
+          <WarningIcon color="warning" />
+        ) : (
+          <SuccessIcon color="success" />
+        );
+      },
+    },
+    {
+      field: 'name',
+      headerName: 'Serviço',
+      flex: 1,
+    },
+    {
+      field: 'hosts',
+      headerName: 'Hosts detectados',
+      flex: 1,
+      renderCell: (params: any) => {
+        const nodes = (params?.row as Grouped)?.nodes ?? [];
+        return `${nodes.length} host(s) detectado(s)`;
+      },
+    },
+  ];
+
+  const rows = services.map((svc, index) => ({
+    id: index, 
+    name: svc.name,
+    nodes: svc.nodes,
+    hasCritical: svc.hasCritical,
+    hasWarning: svc.hasWarning,
+  }));
+
   return (
-    <Box
-      sx={{
-        height: '100%',
-        display: 'flex',
-        flexDirection: 'column',
-      }}
-    >
-    <PanelGroup direction="vertical" style={{ flex: 1}}>
-      <Panel defaultSize={100} minSize={30}   className="custom-scroll" style={{ display: 'flex', flexDirection: 'column', overflow: 'auto' }}>
-        <Paper
-          elevation={3}
-          sx={{
-            p: 2,
-            flex: 1,
-            display: 'flex',
-            flexDirection: 'column',
-            width: '100%',
-            borderRadius: 1,
-          }}
-        >
+    <Box sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
+      <PanelGroup direction="vertical" style={{ flex: 1 }}>
+        <Panel defaultSize={60} minSize={20}>
+          <Paper
+            elevation={1}
+            sx={{
+              p: 2,
+              height: '99%', 
+              borderRadius: 3,
+              backgroundColor: (theme) =>
+                theme.palette.mode === 'dark' ? '#1e1e1e' : '#fafafa',
+              display: 'flex',
+              flexDirection: 'column',
+            }}
+          >
           {loading ? (
             <Box sx={{ display: 'flex', justifyContent: 'center', mt: 5 }}>
               <CircularProgress />
@@ -84,78 +111,66 @@ export default function ServicesPage() {
           ) : services.length === 0 ? (
             <Typography variant="body1">Nenhum serviço disponível.</Typography>
           ) : (
-            services.map((group) => (
-              <Accordion
-                key={group.node}
-                sx={{
-                  mb: 2,
-                  '&:last-child': { mb: 0 }, 
-                  borderRadius: 4,
-                  border: 'none', 
-                  '& .MuiAccordionSummary-root': {
-                    borderBottom: 'none',
-                  },
-                  '& .MuiAccordionDetails-root': {
-                    padding: '0 16px 16px',
-                  },
-                }}
-              >
-                <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                  <Box sx={{ display: 'flex', alignItems: 'center', width: '100%' }}>
-                    <Typography variant="h6" sx={{ flexGrow: 1 }}>{group.node}</Typography>
-                    {group.hasCritical ? (
-                      <ErrorIcon color="error" sx={{ ml: 1 }} />
-                    ) : group.hasWarning ? (
-                      <WarningIcon color="warning" sx={{ ml: 1 }} />
-                    ) : (
-                      <SuccessIcon color="success" sx={{ ml: 1 }} />
-                    )}
-                  </Box>
-                </AccordionSummary>
-                <AccordionDetails>
-                  <Table sx={{ minWidth: 650 }} aria-label={`serviços de ${group.node}`}>
-                    <TableHead>
-                      <TableRow>
-                        <TableCell>Serviço</TableCell>
-                        <TableCell>Porta</TableCell>
-                        <TableCell>Status</TableCell>
-                      </TableRow>
-                    </TableHead>
-                    <TableBody>
-                      {group.services.map((service) => (
-                        <TableRow
-                          key={service.id || service.name}
-                          sx={{
-                            '&:hover': { backgroundColor: 'rgba(0,0,0,0.05)' },
-                            cursor: 'pointer',
-                          }}
-                        >
-                          <TableCell>{service.name}</TableCell>
-                          <TableCell>{service.port || 'N/A'}</TableCell>
-                          <TableCell>
-                            <Typography
-                              color={
-                                service.status === 'critical'
-                                  ? 'error'
-                                  : service.status === 'warning'
-                                  ? 'warning'
-                                  : 'success'
-                              }
-                            >
-                              {service.status || 'N/A'}
-                            </Typography>
-                          </TableCell>
-                        </TableRow>
-                      ))}
-                    </TableBody>
-                  </Table>
-                </AccordionDetails>
-              </Accordion>
-            ))
+            <DataGrid
+              rows={rows}
+              columns={columns}
+              sx={{
+                borderRadius: 2,
+                boxShadow: 1,
+                bgcolor: 'background.paper',
+              }}
+              onRowClick={(params) => setSelected(params.row)}
+            />
+        )}
+          </Paper>
+        </Panel>
+      </PanelGroup>
+
+      {/* Modal com detalhes */}
+      <Dialog
+        open={!!selected}
+        onClose={() => setSelected(null)}
+        maxWidth="md"
+        fullWidth
+      >
+        <DialogTitle>Hosts com o serviço {selected?.name}</DialogTitle>
+        <DialogContent>
+          {selected && (
+            <Table sx={{ minWidth: 650 }}>
+              <TableHead>
+                <TableRow>
+                  <TableCell>Node</TableCell>
+                  <TableCell>IP</TableCell>
+                  <TableCell>Datacenter</TableCell>
+                  <TableCell>Status</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {selected.nodes.map((host: Service) => (
+                  <TableRow key={host.node}>
+                    <TableCell>{host.node}</TableCell>
+                    <TableCell>{host.address}</TableCell>
+                    <TableCell>{host.datacenter}</TableCell>
+                    <TableCell>
+                      <Typography
+                        color={
+                          host.status === 'critical'
+                            ? 'error'
+                            : host.status === 'warning'
+                            ? 'warning'
+                            : 'success'
+                        }
+                      >
+                        {host.status || 'N/A'}
+                      </Typography>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
           )}
-        </Paper>
-      </Panel>
-    </PanelGroup>
-  </Box>
+        </DialogContent>
+      </Dialog>
+    </Box>
   );
 }

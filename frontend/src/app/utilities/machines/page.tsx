@@ -8,13 +8,7 @@ import { fetchMachines } from '@/app/api/api';
 import MachineDetails from './MachineDetails';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/utils/store/store';
-
-interface Machine {
-  name: string;
-  address?: string;
-  datacenter?: string;
-  id?: string;
-}
+import { Machine } from './types';
 
 export default function MachinesPage() {
   const [machines, setMachines] = useState<Machine[]>([]);
