@@ -20,10 +20,8 @@ import {
   VisibilityOff as VisibilityOffIcon,
   CheckCircle as CheckCircleIcon,
   Security as SecurityIcon,
-  Speed as SpeedIcon,
   Tag as TagIcon,
   Timeline as TimelineIcon,
-  Memory as MemoryIcon,
   Build as BuildIcon,
   Fingerprint as FingerprintIcon
 } from '@mui/icons-material';
@@ -41,6 +39,70 @@ interface Machine {
   services: any[];
   _id?: string;
   hash?: string;
+}
+
+function diffSnapshots(prev: any, curr: any) {
+  const diffs: any[] = [];
+
+  // campos simples
+  ['node', 'node_address', 'datacenter'].forEach(field => {
+    if (prev[field] !== curr[field]) {
+      diffs.push({
+        field,
+        old_value: prev[field],
+        new_value: curr[field],
+        action: 'Alteração'
+      });
+    }
+  });
+
+  // serviços
+  const prevServices = Object.fromEntries((prev.services ?? []).map((s: any) => [s.id, s]));
+  const currServices = Object.fromEntries((curr.services ?? []).map((s: any) => [s.id, s]));
+
+  // removidos
+  for (const id in prevServices) {
+    if (!currServices[id]) {
+      diffs.push({
+        field: `${id}`,
+        old_value: 'presente',
+        new_value: 'removido',
+        action: 'Remoção de serviço'
+      });
+    }
+  }
+  
+  for (const id in currServices) {
+    const sPrev = prevServices[id];
+    const sCurr = currServices[id];
+    if (!sPrev) {
+      diffs.push({
+        field: `Serviço ${id}`,
+        old_value: 'ausente',
+        new_value: 'adicionado',
+        action: 'Novo serviço'
+      });
+    } else {
+      if (sPrev.status !== sCurr.status) {
+        diffs.push({
+          field: `${id}`,
+          old_value: sPrev.status,
+          new_value: sCurr.status,
+          action: 'Alteração de status'
+        });
+      }
+      if (JSON.stringify(sPrev.tags) !== JSON.stringify(sCurr.tags)) {
+        diffs.push({
+          field: `${id}`,
+          old_value: (sPrev.tags ?? []).join(', '),
+          new_value: (sCurr.tags ?? []).join(', '),
+          action: 'Alteração de tags'
+        });
+      }
+    }
+  }
+
+  return diffs;
 }
 
 export default function MachineDetails({ node }: Props) {
@@ -63,13 +125,24 @@ export default function MachineDetails({ node }: Props) {
           fetchMachineHistory(node)
         ]);
 
-        const updatedHistory = machineHistory.map(historyEntry => ({
-          ...historyEntry,
-          services: consulData
-        }));
-        setMachine({ ...updatedHistory[0] });
+        const diffsHistory: any[] = [];
+        for (let i = 1; i < machineHistory.length; i++) {
+          const prev = machineHistory[i];
+          const curr = machineHistory[i - 1];
+          const diffs = diffSnapshots(prev, curr);
+          diffs.forEach(d => {
+            diffsHistory.push({
+              timestamp: curr.timestamp,
+              node: curr.node,
+              datacenter: curr.datacenter,
+              services: curr.services,
+              ...d
+            });
+          });
+        }
 
-        setHistory(updatedHistory);
+        setMachine({ ...machineHistory[0], services: consulData });
+        setHistory(diffsHistory);
       } catch (error) {
         console.error('Erro ao carregar dados da máquina:', error);
       } finally {
@@ -494,16 +567,11 @@ export default function MachineDetails({ node }: Props) {
                             <Typography variant="body2" sx={{ fontSize: '0.85rem' }}>
                               <strong>Campo alterado:</strong> {entry.field || '-'}
                             </Typography>
-                            <Typography variant="body2" sx={{ fontSize: '0.85rem' }}>
+                            <Typography component="span" variant="body2" sx={{ fontSize: '0.85rem' }}> 
                               <strong>Valor anterior:</strong>
-                              <Chip
-                                label={entry.old_value || '-'}
-                                size="small"
-                                variant="outlined"
-                                sx={{ ml: 1 }}
-                              />
+                              <Chip label={entry.old_value || '-'} size="small" variant="outlined" sx={{ ml: 1 }}/>
                             </Typography>
-                            <Typography variant="body2" sx={{ fontSize: '0.85rem' }}>
+                            <Typography component="span" variant="body2" sx={{ fontSize: '0.85rem' }}>
                               <strong>Novo valor:</strong>
                               <Chip
                                 label={entry.new_value || '-'}
@@ -523,7 +591,6 @@ export default function MachineDetails({ node }: Props) {
             )}
           </Box>
         )}
-
       </Box>
     </Paper>
   );
