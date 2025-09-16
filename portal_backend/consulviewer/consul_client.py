@@ -1,5 +1,6 @@
 from collections import defaultdict
 from datetime import datetime
+import re
 from pymongo import DESCENDING
 from portal.mongo_client import history_collection
 import os
@@ -89,7 +90,32 @@ def get_services_by_node(node_name: str):
         node_services_checks = health_resp.json()
         
         services_map = {}
-        
+        host_metrics = {}
+
+        # Extrai métricas do host (uma vez)
+        for entry in node_services_checks:
+            output_text = entry.get("Output", "")
+            if "machine_cpu_cores" in output_text:
+                patterns = {
+                    "machine_cpu_cores": r"machine_cpu_cores.*}\s+([0-9.e\+]+)",
+                    "machine_memory_bytes": r"machine_memory_bytes.*}\s+([0-9.e\+]+)",
+                    "machine_swap_bytes": r"machine_swap_bytes.*}\s+([0-9.e\+]+)",
+                    "node_uname_info": r"node_uname_info\{([^}]+)\}\s+1"
+                }
+                for key, pattern in patterns.items():
+                    m = re.search(pattern, output_text)
+                    if m:
+                        if key == "node_uname_info":
+                            labels = {}
+                            for kv in m.group(1).split(","):
+                                k, v = kv.split("=", 1)
+                                labels[k.strip()] = v.strip().strip('"')
+                            host_metrics[key] = labels
+                        else:
+                            host_metrics[key] = float(m.group(1))
+                break
+
+        # Monta mapa de serviços
         for entry in node_services_checks:
             service_id = entry.get("ServiceID", "")
             if not service_id:
@@ -107,32 +133,31 @@ def get_services_by_node(node_name: str):
                     "Checks": [],
                     "Output": entry.get("Output", "")
                 }
-
             services_map[service_id]["Checks"].append(entry)
 
         detailed_services = []
-
         for service_id, service_info in services_map.items():
             checks = service_info["Checks"]
             status = "unknown"
-
             if all(check["Status"] == "passing" for check in checks):
                 status = "passing"
             elif any(check["Status"] == "critical" for check in checks):
                 status = "critical"
             elif any(check["Status"] == "warning" for check in checks):
                 status = "warning"
-            
+
             detailed_services.append({
                 "name": service_info.get("ServiceName"),
                 "id": service_info.get("ServiceID"),
                 "tags": service_info.get("ServiceTags"),
                 "node": service_info.get("Node"),
                 "status": status,
+                "metrics": host_metrics,
                 "output": service_info.get("Output"),
             })
-        
+
         return detailed_services
+
 
     except requests.RequestException as e:
         print(f"Erro ao consultar Consul para node {node_name}: {e}")

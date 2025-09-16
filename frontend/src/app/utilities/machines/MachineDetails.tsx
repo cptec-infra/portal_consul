@@ -10,7 +10,6 @@ import {
 import {
   ExpandMore as ExpandMoreIcon,
   Computer as ComputerIcon,
-  Storage as DatacenterIcon,
   Apps as ServicesIcon,
   NetworkCheck as NetworkIcon,
   History as HistoryIcon,
@@ -19,11 +18,12 @@ import {
   Visibility as VisibilityIcon,
   VisibilityOff as VisibilityOffIcon,
   CheckCircle as CheckCircleIcon,
-  Security as SecurityIcon,
   Tag as TagIcon,
   Timeline as TimelineIcon,
   Build as BuildIcon,
-  Fingerprint as FingerprintIcon
+  Memory as MemoryIcon,
+  Storage as StorageIcon,
+  DeveloperBoard as CpuIcon
 } from '@mui/icons-material';
 import { useEffect, useState } from 'react';
 
@@ -111,8 +111,7 @@ export default function MachineDetails({ node }: Props) {
   const [loadingMachine, setLoadingMachine] = useState(true);
   const [loadingHistory, setLoadingHistory] = useState(true);
   const [history, setHistory] = useState<any[]>([]);
-  const [showId, setShowId] = useState(false);
-  const [showIp, setShowIp] = useState(false);
+  const [showIp, setShowIp] = useState(true);
 
 
   useEffect(() => {
@@ -354,6 +353,14 @@ export default function MachineDetails({ node }: Props) {
     );
   }
 
+  const formatBytes = (bytes) => {
+    if (bytes === 0 || bytes === undefined) return 'N/A';
+    const k = 1024;
+    const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+  };
+
   return (
     <Paper sx={{ mt: 4, p: 4 }}>
       <Box>
@@ -374,7 +381,6 @@ export default function MachineDetails({ node }: Props) {
               <AccordionDetails>
                 <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 2.5 }}>
                   <DetailItem label="Nome do Node" value={machine.node} icon={<ComputerIcon />} />
-                  <DetailItem label="Datacenter" value={machine.datacenter} icon={<DatacenterIcon />} />
                   <DetailItem
                     label="Endereço IP"
                     value={showIp ? machine.node_address : '•••.•••.•••.•••'}
@@ -382,33 +388,29 @@ export default function MachineDetails({ node }: Props) {
                     action={
                       <Tooltip title={showIp ? "Ocultar IP" : "Mostrar IP"}>
                         <IconButton size="small" onClick={() => setShowIp(!showIp)}>
-                          {showIp ? <VisibilityOffIcon /> : <VisibilityIcon />}
+                          {showIp ? <VisibilityIcon /> : <VisibilityOffIcon />}
                         </IconButton>
                       </Tooltip>
                     }
                   />
                   <DetailItem
-                    label="ID da Máquina"
-                    value={showId ? machine._id || 'N/A' : '••••••••••••••••••••••••'}
-                    icon={<FingerprintIcon />}
-                    action={
-                      <Tooltip title={showId ? "Ocultar ID" : "Mostrar ID"}>
-                        <IconButton size="small" onClick={() => setShowId(!showId)}>
-                          {showId ? <VisibilityOffIcon /> : <VisibilityIcon />}
-                        </IconButton>
-                      </Tooltip>
-                    }
+                    label="Cores de CPU"
+                    value={machine?.services?.[0]?.metrics?.machine_cpu_cores ?? 'N/A'}
+                    icon={<CpuIcon />}
                   />
                   <DetailItem
-                    label="Hash de Configuração"
-                    value={machine.hash ? `${machine.hash.substring(0, 16)}...` : 'N/A'}
-                    icon={<SecurityIcon />}
-                    fullWidth
+                    label="Memória"
+                    value={formatBytes(machine?.services?.[0]?.metrics?.machine_memory_bytes)}
+                    icon={<MemoryIcon />}
+                  />
+                  <DetailItem
+                    label="Swap Total"
+                    value={formatBytes(machine?.services?.[0]?.metrics?.machine_swap_bytes)}
+                    icon={<StorageIcon />} // outro ícone para swap
                   />
                 </Box>
               </AccordionDetails>
             </Accordion>
-
             <Accordion>
               <AccordionSummary expandIcon={<ExpandMoreIcon />}>
                 <ServicesIcon color="primary" sx={{ mr: 1 }} />
