@@ -568,11 +568,11 @@ export default function MachineDetails({ node }: Props) {
                               <strong>Campo alterado:</strong> {entry.field || '-'}
                             </Typography>
                             <Typography component="span" variant="body2" sx={{ fontSize: '0.85rem' }}> 
-                              <strong>Valor anterior:</strong>
+                              <strong>Status anterior:</strong>
                               <Chip label={entry.old_value || '-'} size="small" variant="outlined" sx={{ ml: 1 }}/>
                             </Typography>
                             <Typography component="span" variant="body2" sx={{ fontSize: '0.85rem' }}>
-                              <strong>Novo valor:</strong>
+                              <strong> Novo status:</strong>
                               <Chip
                                 label={entry.new_value || '-'}
                                 size="small"
