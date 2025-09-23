@@ -10,5 +10,6 @@ urlpatterns = [
     path('api/servicos/', views.servicos, name='api_servicos'),
     path('api/', include('machines.urls')),
     path('api/', include('freeipa.urls')),
+    path('api/', include('consulviewer.urls')),
     re_path(r'^api/grafana/(?P<grafana_path>.*)$', machine_views.GrafanaProxyView.as_view(), name='grafana_proxy'),
 ]

@@ -1,11 +1,10 @@
 'use client';
 
-import { fetchMachineHistory, fetchMachineFromConsul } from '@/app/api/api';
+import { fetchMachineHistory, fetchPrometheusMetrics } from '@/app/api/api';
 import {
   Tabs, Tab, Box, Typography, Paper, Divider, CircularProgress,
   Accordion, AccordionSummary, AccordionDetails, Chip, Card, IconButton,
   Tooltip, Grid, Stack
-
 } from '@mui/material';
 import {
   ExpandMore as ExpandMoreIcon,
@@ -27,6 +26,8 @@ import {
 } from '@mui/icons-material';
 import { useEffect, useState } from 'react';
 
+const API_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
+
 interface Props {
   node: string;
   onClose?: () => void;
@@ -36,7 +37,7 @@ interface Machine {
   node: string;
   node_address: string;
   datacenter: string;
-  services: any[];
+  services: any;
   _id?: string;
   hash?: string;
 }
@@ -119,8 +120,8 @@ export default function MachineDetails({ node }: Props) {
       setLoadingMachine(true);
       setLoadingHistory(true);
       try {
-        const [consulData, machineHistory] = await Promise.all([
-          fetchMachineFromConsul(node),
+        const [prometheusData, machineHistory] = await Promise.all([
+          fetchPrometheusMetrics(),
           fetchMachineHistory(node)
         ]);
 
@@ -143,7 +144,7 @@ export default function MachineDetails({ node }: Props) {
         setMachine({ ...machineHistory[0], services: consulData });
         setHistory(diffsHistory);
       } catch (error) {
-        console.error('Erro ao carregar dados da máquina:', error);
+        console.log('Erro ao carregar dados da máquina:', error);
       } finally {
         setLoadingMachine(false);
         setLoadingHistory(false);
@@ -155,6 +156,15 @@ export default function MachineDetails({ node }: Props) {
 
   const handleTabChange = (_: any, val: number) => {
     setTab(val);
+  };
+
+  const formatUptime = (seconds: number | null) => {
+    if (seconds === null) return 'N/A';
+    const d = Math.floor(seconds / (3600 * 24));
+    const h = Math.floor((seconds % (3600 * 24)) / 3600);
+    const m = Math.floor((seconds % 3600) / 60);
+    const s = Math.floor(seconds % 60);
+    return `${d}d ${h}h ${m}m ${s}s`;
   };
 
   const DetailItem = ({ label, value, icon, fullWidth = false, action }: {
@@ -173,14 +183,14 @@ export default function MachineDetails({ node }: Props) {
       ...(fullWidth && { gridColumn: '1 / -1' }),
       '&:hover': {
         transform: 'translateY(-3px)',
-        boxShadow: '0 8px 25px rgba(0,0,0,0.12)',
+        boxShadow: '0 2px 2px rgba(0,0,0,0.12)',
         background: 'linear-gradient(135deg, #ffffff 0%, #f8fafc 100%)',
       }
     }}>
-      <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 1.5 }}>
+      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 0.5 }}>
         <Box sx={{
-          p: 0.7,
-          borderRadius: 2,
+          p: 0.1,
+          borderRadius: 1,
           background: 'linear-gradient(12deg, #667eea 0%, #764ba2 100%)',
           color: 'white',
           display: 'flex',
@@ -189,157 +199,27 @@ export default function MachineDetails({ node }: Props) {
         }}>
           {icon}
         </Box>
-        <Typography variant="body1" color="text.secondary" fontWeight="600" sx={{ flex: 1, fontSize: '0.9rem' }}>
+        <Typography variant="body1" color="text.primary" fontWeight="200" sx={{ flex: 1, fontSize: '0.7rem' }}>
           {label}
         </Typography>
         {action}
       </Box>
-      <Typography variant="h6" sx={{ fontSize: '0.9rem' }} fontWeight="700" color="text.primary" sx={{
-        wordBreak: 'break-all',
-        lineHeight: 1.3,
-        fontSize: '0.9rem'
-      }}>
+      <Typography variant="h6" sx={{ fontSize: '0.9rem', wordBreak: 'break-all', lineHeight: 1.3 }} fontWeight="100" color="text.primary">
         {value === 0 ? '0' : value || '-'}
       </Typography>
     </Card>
   );
-
-  const getStatusColorCard = (status: string) => {
-      switch (status) {
-        case 'passing': return '#7edfbeff';
-        case 'warning': return '#ddaf60ff';
-        case 'critical': return '#db6c6cff';
-        default: return 'default';
-      }
-    };
-
-  const ServiceCard = ({ service }: { service: any }) => {
-    const getStatusColor = (status: string) => {
-      switch (status) {
-        case 'passing': return 'success';
-        case 'warning': return 'warning';
-        case 'critical': return 'error';
-        default: return 'default';
-      }
-    };
-    return (
-      <Card sx={{
-        p: 2.5,
-        background: 'linear-gradient(135deg, #ffffff 0%, #f8fafc 100%)',
-        border: '1px solid #e2e8f0',
-        transition: 'all 0.3s ease-in-out',
-        '&:hover': {
-          transform: 'translateY(-2px)',
-          boxShadow: '0 8px 20px rgba(0,0,0,0.1)',
-          borderColor: '#667eea'
-        }
-      }}>
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
-          <Box sx={{
-            width: 42,
-            height: 42,
-            borderRadius: 2,
-            background: `linear-gradient(135deg, ${getStatusColor(service.status) === 'success' ? '#10b981, #059669' : '#f59e0b, #d97706'})`,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            color: 'white'
-          }}>
-            <ServicesIcon />
-          </Box>
-          <Box sx={{ flex: 1 }}>
-            <Typography variant="h6" sx={{ fontSize: '0.9rem' }} fontWeight="700" color="text.primary" sx={{ fontSize: '1.1rem' }}>
-              {service.name}
-            </Typography>
-            <Chip
-              icon={<CheckCircleIcon />}
-              label={service.status}
-              color={getStatusColor(service.status) as any}
-              size="small"
-              variant="filled"
-            />
-          </Box>
-        </Box>
-        <Divider sx={{ my: 2 }} />
-
-        <Grid container spacing={2}>
-          <Grid sx={{ xs: 4 }}>
-            <Typography variant="caption" color="text.secondary" fontWeight="600" sx={{ fontSize: '0.75rem' }}>
-              TAGS
-            </Typography>
-            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.5, mt: 0.5 }}>
-              {service.tags && service.tags.length > 0 ? (
-                service.tags.map((tag: string, tagIndex: number) => (
-                  <Chip
-                    key={tagIndex}
-                    icon={<TagIcon />}
-                    label={tag}
-                    size="small"
-                    variant="outlined"
-                    color="primary"
-                    sx={{ alignSelf: 'flex-start' }}
-                  />
-                ))
-              ) : (
-                <Typography variant="body2" color="text.secondary" sx={{ fontSize: '0.85rem' }}>
-                  Nenhuma tag
-                </Typography>
-              )}
-            </Box>
-          </Grid>
-          <Grid sx={{ xs: 4 }}>
-            <Typography variant="caption" color="text.secondary" fontWeight="600" sx={{ fontSize: '0.75rem' }}>
-              HEALTH CHECK
-            </Typography>
-            {service?.output && service?.output.length > 0 ? (
-              <Stack spacing={1} sx={{ mt: 1 }}>
-                {
-                  <Box
-                    sx={{
-                      p: 1.5,
-                      backgroundColor: getStatusColorCard(service.status),
-                      borderRadius: 1,
-                      border: getStatusColor(service.status) as any,
-                    }}
-                  >
-                    <Typography variant="body2" fontWeight="600" sx={{ mb: 0.5, fontSize: '0.85rem' }}>
-                      Output
-                    </Typography>
-                    <Typography variant="body2" color='#000000ff' sx={{ fontSize: '0.85rem' }}>
-                      {(service?.output?.length ?? 0) > 50
-                        ? service.output.slice(0, 71) + '...'
-                        : service.output || 'Sem dados'}
-                    </Typography>
-
-                  </Box>
-                }
-              </Stack>
-
-
-            ) : (
-              <Typography variant="body2" color="text.secondary" sx={{ fontSize: '0.85rem', mt: 0.5 }}>
-                Nenhum check
-              </Typography>
-            )}
-          </Grid>
-          <Grid sx={{ xs: 12 }}>
-
-          </Grid>
-        </Grid>
-      </Card>
-    );
-  };
 
   const formatDate = (timestamp: string) => {
     const date = new Date(timestamp);
     return `${String(date.getDate()).padStart(2, '0')}/${String(date.getMonth() + 1).padStart(2, '0')}/${date.getFullYear()} ${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}:${date.getSeconds().toString().padStart(2, '0')}`;
   };
 
-  if (loadingMachine) {
+  if (loadingMachine || loadingHistory) {
     return (
       <Paper sx={{ mt: 4, p: 4, textAlign: 'center' }}>
         <CircularProgress sx={{ color: 'black', mb: 2 }} />
-        <Typography variant="h6" sx={{ fontSize: '0.9rem' }} sx={{ mb: 1 }}>Carregando detalhes da máquina...</Typography>
+        <Typography variant="h6" sx={{ mb: 1, fontSize: '0.9rem' }}>Carregando detalhes da máquina...</Typography>
       </Paper>
     );
   }
@@ -362,28 +242,29 @@ export default function MachineDetails({ node }: Props) {
   };
 
   return (
-    <Paper sx={{ mt: 4, p: 4 }}>
-      <Box>
+    <Paper sx={{ mt: 4, p: 4, flexGrow: 1, display: 'flex', flexDirection: 'column', height: '100%' }}>
+      <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3, boxSizing: 'border-box', height: '100%' }}>
         <Tabs value={tab} onChange={handleTabChange} textColor="primary" indicatorColor="primary" sx={{ mb: 3 }}>
           <Tab label="Detalhes da Máquina" />
+          <Tab label="Monitoramento" />
           <Tab label="Histórico de Alterações" />
         </Tabs>
 
-        <Divider sx={{ mb: 3 }} />
+        <Divider sx={{ mb: 2 }} />
 
         {tab === 0 && (
           <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-            <Accordion>
+            <Accordion defaultExpanded>
               <AccordionSummary expandIcon={<ExpandMoreIcon />}>
                 <ComputerIcon color="primary" sx={{ mr: 1 }} />
-                <Typography variant="h6" sx={{ fontSize: '0.9rem' }} fontWeight="800">Informações Básicas</Typography>
+                <Typography sx={{ fontSize: "0.2" }} fontWeight="100">Informações Básicas</Typography>
               </AccordionSummary>
               <AccordionDetails>
                 <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 2.5 }}>
                   <DetailItem label="Nome do Node" value={machine.node} icon={<ComputerIcon />} />
                   <DetailItem
                     label="Endereço IP"
-                    value={showIp ? machine.node_address : '•••.•••.•••.•••'}
+                    value={machine?.node_address}
                     icon={<NetworkIcon />}
                     action={
                       <Tooltip title={showIp ? "Ocultar IP" : "Mostrar IP"}>
@@ -461,8 +342,20 @@ export default function MachineDetails({ node }: Props) {
             </Accordion>
           </Box>
         )}
+
         {tab === 1 && (
-          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+          <Box sx={{ flexGrow: 1, height: '100%' }}>
+            <iframe
+              src={`${API_URL}/grafana/d-solo/bele8igbwfncwb/coids?orgId=1&from=1756729139872&to=1756815539872&timezone=browser&panelId=7&__feature.dashboardSceneSolo`}
+              width="100%"
+              height="300"
+              frameBorder="0"
+            />
+          </Box>
+        )}
+
+        {tab === 2 && (
+          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, flexGrow: 1 }}>
             <Typography variant="h5" fontWeight="700" color="text.primary" sx={{ mb: 2, display: 'flex', alignItems: 'center', gap: 2, fontSize: '1.3rem' }}>
               <TimelineIcon color="primary" />
               Histórico de Alterações
@@ -484,58 +377,10 @@ export default function MachineDetails({ node }: Props) {
               </Card>
             ) : (
               history.map((entry, index) => (
-                <Accordion
-                  key={index}
-                  sx={{
-                    borderRadius: 2,
-                    overflow: 'hidden',
-                    border: '1px solid #e2e8f0',
-                    '&:before': { display: 'none' },
-                    boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
-                    '&.Mui-expanded': {
-                      boxShadow: '0 4px 16px rgba(0,0,0,0.15)'
-                    }
-                  }}
-                >
-                  <AccordionSummary
-                    expandIcon={<ExpandMoreIcon />}
-                    aria-controls={`panel${index}-content`}
-                    id={`panel${index}-header`}
-                    sx={{
-                      background: 'linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%)',
-                      minHeight: 64,
-                      '&:hover': {
-                        background: 'linear-gradient(135deg, #e2e8f0 0%, #cbd5e1 100%)',
-                      },
-                      '& .MuiAccordionSummary-content': {
-                        alignItems: 'center'
-                      }
-                    }}
-                  >
-                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, width: '100%' }}>
-                      <HistoryIcon color="primary" />
-                      <Box sx={{ flex: 1 }}>
-                        <Typography variant="body1" fontWeight="600" color="text.primary" sx={{ fontSize: '0.95rem' }}>
-                          {formatDate(entry.timestamp)}
-                        </Typography>
-                        <Typography variant="caption" color="text.secondary" sx={{ fontSize: '0.75rem' }}>
-                          Clique para ver detalhes da alteração
-                        </Typography>
-                      </Box>
-                      {entry.action && (
-                        <Chip
-                          icon={<EditIcon />}
-                          label={entry.action}
-                          color="primary"
-                          variant="filled"
-                          size="small"
-                          sx={{
-                            fontWeight: 600,
-                            '& .MuiChip-icon': { fontSize: 16 }
-                          }}
-                        />
-                      )}
-                    </Box>
+                <Accordion key={index}>
+                  <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                    <HistoryIcon color="primary" />
+                    <Typography>{formatDate(entry.timestamp)}</Typography>
                   </AccordionSummary>
 
                   <AccordionDetails sx={{

@@ -1,5 +1,8 @@
-# Etapa de build do Next.js
-FROM node:18-alpine as builder
+FROM node:18-alpine AS frontend_builder
+
+ARG NEXT_PUBLIC_API_BASE_URL
+
+ENV NEXT_PUBLIC_API_BASE_URL=$NEXT_PUBLIC_API_BASE_URL
 
 WORKDIR /app
 
@@ -9,14 +12,5 @@ RUN npm ci
 COPY . .
 RUN npm run build
 
-# Etapa final: servir com NGINX
-FROM nginx:alpine
-
-# Remove config padrão
-RUN rm /etc/nginx/conf.d/default.conf
-
-# Copia os arquivos exportados
-COPY --from=builder /app/out /usr/share/nginx/html
-
-# Copia nova configuração do nginx
-COPY nginx.conf /etc/nginx/conf.d/default.conf
+EXPOSE 3000
+CMD ["npm", "run", "start"]

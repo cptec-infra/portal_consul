@@ -1,10 +1,12 @@
-#!/bin/bash
+#!/bin/sh
+set -e
 
 echo "📦 Aplicando migrações..."
-python manage.py migrate
+python portal_backend/manage.py migrate --noinput
 
-echo "👤 Verificando/Criação do superusuário..."
-python manage.py shell << END
+if [ "$CREATE_SUPERUSER" = "true" ]; then
+    echo "👤 Verificando/Criação do superusuário..."
+    python portal_backend/manage.py shell << END
 from django.contrib.auth import get_user_model
 import os
 
@@ -19,6 +21,12 @@ if not User.objects.filter(username=username).exists():
 else:
     print("✅ Superusuário já existe.")
 END
+fi
 
-echo "🚀 Iniciando o servidor..."
-exec python manage.py runserver 0.0.0.0:8000
+echo "🚀 Iniciando o servidor Gunicorn..."
+
+exec gunicorn --chdir portal_backend portal.wsgi:application \
+    --bind 0.0.0.0:8000 \
+    --workers 4 \
+    --threads 2 \
+    --timeout 120
