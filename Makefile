@@ -5,13 +5,13 @@ define compose
 endef
 
 start-dev:
-	$(call compose,docker-compose_dev.yml) up
+	$(call compose,docker-compose_dev.yml) up -d
 
 start-prod:
-	$(call compose,docker-compose.yml) up
+	$(call compose,docker-compose.yml) up -d
 
 start-prod-build:
-	$(call compose,docker-compose.yml) up --build
+	$(call compose,docker-compose.yml) up --build -d
 
 stop-dev:
 	$(call compose,docker-compose_dev.yml) down 
