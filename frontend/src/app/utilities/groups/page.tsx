@@ -22,7 +22,7 @@ export default function GroupsPage() {
       try {
         const data = await fetchGroups();
 
-        const list = Array.isArray(data?.grupos) ? data.grupos : [];
+        const list = Array.isArray(data) ? data : [];
         const normalized: Group[] = list.map((u: any, index) => ({
           cn: String(u.cn || `group-${index}`), 
           description: String(u.description || '-'),

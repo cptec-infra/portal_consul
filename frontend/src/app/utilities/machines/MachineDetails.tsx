@@ -254,23 +254,8 @@ export default function MachineDetails({ node }: Props) {
 
         {tab === 1 && (
           <Box sx={{ flexGrow: 1, height: '100%' }}>
-            {/* <iframe
+            <iframe
               src={`${API_URL}/grafana/d-solo/bele8igbwfncwb/coids?orgId=1&from=1756729139872&to=1756815539872&timezone=browser&panelId=7&__feature.dashboardSceneSolo`}
-              style={{
-                border: 'none',
-                width: '100%',
-                height: '100%',
-              }}
-              sandbox="allow-scripts allow-same-origin allow-popups"
-            /> */}
-            <iframe
-              src={`${API_URL}/d/rYdddlPWk/node-exporter-full?orgId=1&from=now-1h&to=now&timezone=browser&var-datasource=dejpdm2ltl2bkd&var-job=node_exporter&var-nodename=caete.coids.inpe.br&var-node=150.163.212.252:9100&var-diskdevices=%5Ba-z%5D%2B%7Cnvme%5B0-9%5D%2Bn%5B0-9%5D%2B%7Cmmcblk%5B0-9%5D%2B&refresh=1m`}
-              width="100%"
-              height="300"
-              frameBorder="0"
-            />
-            <iframe
-              src={`${API_URL}/grafana/d-solo/bele8igbwfncwb/node-exporter-full?orgId=1&panelId=4&var-node=${node}&fullscreen&theme=light`}
               width="100%"
               height="300"
               frameBorder="0"

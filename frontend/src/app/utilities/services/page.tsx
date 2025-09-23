@@ -27,7 +27,7 @@ export default function ServicesPage() {
     const getServices = async () => {
       try {
         const rawData = await fetchServices();
-       
+
         const groupedServices = Object.values(
           rawData.reduce((acc: { [key: string]: Service[] }, service) => {
             if (service.node) {
@@ -39,7 +39,7 @@ export default function ServicesPage() {
             return acc;
           }, {})
         ).map((group) => ({
-          node: group[0].node,
+          node: group[0].node ?? '',
           services: group,
           hasCritical: group.some((s) => s.status === 'critical'),
           hasWarning: group.some((s) => s.status === 'warning'),
@@ -64,98 +64,98 @@ export default function ServicesPage() {
         flexDirection: 'column',
       }}
     >
-    <PanelGroup direction="vertical" style={{ flex: 1}}>
-      <Panel defaultSize={100} minSize={30}   className="custom-scroll" style={{ display: 'flex', flexDirection: 'column', overflow: 'auto' }}>
-        <Paper
-          elevation={3}
-          sx={{
-            p: 2,
-            flex: 1,
-            display: 'flex',
-            flexDirection: 'column',
-            width: '100%',
-            borderRadius: 1,
-          }}
-        >
-          {loading ? (
-            <Box sx={{ display: 'flex', justifyContent: 'center', mt: 5 }}>
-              <CircularProgress />
-            </Box>
-          ) : services.length === 0 ? (
-            <Typography variant="body1">Nenhum serviço disponível.</Typography>
-          ) : (
-            services.map((group) => (
-              <Accordion
-                key={group.node}
-                sx={{
-                  mb: 2,
-                  '&:last-child': { mb: 0 }, 
-                  borderRadius: 4,
-                  border: 'none', 
-                  '& .MuiAccordionSummary-root': {
-                    borderBottom: 'none',
-                  },
-                  '& .MuiAccordionDetails-root': {
-                    padding: '0 16px 16px',
-                  },
-                }}
-              >
-                <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                  <Box sx={{ display: 'flex', alignItems: 'center', width: '100%' }}>
-                    <Typography variant="h6" sx={{ flexGrow: 1 }}>{group.node}</Typography>
-                    {group.hasCritical ? (
-                      <ErrorIcon color="error" sx={{ ml: 1 }} />
-                    ) : group.hasWarning ? (
-                      <WarningIcon color="warning" sx={{ ml: 1 }} />
-                    ) : (
-                      <SuccessIcon color="success" sx={{ ml: 1 }} />
-                    )}
-                  </Box>
-                </AccordionSummary>
-                <AccordionDetails>
-                  <Table sx={{ minWidth: 650 }} aria-label={`serviços de ${group.node}`}>
-                    <TableHead>
-                      <TableRow>
-                        <TableCell>Serviço</TableCell>
-                        <TableCell>Porta</TableCell>
-                        <TableCell>Status</TableCell>
-                      </TableRow>
-                    </TableHead>
-                    <TableBody>
-                      {group.services.map((service) => (
-                        <TableRow
-                          key={service.id || service.name}
-                          sx={{
-                            '&:hover': { backgroundColor: 'rgba(0,0,0,0.05)' },
-                            cursor: 'pointer',
-                          }}
-                        >
-                          <TableCell>{service.name}</TableCell>
-                          <TableCell>{service.port || 'N/A'}</TableCell>
-                          <TableCell>
-                            <Typography
-                              color={
-                                service.status === 'critical'
-                                  ? 'error'
-                                  : service.status === 'warning'
-                                  ? 'warning'
-                                  : 'success'
-                              }
-                            >
-                              {service.status || 'N/A'}
-                            </Typography>
-                          </TableCell>
+      <PanelGroup direction="vertical" style={{ flex: 1 }}>
+        <Panel defaultSize={100} minSize={30} className="custom-scroll" style={{ display: 'flex', flexDirection: 'column', overflow: 'auto' }}>
+          <Paper
+            elevation={3}
+            sx={{
+              p: 2,
+              flex: 1,
+              display: 'flex',
+              flexDirection: 'column',
+              width: '100%',
+              borderRadius: 1,
+            }}
+          >
+            {loading ? (
+              <Box sx={{ display: 'flex', justifyContent: 'center', mt: 5 }}>
+                <CircularProgress />
+              </Box>
+            ) : services.length === 0 ? (
+              <Typography variant="body1">Nenhum serviço disponível.</Typography>
+            ) : (
+              services.map((group) => (
+                <Accordion
+                  key={group.node}
+                  sx={{
+                    mb: 2,
+                    '&:last-child': { mb: 0 },
+                    borderRadius: 4,
+                    border: 'none',
+                    '& .MuiAccordionSummary-root': {
+                      borderBottom: 'none',
+                    },
+                    '& .MuiAccordionDetails-root': {
+                      padding: '0 16px 16px',
+                    },
+                  }}
+                >
+                  <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                    <Box sx={{ display: 'flex', alignItems: 'center', width: '100%' }}>
+                      <Typography variant="h6" sx={{ flexGrow: 1 }}>{group.node}</Typography>
+                      {group.hasCritical ? (
+                        <ErrorIcon color="error" sx={{ ml: 1 }} />
+                      ) : group.hasWarning ? (
+                        <WarningIcon color="warning" sx={{ ml: 1 }} />
+                      ) : (
+                        <SuccessIcon color="success" sx={{ ml: 1 }} />
+                      )}
+                    </Box>
+                  </AccordionSummary>
+                  <AccordionDetails>
+                    <Table sx={{ minWidth: 650 }} aria-label={`serviços de ${group.node}`}>
+                      <TableHead>
+                        <TableRow>
+                          <TableCell>Serviço</TableCell>
+                          <TableCell>Porta</TableCell>
+                          <TableCell>Status</TableCell>
                         </TableRow>
-                      ))}
-                    </TableBody>
-                  </Table>
-                </AccordionDetails>
-              </Accordion>
-            ))
-          )}
-        </Paper>
-      </Panel>
-    </PanelGroup>
-  </Box>
+                      </TableHead>
+                      <TableBody>
+                        {group.services.map((service) => (
+                          <TableRow
+                            key={service.id || service.name}
+                            sx={{
+                              '&:hover': { backgroundColor: 'rgba(0,0,0,0.05)' },
+                              cursor: 'pointer',
+                            }}
+                          >
+                            <TableCell>{service.name}</TableCell>
+                            <TableCell>{service.port || 'N/A'}</TableCell>
+                            <TableCell>
+                              <Typography
+                                color={
+                                  service.status === 'critical'
+                                    ? 'error'
+                                    : service.status === 'warning'
+                                      ? 'warning'
+                                      : 'success'
+                                }
+                              >
+                                {service.status || 'N/A'}
+                              </Typography>
+                            </TableCell>
+                          </TableRow>
+                        ))}
+                      </TableBody>
+                    </Table>
+                  </AccordionDetails>
+                </Accordion>
+              ))
+            )}
+          </Paper>
+        </Panel>
+      </PanelGroup>
+    </Box>
   );
 }

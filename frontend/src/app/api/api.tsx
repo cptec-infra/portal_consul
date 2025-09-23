@@ -3,6 +3,7 @@ import { Machine, PrometheusMetrics } from '../utilities/machines/types';
 import { User } from '../utilities/users/types';
 import { Group } from '../utilities/groups/types';
 
+
 const api: AxiosInstance = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_BASE_URL,
   headers: {
@@ -14,6 +15,7 @@ const api: AxiosInstance = axios.create({
 api.interceptors.request.use(
   (config: InternalAxiosRequestConfig) => {
     const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
+    console.log('API Base URL:', process.env.NEXT_PUBLIC_API_BASE_URL);
     if (token && config.headers) {
       config.headers.Authorization = `Bearer ${token}`;
     }

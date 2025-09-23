@@ -22,7 +22,7 @@ export default function UsersPage() {
       try {
         const data = await fetchUsers();
 
-        const list = Array.isArray(data?.usuarios) ? data.usuarios : [];
+        const list = Array.isArray(data) ? data : [];
         const normalized: User[] = list.map((u: any) => ({
           uid: String(u.uid || '-'),
           mail: String(u.mail || '-'),
