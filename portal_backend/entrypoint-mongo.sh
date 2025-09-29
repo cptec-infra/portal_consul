@@ -1,3 +1,5 @@
+#!/bin/bash
+
 set -eu
 
 cat <<EOF > /docker-entrypoint-initdb.d/init-mongo.js
