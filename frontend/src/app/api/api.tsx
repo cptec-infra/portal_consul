@@ -24,18 +24,6 @@ api.interceptors.request.use(
   (error) => Promise.reject(error)
 );
 
-
-export const fetchPrometheusMetrics = async (): Promise<PrometheusMetrics | null> => {
-  try {
-    const response = await api.get<PrometheusMetrics>(`/monitoring/`);
-    console.log('response.data: ', response.data)
-    return response.data;
-  } catch (error) {
-    console.error(`Erro ao buscar métricas do Prometheus:`, error);
-    return null;
-  }
-};
-
 export const fetchMachines = async (): Promise<Machine[]> => {
   const response = await api.get<{nodes: Machine[]}>('/nodes/');
   return response.data.nodes;
