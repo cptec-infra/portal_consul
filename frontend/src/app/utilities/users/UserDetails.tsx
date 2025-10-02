@@ -87,9 +87,9 @@ interface Props {
             <Typography fontWeight="600" sx={{ display: 'flex', gap: 1, pb: 2 }}>
               <GroupsIcon sx={{ mr: 1 }}/> Grupos 
             </Typography>
-            {user.memberGroup && user.memberGroup.length > 0 ? (
+            {user.memberOfGroup && user.memberOfGroup.length > 0 ? (
               <Box display="flex" gap={1} flexWrap="wrap">
-                {user.memberGroup.map((g, idx) => (
+                {user.memberOfGroup.map((g, idx) => (
                   <Chip key={idx} label={g} color="secondary" variant="outlined" />
                 ))}
               </Box>

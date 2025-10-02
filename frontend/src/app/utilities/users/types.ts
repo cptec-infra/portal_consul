@@ -9,5 +9,5 @@ export interface User {
   macs?: string[];
   telephoneNumber?: string;
   homeDirectory?: string;
-  memberGroup?: string[];
+  memberOfGroup?: string[];
 }
