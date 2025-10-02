@@ -5,7 +5,10 @@ import {
   IconSettings,
   IconActivity,
   IconUser,
-  IconUsersGroup
+  IconUsersGroup,
+  IconChartColumn,
+  IconDevicesPc,
+  IconUserShield
 } from "@tabler/icons-react";
 
 import { uniqueId } from "lodash";
@@ -52,6 +55,28 @@ const Menuitems = [
     title: "Grupos",
     icon: IconUsersGroup,
     href: "/utilities/groups",
+  },
+  {
+    navlabel: true,
+    subheader: "RACKS",
+  },
+  {
+    id: uniqueId(),
+    title: "Racks",
+    icon: IconChartColumn,
+    href: "/utilities/racks",
+  },
+  {
+    id: uniqueId(),
+    title: "Equipamentos",
+    icon: IconDevicesPc,
+    href: "/utilities/equipamentos",
+  },
+  {
+    id: uniqueId(),
+    title: "Responsáveis",
+    icon: IconUserShield,
+    href: "/utilities/responsaveis",
   },
 ];
 
