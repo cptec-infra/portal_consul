@@ -43,9 +43,11 @@ class MachineDetailView(APIView):
     def get(self, request, node):
         if not node:
             return Response({'error': 'Node parameter is required'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-        service = get_services_by_node(node)
-        return Response(service, status=status.HTTP_200_OK)
-
+        try:
+            service = get_services_by_node(node)
+            return Response(service, status=status.HTTP_200_OK)
+        except Exception as e:
+            return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 class GrafanaProxyView(APIView):
     @method_decorator(csrf_exempt)
