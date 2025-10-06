@@ -6,7 +6,6 @@ import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import { Panel, PanelGroup, PanelResizeHandle } from 'react-resizable-panels';
 import { fetchGroups } from '@/app/api/api';
 import { useSelector } from 'react-redux';
-import { RootState } from '@/utils/store/store';
 import { Group } from './types';
 import GroupDetails from './GroupDetails';
 
@@ -15,7 +14,6 @@ export default function GroupsPage() {
   const [loading, setLoading] = useState(true);
   const [selectedGroup, setSelectedGroup] = useState<Group | null>(null);
 
-  const searchTerm = useSelector((state: RootState) => state.search.value);
 
   useEffect(() => {
     const getGroups = async () => {
@@ -40,17 +38,6 @@ export default function GroupsPage() {
 
     getGroups();
   }, []);
-
-  const filteredGroups = useMemo(() => {
-    if (!searchTerm) return groups;
-    return groups.filter((group) =>
-      Object.values(group)
-        .filter((v) => typeof v === 'string')
-        .some((value) =>
-          (value as string).toLowerCase().includes(searchTerm.toLowerCase())
-        )
-    );
-  }, [groups, searchTerm]);
 
   const columns: GridColDef[] = [
     { field: 'gidNumber', headerName: 'GID', flex: 0 },
@@ -80,7 +67,6 @@ export default function GroupsPage() {
               </Box>
             ) : (
               <DataGrid
-                rows={filteredGroups}
                 columns={columns}
                 getRowId={(row) => row.cn || `group-${Math.random()}`}
                 onRowClick={(params) => setSelectedGroup(params.row)}

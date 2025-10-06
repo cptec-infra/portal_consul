@@ -10,15 +10,14 @@ import { fetchServices } from '@/app/api/api';
 import { Service, Grouped } from './types';
 import { Panel, PanelGroup } from 'react-resizable-panels';
 import { useSelector } from 'react-redux';
-import { RootState } from '@/utils/store/store';
+import { useSearchStore } from '@/app/store/useSearchStore';
 
 
 export default function ServicesPage() {
   const [services, setServices] = useState<Grouped[]>([]);
   const [loading, setLoading] = useState(true);
   const [selected, setSelected] = useState<Grouped | null>(null);
-
-  const searchTerm = useSelector((state: RootState) => state.search.value);
+  const searchValue = useSearchStore((state) => state.value);
   
   useEffect(() => {
     const getServices = async () => {
@@ -51,7 +50,13 @@ export default function ServicesPage() {
     getServices();
   }, []);
 
-  // DataGrid columns
+  const filteredServices = useMemo(() => {
+    if (!searchValue.trim()) return services;
+    return services.filter((service) => 
+    service.name.toLowerCase().includes(searchValue.toLowerCase())
+  );
+  }, [services, searchValue])
+
   const columns: GridColDef[] = [
     {
       field: 'statusIcon',
@@ -84,26 +89,6 @@ export default function ServicesPage() {
       },
     },
   ];
-  const filteredServices = useMemo(() => {
-    if (!searchTerm) return services;
-    return services.filter((service) =>
-      Object.values(service)
-        .filter((v) => typeof v === 'string')
-        .some((value) =>
-          (value as string).toLowerCase().includes(searchTerm.toLowerCase())
-        )
-    );
-  }, [services, searchTerm]);
-
-  const rows = filteredServices.map((svc, index) => ({
-    id: index, 
-    name: svc.name,
-    nodes: svc.nodes,
-    hasCritical: svc.hasCritical,
-    hasWarning: svc.hasWarning,
-  }));
-
-
   return (
     <Box sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
       <PanelGroup direction="vertical" style={{ flex: 1 }}>
@@ -128,8 +113,9 @@ export default function ServicesPage() {
             <Typography variant="body1">Nenhum serviço disponível.</Typography>
           ) : (
             <DataGrid
-              rows={rows}
               columns={columns}
+              rows={filteredServices}
+              getRowId={(row) => row.name}
               sx={{
                 borderRadius: 2,
                 boxShadow: 1,
@@ -141,8 +127,6 @@ export default function ServicesPage() {
           </Paper>
         </Panel>
       </PanelGroup>
-
-      {/* Modal com detalhes */}
       <Dialog
         open={!!selected}
         onClose={() => setSelected(null)}

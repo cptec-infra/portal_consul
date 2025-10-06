@@ -6,7 +6,6 @@ import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import { Panel, PanelGroup, PanelResizeHandle } from 'react-resizable-panels';
 import { fetchUsers } from '@/app/api/api';
 import { useSelector } from 'react-redux';
-import { RootState } from '@/utils/store/store';
 import { User } from './types';
 import UserDetails from './UserDetails';
 
@@ -15,7 +14,6 @@ export default function UsersPage() {
   const [loading, setLoading] = useState(true);
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
 
-  const searchTerm = useSelector((state: RootState) => state.search.value);
 
   useEffect(() => {
     const getUsers = async () => {
@@ -51,16 +49,6 @@ export default function UsersPage() {
     getUsers();
   }, []);
 
-  const filteredUsers = useMemo(() => {
-    if (!searchTerm) return users;
-    const q = searchTerm.toLowerCase();
-    return users.filter((u) =>
-      [u.uid, u.mail, u.uidNumber, u.title].some((v) =>
-        v.toLowerCase().includes(q)
-      )
-    );
-  }, [users, searchTerm]);
-
   const columns: GridColDef[] = [
     { field: 'uidNumber', headerName: 'ID', flex: 0 },
     { field: 'uid', headerName: 'Usuário', flex: 1 },
@@ -91,7 +79,6 @@ export default function UsersPage() {
               </Box>
             ) : (
               <DataGrid
-                rows={filteredUsers}
                 columns={columns}
                 getRowId={(row) => row.uid}
                 onRowClick={(params) => setSelectedUser(params.row)}
