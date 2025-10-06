@@ -24,6 +24,8 @@ services:
       args:
         - NEXT_PUBLIC_API_BASE_URL=${NEXT_PUBLIC_API_BASE_URL}
     container_name: portal_frontend
+    expose:
+      - "3001"
     depends_on:
       - django
     networks:
