@@ -7,6 +7,9 @@ endef
 start-dev:
 	$(call compose,docker-compose_dev.yml) up -d
 
+start-dev-build:
+	$(call compose,docker-compose_dev.yml) up --build
+
 start-prod:
 	$(call compose,docker-compose.yml) up -d
 

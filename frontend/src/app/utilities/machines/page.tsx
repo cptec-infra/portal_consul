@@ -6,16 +6,16 @@ import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import { Panel, PanelGroup, PanelResizeHandle } from 'react-resizable-panels';
 import { fetchMachines } from '@/app/api/api';
 import MachineDetails from './MachineDetails';
-import { useSelector } from 'react-redux';
-import { RootState } from '@/utils/store/store';
 import { Machine } from './types';
+import { useSearchStore } from '@/app/store/useSearchStore';
+
 
 export default function MachinesPage() {
   const [machines, setMachines] = useState<Machine[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedMachine, setSelectedMachine] = useState<Machine | null>(null);
 
-  const searchTerm = useSelector((state: RootState) => state.search.value);
+  const searchTerm = useSearchStore((state) => state.value);
 
   useEffect(() => {
     const getMachines = async () => {
@@ -65,7 +65,7 @@ export default function MachinesPage() {
           >
             {loading ? (
               <Box sx={{ display: 'flex', justifyContent: 'center', mt: 5 }}>
-                <CircularProgress />
+                <CircularProgress role="progressbar" />
               </Box>
             ) : (
               <DataGrid

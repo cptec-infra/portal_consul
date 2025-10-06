@@ -44,7 +44,6 @@ interface Machine {
 function diffSnapshots(prev: any, curr: any) {
   const diffs: any[] = [];
 
-  // campos simples
   ['node', 'node_address', 'datacenter'].forEach(field => {
     if (prev[field] !== curr[field]) {
       diffs.push({
@@ -56,11 +55,9 @@ function diffSnapshots(prev: any, curr: any) {
     }
   });
 
-  // serviços
   const prevServices = Object.fromEntries((prev.services ?? []).map((s: any) => [s.id, s]));
   const currServices = Object.fromEntries((curr.services ?? []).map((s: any) => [s.id, s]));
 
-  // removidos
   for (const id in prevServices) {
     if (!currServices[id]) {
       diffs.push({
