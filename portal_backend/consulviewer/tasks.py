@@ -1,5 +1,4 @@
 from celery import shared_task
-import datetime
 import logging
 from .consul_client import save_history
 

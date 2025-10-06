@@ -77,12 +77,7 @@ def get_services():
     except requests.RequestException as e:
         print(f"Erro ao acessar o Consul: {e}")
         return []
-
-    except requests.RequestException as e:
-        print(f"Erro ao consultar Consul: {e}")
-        return []
     
-
 def get_services_by_node(node_name: str):
     try:
         health_resp = requests.get(f"{BASE_URL}/v1/health/node/{node_name}")
@@ -135,16 +130,21 @@ def get_services_by_node(node_name: str):
                 }
             services_map[service_id]["Checks"].append(entry)
 
+        # Avalia status de cada serviço
         detailed_services = []
         for service_id, service_info in services_map.items():
             checks = service_info["Checks"]
             status = "unknown"
-            if all(check["Status"] == "passing" for check in checks):
-                status = "passing"
-            elif any(check["Status"] == "critical" for check in checks):
-                status = "critical"
-            elif any(check["Status"] == "warning" for check in checks):
-                status = "warning"
+
+            for check in checks:
+                check_status = check.get("Status", "unknown").lower()
+                if check_status == "critical":
+                    status = "critical"
+                    break  # prioridade máxima
+                elif check_status == "warning":
+                    status = "warning"
+                elif check_status == "passing" and status not in ["warning", "critical"]:
+                    status = "passing"
 
             detailed_services.append({
                 "name": service_info.get("ServiceName"),
@@ -158,11 +158,9 @@ def get_services_by_node(node_name: str):
 
         return detailed_services
 
-
     except requests.RequestException as e:
         print(f"Erro ao consultar Consul para node {node_name}: {e}")
         return []
-
 
 def get_detailed_services():
     catalog_url = f"{BASE_URL}/v1/catalog/services"
