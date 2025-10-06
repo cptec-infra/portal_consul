@@ -5,15 +5,12 @@ import { IconSearch } from '@tabler/icons-react';
 import Profile from './Profile';
 import AppsIcon from '@mui/icons-material/Apps';
 import Menuitems from "@/app/layout/sidebar/MenuItems"; 
-import { useDispatch } from 'react-redux';
-import { setSearch } from '../../../utils/store/searchSlice';
 
 interface ItemType {
   toggleMobileSidebar: (event: React.MouseEvent<HTMLElement>) => void;
 }
 
 const Header = ({ toggleMobileSidebar }: ItemType) => {
-  const dispatch = useDispatch();
   const links = Menuitems?.filter((item) => item?.href);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
@@ -89,26 +86,6 @@ const Header = ({ toggleMobileSidebar }: ItemType) => {
             ))}
           </Menu>
         </Stack>
-
-        <Box
-          sx={{
-            display: 'flex',
-            alignItems: 'center',
-            backgroundColor: 'white',
-            borderRadius: 1,
-            px: 1,
-            py: 0.5,
-            minWidth: '250px',
-          }}
-        >
-          <IconSearch size="1.1rem" style={{ color: '#666' }} />
-          <InputBase
-            placeholder="Search"
-            sx={{ ml: 1, fontSize: 14, width: '100%' }}
-            onChange={(e) => dispatch(setSearch(e.target.value))}
-          />
-        </Box>
-
         <Stack direction="row" spacing={1} alignItems="center">
           <Profile />
         </Stack>
