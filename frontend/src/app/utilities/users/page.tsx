@@ -79,6 +79,7 @@ export default function UsersPage() {
               </Box>
             ) : (
               <DataGrid
+		rows={users}
                 columns={columns}
                 getRowId={(row) => row.uid}
                 onRowClick={(params) => setSelectedUser(params.row)}

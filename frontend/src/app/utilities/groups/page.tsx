@@ -67,6 +67,7 @@ export default function GroupsPage() {
               </Box>
             ) : (
               <DataGrid
+		rows={groups}
                 columns={columns}
                 getRowId={(row) => row.cn || `group-${Math.random()}`}
                 onRowClick={(params) => setSelectedGroup(params.row)}
