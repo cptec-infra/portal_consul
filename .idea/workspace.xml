@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="daea5d4d-052f-469e-b2f8-ffd2301b94d5" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docker-compose.yml" beforeDir="false" afterPath="$PROJECT_DIR$/docker-compose.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/.next/app-build-manifest.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/.next/build-manifest.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/.next/cache/.rscinfo" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/.next/cache/webpack/client-development-fallback/0.pack.gz" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/.next/cache/webpack/client-development-fallback/1.pack.gz" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/.next/cache/webpack/client-development-fallback/index.pack.gz" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/.next/cache/webpack/client-development-fallback/index.pack.gz.old" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/.next/cache/webpack/client-development/0.pack.gz" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/.next/cache/webpack/client-development/1.pack.gz" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/.next/cache/webpack/client-development/10.pack.gz" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/.next/cache/webpack/client-development/11.pack.gz" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/.next/cache/webpack/client-development/12.pack.gz" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/.next/cache/webpack/client-development/13.pack.gz" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/.next/cache/webpack/client-development/14.pack.gz" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/.next/cache/webpack/client-development/15.pack.gz" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/.next/cache/webpack/client-development/16.pack.gz" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/.next/cache/webpack/client-development/17.pack.gz" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/.next/cache/webpack/client-development/18.pack.gz" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/.next/cache/webpack/client-development/19.pack.gz" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/.next/cache/webpack/client-development/2.pack.gz" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/.next/cache/webpack/client-development/20.pack.gz" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/.next/cache/webpack/client-development/21.pack.gz" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/.next/cache/webpack/client-development/3.pack.gz" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/.next/cache/webpack/client-development/4.pack.gz" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/.next/cache/webpack/client-development/5.pack.gz" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/.next/cache/webpack/client-development/6.pack.gz" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/.next/cache/webpack/client-development/7.pack.gz" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/.next/cache/webpack/client-development/8.pack.gz" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/.next/cache/webpack/client-development/9.pack.gz" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/.next/cache/webpack/client-development/index.pack.gz" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/.next/cache/webpack/client-development/index.pack.gz.old" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/.next/cache/webpack/server-development/0.pack.gz" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/.next/cache/webpack/server-development/1.pack.gz" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/.next/cache/webpack/server-development/10.pack.gz" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/.next/cache/webpack/server-development/11.pack.gz" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/.next/cache/webpack/server-development/12.pack.gz" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/.next/cache/webpack/server-development/13.pack.gz" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/.next/cache/webpack/server-development/14.pack.gz" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/.next/cache/webpack/server-development/15.pack.gz" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/.next/cache/webpack/server-development/16.pack.gz" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/.next/cache/webpack/server-development/17.pack.gz" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/.next/cache/webpack/server-development/18.pack.gz" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/.next/cache/webpack/server-development/19.pack.gz" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/.next/cache/webpack/server-development/2.pack.gz" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/.next/cache/webpack/server-development/3.pack.gz" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/.next/cache/webpack/server-development/4.pack.gz" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/.next/cache/webpack/server-development/5.pack.gz" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/.next/cache/webpack/server-development/6.pack.gz" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/.next/cache/webpack/server-development/7.pack.gz" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/.next/cache/webpack/server-development/8.pack.gz" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/.next/cache/webpack/server-development/9.pack.gz" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/.next/cache/webpack/server-development/index.pack.gz" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/.next/cache/webpack/server-development/index.pack.gz.old" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/.next/package.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/.next/react-loadable-manifest.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/.next/server/app-paths-manifest.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/.next/server/app/favicon.ico/route.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/.next/server/app/page.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/.next/server/app/page_client-reference-manifest.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/.next/server/interception-route-rewrite-manifest.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/.next/server/middleware-build-manifest.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/.next/server/middleware-manifest.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/.next/server/middleware-react-loadable-manifest.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/.next/server/next-font-manifest.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/.next/server/next-font-manifest.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/.next/server/pages-manifest.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/.next/server/server-reference-manifest.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/.next/server/server-reference-manifest.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/.next/server/vendor-chunks/@babel.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/.next/server/vendor-chunks/@emotion.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/.next/server/vendor-chunks/@mui.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/.next/server/vendor-chunks/@popperjs.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/.next/server/vendor-chunks/@swc.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/.next/server/vendor-chunks/@tabler.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/.next/server/vendor-chunks/clsx.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/.next/server/vendor-chunks/hoist-non-react-statics.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/.next/server/vendor-chunks/lodash.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/.next/server/vendor-chunks/next.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/.next/server/vendor-chunks/object-assign.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/.next/server/vendor-chunks/prop-types.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/.next/server/vendor-chunks/react-is.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/.next/server/vendor-chunks/react-mui-sidebar.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/.next/server/vendor-chunks/react-transition-group.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/.next/server/vendor-chunks/stylis.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/.next/server/webpack-runtime.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/.next/static/chunks/_app-pages-browser_node_modules_react-apexcharts_dist_react-apexcharts_min_js.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/.next/static/chunks/app-pages-internals.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/.next/static/chunks/app/layout.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/.next/static/chunks/app/loading.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/.next/static/chunks/app/page.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/.next/static/chunks/main-app.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/.next/static/chunks/polyfills.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/.next/static/chunks/webpack.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/.next/static/development/_buildManifest.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/.next/static/development/_ssgManifest.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/.next/static/webpack/03eed9c5cd0bc27d.webpack.hot-update.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/.next/static/webpack/170cef99d264684f.webpack.hot-update.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/.next/static/webpack/1e063c35955f10f7.webpack.hot-update.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/.next/static/webpack/219abee0de75ddfe.webpack.hot-update.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/.next/static/webpack/2a60f96c3f5df359.webpack.hot-update.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/.next/static/webpack/49399386fa4c3fbd.webpack.hot-update.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/.next/static/webpack/50e930b70f0e8cc3.webpack.hot-update.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/.next/static/webpack/633457081244afec._.hot-update.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/.next/static/webpack/75f12f9d5be4ec49.webpack.hot-update.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/.next/static/webpack/78c521adaa0c86b0.webpack.hot-update.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/.next/static/webpack/8d94cc6b33f386f5.webpack.hot-update.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/.next/static/webpack/ae20e1be9677c89e.webpack.hot-update.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/.next/static/webpack/app/layout.170cef99d264684f.hot-update.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/.next/static/webpack/app/layout.219abee0de75ddfe.hot-update.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/.next/static/webpack/app/page.03eed9c5cd0bc27d.hot-update.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/.next/static/webpack/app/page.1e063c35955f10f7.hot-update.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/.next/static/webpack/app/page.2a60f96c3f5df359.hot-update.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/.next/static/webpack/app/page.49399386fa4c3fbd.hot-update.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/.next/static/webpack/app/page.50e930b70f0e8cc3.hot-update.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/.next/static/webpack/app/page.75f12f9d5be4ec49.hot-update.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/.next/static/webpack/app/page.78c521adaa0c86b0.hot-update.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/.next/static/webpack/app/page.8d94cc6b33f386f5.hot-update.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/.next/static/webpack/app/page.ae20e1be9677c89e.hot-update.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/.next/static/webpack/app/page.b81e53e1e5f5b524.hot-update.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/.next/static/webpack/app/page.bb64a1a6c34d5942.hot-update.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/.next/static/webpack/app/page.cfb23b4786fd98df.hot-update.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/.next/static/webpack/app/page.d12d150fcd7740c8.hot-update.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/.next/static/webpack/app/page.d5ab3b643cbba932.hot-update.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/.next/static/webpack/app/page.d9eacd998e06c489.hot-update.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/.next/static/webpack/app/page.f1735f0232c7d402.hot-update.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/.next/static/webpack/app/page.fc25ab28f2bb3f01.hot-update.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/.next/static/webpack/app/page.fd50411d0abe9634.hot-update.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/.next/static/webpack/b81e53e1e5f5b524.webpack.hot-update.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/.next/static/webpack/bb64a1a6c34d5942.webpack.hot-update.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/.next/static/webpack/cfb23b4786fd98df.webpack.hot-update.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/.next/static/webpack/d12d150fcd7740c8.webpack.hot-update.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/.next/static/webpack/d5ab3b643cbba932.webpack.hot-update.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/.next/static/webpack/d9eacd998e06c489.webpack.hot-update.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/.next/static/webpack/f1735f0232c7d402.webpack.hot-update.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/.next/static/webpack/fc25ab28f2bb3f01.webpack.hot-update.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/.next/static/webpack/fd50411d0abe9634.webpack.hot-update.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/.next/static/webpack/webpack.03eed9c5cd0bc27d.hot-update.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/.next/static/webpack/webpack.170cef99d264684f.hot-update.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/.next/static/webpack/webpack.1e063c35955f10f7.hot-update.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/.next/static/webpack/webpack.219abee0de75ddfe.hot-update.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/.next/static/webpack/webpack.2a60f96c3f5df359.hot-update.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/.next/static/webpack/webpack.49399386fa4c3fbd.hot-update.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/.next/static/webpack/webpack.50e930b70f0e8cc3.hot-update.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/.next/static/webpack/webpack.75f12f9d5be4ec49.hot-update.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/.next/static/webpack/webpack.78c521adaa0c86b0.hot-update.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/.next/static/webpack/webpack.8d94cc6b33f386f5.hot-update.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/.next/static/webpack/webpack.ae20e1be9677c89e.hot-update.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/.next/static/webpack/webpack.b81e53e1e5f5b524.hot-update.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/.next/static/webpack/webpack.bb64a1a6c34d5942.hot-update.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/.next/static/webpack/webpack.cfb23b4786fd98df.hot-update.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/.next/static/webpack/webpack.d12d150fcd7740c8.hot-update.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/.next/static/webpack/webpack.d5ab3b643cbba932.hot-update.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/.next/static/webpack/webpack.d9eacd998e06c489.hot-update.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/.next/static/webpack/webpack.f1735f0232c7d402.hot-update.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/.next/static/webpack/webpack.fc25ab28f2bb3f01.hot-update.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/.next/static/webpack/webpack.fd50411d0abe9634.hot-update.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/.next/trace" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/.next/types/app/layout.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/.next/types/app/page.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/.next/types/cache-life.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/.next/types/package.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/app/components/dashboard/SalesOverview.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/app/components/dashboard/SalesOverview.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/app/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/app/page.tsx" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="ProjectColorInfo"><![CDATA[{
+  "associatedIndex": 3
+}]]></component>
+  <component name="ProjectId" id="30V5AM5EhgBiiNNpi2DhUsRKPaM" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "git-widget-placeholder": "v3.0",
+    "last_opened_file_path": "/home/renato/Documents/portal_consul"
+  }
+}]]></component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-python-sdk-4c141bd692a7-e2d783800521-com.jetbrains.pycharm.community.sharedIndexes.bundled-PC-251.26927.90" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="daea5d4d-052f-469e-b2f8-ffd2301b94d5" name="Changes" comment="" />
+      <created>1753699755284</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1753699755284</updated>
+    </task>
+    <servers />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+</project>
